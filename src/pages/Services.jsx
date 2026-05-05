@@ -23,7 +23,7 @@ export default function Services() {
 
   return (
     <main className="bg-[#050505]">
-      <section className="relative min-h-[430px] bg-[url('/images/truck1.jpg')] bg-cover bg-center">
+      <section className="relative min-h-[430px] bg-[url('/images/truck1.png')] bg-cover bg-center">
         <div className="absolute inset-0 bg-gradient-to-r from-black via-black/75 to-black/20"></div>
 
         <div className="relative mx-auto flex min-h-[430px] max-w-7xl items-center px-8 pt-28">
@@ -94,7 +94,7 @@ export default function Services() {
         </div>
       </section>
 
-      <section className="relative bg-[url('/images/truck2.jpg')] bg-cover bg-center">
+      <section className="relative bg-[url('/images/truck2.png')] bg-cover bg-center">
         <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-black/20"></div>
 
         <div className="relative mx-auto max-w-7xl px-8 py-16">

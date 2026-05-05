@@ -27,7 +27,7 @@ export default function Home() {
   return (
     <main className="bg-[#050505]">
       {/* HERO */}
-      <section className="relative min-h-[760px] bg-[url('/images/truck2.jpg')] bg-cover bg-center">
+      <section className="relative min-h-[760px] bg-[url('/images/truck2.png')] bg-cover bg-center">
         <div className="absolute inset-0 bg-gradient-to-r from-black via-black/65 to-black/20"></div>
 
         <div className="relative mx-auto flex min-h-[760px] max-w-7xl items-center px-8 pt-28">
@@ -105,7 +105,7 @@ export default function Home() {
         </div>
 
         <img
-          src="/images/twotrucks.jpg"
+          src="/images/twotrucks.png"
           alt="Apex trucks"
           className="h-[360px] w-full rounded-lg object-cover"
         />
@@ -142,7 +142,7 @@ export default function Home() {
       </section>
 
       {/* CTA */}
-      <section className="relative bg-[url('/images/truck1.jpg')] bg-cover bg-center">
+      <section className="relative bg-[url('/images/truck1.png')] bg-cover bg-center">
         <div className="absolute inset-0 bg-gradient-to-r from-black via-black/75 to-black/20"></div>
 
         <div className="relative mx-auto max-w-7xl px-8 py-16">

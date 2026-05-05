@@ -28,7 +28,7 @@ export default function Resources() {
   return (
     <main className="bg-[#050505]">
       {/* HERO */}
-      <section className="relative min-h-[430px] bg-[url('/images/truck1.jpg')] bg-cover bg-center">
+      <section className="relative min-h-[430px] bg-[url('/images/truck1.png')] bg-cover bg-center">
         <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-black/25"></div>
 
         <div className="relative mx-auto flex min-h-[430px] max-w-7xl items-center px-8 pt-28">

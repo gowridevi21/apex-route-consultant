@@ -13,7 +13,7 @@ export default function Contact() {
   return (
     <main className="bg-[#050505]">
       {/* HERO */}
-      <section className="relative min-h-[560px] bg-[url('/images/truck2.jpg')] bg-cover bg-center">
+      <section className="relative min-h-[560px] bg-[url('/images/truck2.png')] bg-cover bg-center">
         <div className="absolute inset-0 bg-gradient-to-r from-black via-black/75 to-black/20"></div>
 
         <div className="relative mx-auto flex min-h-[560px] max-w-7xl items-center px-8 pt-28">
@@ -180,7 +180,7 @@ export default function Contact() {
       </section>
 
       {/* CTA */}
-      <section className="relative bg-[url('/images/truck1.PNG.png')] bg-cover bg-center">
+      <section className="relative bg-[url('/images/truck1.png')] bg-cover bg-center">
         <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-black/20"></div>
 
         <div className="relative mx-auto flex max-w-7xl flex-col gap-8 px-8 py-12 md:flex-row md:items-center md:justify-between">
