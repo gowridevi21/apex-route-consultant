@@ -1,0 +1,38 @@
+@import "tailwindcss";
+
+@layer base {
+  html {
+    font-family: 'Inter', sans-serif;
+  }
+
+  body {
+    background: #0b0b0b;
+    color: #ffffff;
+  }
+}
+
+h1, h2, h3 {
+  letter-spacing: -0.02em;
+  font-weight: 900;
+}
+
+/* Premium typography system */
+
+.heading-xl {
+  font-size: 72px;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.heading-lg {
+  font-size: 48px;
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.subtext {
+  font-size: 18px;
+  color: rgba(255,255,255,0.8);
+}
