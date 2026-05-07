@@ -32,7 +32,7 @@ export default function Footer() {
               <FaFacebookF size={18} />
             </a>
 
-            <a href="https://instagram.com" target="_blank" rel="noreferrer"
+            <a href="https://www.instagram.com/transportationdla?igsh=MThsa3F2cDBsamhqZQ%3D%3D&utm_source=qr" target="_blank" rel="noreferrer"
               className="flex h-10 w-10 items-center justify-center rounded-full bg-[#D4AF37]/20 text-[#D4AF37] hover:bg-[#D4AF37] hover:text-black transition">
               <FaInstagram size={18} />
             </a>
@@ -47,7 +47,7 @@ export default function Footer() {
               <FaLinkedinIn size={18} />
             </a>
 
-            <a href="https://tiktok.com" target="_blank" rel="noreferrer"
+            <a href="https://www.tiktok.com/@realtrucklog?_r=1&_t=ZT-96Aq999LEeT" target="_blank" rel="noreferrer"
               className="flex h-10 w-10 items-center justify-center rounded-full bg-[#D4AF37]/20 text-[#D4AF37] hover:bg-[#D4AF37] hover:text-black transition">
               <FaTiktok size={18} />
             </a>

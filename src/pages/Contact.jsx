@@ -1,3 +1,5 @@
+import { useState } from "react";
+import emailjs from "@emailjs/browser";
 import {
   CalendarDays,
   Clock,
@@ -16,7 +18,38 @@ import {
 } from "react-icons/fa";
 import { FaTiktok } from "react-icons/fa6";
 
+const SERVICE_ID = "YOUR_SERVICE_ID";
+const COMPANY_TEMPLATE_ID = "YOUR_COMPANY_TEMPLATE_ID";
+const CUSTOMER_TEMPLATE_ID = "YOUR_CUSTOMER_TEMPLATE_ID";
+const PUBLIC_KEY = "YOUR_PUBLIC_KEY";
+
 export default function Contact() {
+  const [status, setStatus] = useState("");
+  const [sending, setSending] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSending(true);
+    setStatus("");
+
+    const form = e.target;
+
+    try {
+      await emailjs.sendForm(SERVICE_ID, COMPANY_TEMPLATE_ID, form, PUBLIC_KEY);
+      await emailjs.sendForm(SERVICE_ID, CUSTOMER_TEMPLATE_ID, form, PUBLIC_KEY);
+
+      setStatus(
+        "Request received successfully. A pending confirmation email has been sent to you."
+      );
+      form.reset();
+    } catch (error) {
+      console.error("EmailJS Error:", error);
+      setStatus("Something went wrong. Please call us at 603-713-7917.");
+    } finally {
+      setSending(false);
+    }
+  };
+
   return (
     <main className="bg-[#050505]">
       <section className="relative min-h-[560px] bg-[url('/images/truckwithsnow.png')] bg-cover bg-center">
@@ -25,9 +58,7 @@ export default function Contact() {
         <div className="relative mx-auto flex min-h-[560px] max-w-7xl items-center px-8 pt-28 pb-20">
           <div className="w-full">
             <div className="max-w-3xl">
-              <p className="font-black uppercase text-[#D4AF37]">
-                Contact Us
-              </p>
+              <p className="font-black uppercase text-[#D4AF37]">Contact Us</p>
 
               <h1 className="mt-4 text-5xl font-black uppercase leading-tight text-white md:text-7xl">
                 Let’s Build Your
@@ -62,14 +93,9 @@ export default function Contact() {
                 ],
               ].map(([Icon, title, text]) => (
                 <div key={title}>
-                  <Icon
-                    className="mb-4 text-[#D4AF37]"
-                    size={38}
-                  />
+                  <Icon className="mb-4 text-[#D4AF37]" size={38} />
 
-                  <h3 className="font-black uppercase text-white">
-                    {title}
-                  </h3>
+                  <h3 className="font-black uppercase text-white">{title}</h3>
 
                   <p className="mt-2 text-sm leading-relaxed text-white/75">
                     {text}
@@ -81,127 +107,101 @@ export default function Contact() {
         </div>
       </section>
 
-      {/* CONTACT FORM */}
       <section className="mx-auto grid max-w-7xl gap-6 px-8 py-16 md:grid-cols-[1.2fr_0.9fr]">
-
         <form
-  action="https://formsubmit.co/Ceo@apexrouteconsulting.com"
-  method="POST"
-  className="rounded-md border border-white/10 bg-white/[0.03] p-8"
->
+          onSubmit={handleSubmit}
+          className="rounded-md border border-white/10 bg-white/[0.03] p-8"
+        >
+          <p className="font-black uppercase text-[#D4AF37]">
+            Send Us a Message
+          </p>
 
-  <input type="hidden" name="_captcha" value="false" />
+          <h2 className="mt-3 text-3xl font-black text-white">
+            We’d Love to Hear From You
+          </h2>
 
-  <input
-    type="hidden"
-    name="_subject"
-    value="New Consultation Request"
-  />
+          <div className="mt-6 grid gap-4 md:grid-cols-2">
+            <input
+              name="fullName"
+              className="w-full rounded border border-white/10 bg-black/60 p-4 text-white outline-none focus:border-[#D4AF37]"
+              placeholder="Full Name"
+              required
+            />
 
-  <input
-    type="hidden"
-    name="_autoresponse"
-    value="Thank you for contacting Apex Route Consultant Group. We received your consultation request and our team will contact you soon."
-  />
+            <input
+              type="email"
+              name="email"
+              className="w-full rounded border border-white/10 bg-black/60 p-4 text-white outline-none focus:border-[#D4AF37]"
+              placeholder="Email Address"
+              required
+            />
 
-  <p className="font-black uppercase text-[#D4AF37]">
-    Send Us a Message
-  </p>
+            <input
+              name="phone"
+              className="w-full rounded border border-white/10 bg-black/60 p-4 text-white outline-none focus:border-[#D4AF37]"
+              placeholder="Phone Number"
+              required
+            />
 
-  <h2 className="mt-3 text-3xl font-black text-white">
-    We’d Love to Hear From You
-  </h2>
+            <input
+              name="company"
+              className="w-full rounded border border-white/10 bg-black/60 p-4 text-white outline-none focus:border-[#D4AF37]"
+              placeholder="Company Name (Optional)"
+            />
+          </div>
 
-  <div className="mt-6 grid gap-4 md:grid-cols-2">
+          <input
+            name="subject"
+            className="mt-4 w-full rounded border border-white/10 bg-black/60 p-4 text-white outline-none focus:border-[#D4AF37]"
+            placeholder="Subject"
+          />
 
-    <input
-      name="fullName"
-      className="w-full rounded border border-white/10 bg-black/60 p-4 text-white outline-none focus:border-[#D4AF37]"
-      placeholder="Full Name"
-      required
-    />
+          <textarea
+            name="message"
+            className="mt-4 h-36 w-full rounded border border-white/10 bg-black/60 p-4 text-white outline-none focus:border-[#D4AF37]"
+            placeholder="How can we help you?"
+            required
+          />
 
-    <input
-      type="email"
-      name="email"
-      className="w-full rounded border border-white/10 bg-black/60 p-4 text-white outline-none focus:border-[#D4AF37]"
-      placeholder="Email Address"
-      required
-    />
+          <button
+            type="submit"
+            disabled={sending}
+            className="mt-6 w-full bg-[#D4AF37] px-8 py-4 text-sm font-black uppercase text-black transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {sending ? "Sending..." : "Send Message"}
+          </button>
 
-    <input
-      name="phone"
-      className="w-full rounded border border-white/10 bg-black/60 p-4 text-white outline-none focus:border-[#D4AF37]"
-      placeholder="Phone Number"
-      required
-    />
-
-    <input
-      name="company"
-      className="w-full rounded border border-white/10 bg-black/60 p-4 text-white outline-none focus:border-[#D4AF37]"
-      placeholder="Company Name (Optional)"
-    />
-
-  </div>
-
-  <input
-    name="subject"
-    className="mt-4 w-full rounded border border-white/10 bg-black/60 p-4 text-white outline-none focus:border-[#D4AF37]"
-    placeholder="Subject"
-  />
-
-  <textarea
-    name="message"
-    className="mt-4 h-36 w-full rounded border border-white/10 bg-black/60 p-4 text-white outline-none focus:border-[#D4AF37]"
-    placeholder="How can we help you?"
-    required
-  />
-
-  <button
-    type="submit"
-    className="mt-6 w-full bg-[#D4AF37] px-8 py-4 text-sm font-black uppercase text-black transition hover:bg-white"
-  >
-    Send Message
-  </button>
-
-  <p className="mt-4 text-xs text-white/60">
-    🔒 Your information is secure and will never be shared.
-  </p>
-
-</form>
-
-        {/* RIGHT SIDE */}
-        <div className="rounded-md border border-white/10 bg-white/[0.03]">
-
-          <div className="p-8">
-            <p className="font-black uppercase text-[#D4AF37]">
-              Get in Touch
+          {status && (
+            <p className="mt-4 rounded border border-[#D4AF37]/40 bg-[#D4AF37]/10 p-4 text-sm text-white">
+              {status}
             </p>
+          )}
+
+          <p className="mt-4 text-xs text-white/60">
+            🔒 Your information is secure and will never be shared.
+          </p>
+        </form>
+
+        <div className="rounded-md border border-white/10 bg-white/[0.03]">
+          <div className="p-8">
+            <p className="font-black uppercase text-[#D4AF37]">Get in Touch</p>
 
             <h2 className="mt-3 text-3xl font-black text-white">
               Contact Information
             </h2>
 
             <div className="mt-8 space-y-7">
-
-              <InfoItem
-                icon={Phone}
-                title="Phone"
-                text="603-713-7917"
-              />
-
+              <InfoItem icon={Phone} title="Phone" text="603-713-7917" />
               <InfoItem
                 icon={Mail}
                 title="Email"
                 text="ceo@apexrouteconsulting.com"
               />
-
               <InfoItem
                 icon={MapPin}
                 title="Service Area"
                 text="Serving Carriers Nationwide"
               />
-
               <InfoItem
                 icon={Clock}
                 title="Business Hours"
@@ -210,77 +210,38 @@ export default function Contact() {
             </div>
           </div>
 
-          {/* SOCIALS */}
           <div className="border-t border-white/10 p-8">
-            <p className="font-black uppercase text-[#D4AF37]">
-              Follow Us
-            </p>
+            <p className="font-black uppercase text-[#D4AF37]">Follow Us</p>
 
             <div className="mt-5 flex gap-4">
-
-              <a
-                href="https://facebook.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-[#D4AF37]/20 text-[#D4AF37] transition duration-300 hover:scale-110 hover:bg-[#D4AF37] hover:text-black"
-              >
-                <FaFacebookF />
-              </a>
-
-              <a
-                href="https://instagram.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-[#D4AF37]/20 text-[#D4AF37] transition duration-300 hover:scale-110 hover:bg-[#D4AF37] hover:text-black"
-              >
-                <FaInstagram />
-              </a>
-
-              <a
-                href="https://youtube.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-[#D4AF37]/20 text-[#D4AF37] transition duration-300 hover:scale-110 hover:bg-[#D4AF37] hover:text-black"
-              >
-                <FaYoutube />
-              </a>
-
-              <a
-                href="https://linkedin.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-[#D4AF37]/20 text-[#D4AF37] transition duration-300 hover:scale-110 hover:bg-[#D4AF37] hover:text-black"
-              >
-                <FaLinkedinIn />
-              </a>
-
-              <a
-                href="https://tiktok.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-[#D4AF37]/20 text-[#D4AF37] transition duration-300 hover:scale-110 hover:bg-[#D4AF37] hover:text-black"
-              >
-                <FaTiktok />
-              </a>
-
+              {[
+                { icon: <FaFacebookF />, url: "https://facebook.com" },
+                { icon: <FaInstagram />, url: "https://www.instagram.com/transportationdla?igsh=MThsa3F2cDBsamhqZQ%3D%3D&utm_source=qr" },
+                { icon: <FaYoutube />, url: "https://youtube.com" },
+                { icon: <FaLinkedinIn />, url: "https://linkedin.com" },
+                { icon: <FaTiktok />, url: "https://www.tiktok.com/@realtrucklog?_r=1&_t=ZT-96Aq999LEeT" },
+              ].map((item, index) => (
+                <a
+                  key={index}
+                  href={item.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex h-10 w-10 items-center justify-center rounded-full bg-[#D4AF37]/20 text-[#D4AF37] transition duration-300 hover:scale-110 hover:bg-[#D4AF37] hover:text-black"
+                >
+                  {item.icon}
+                </a>
+              ))}
             </div>
           </div>
         </div>
       </section>
 
-      {/* CTA */}
       <section className="relative bg-[url('/images/snowsunset.png')] bg-cover bg-center">
-
         <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-black/20"></div>
 
         <div className="relative mx-auto flex max-w-7xl flex-col gap-8 px-8 py-12 md:flex-row md:items-center md:justify-between">
-
           <div className="flex gap-6">
-
-            <CalendarDays
-              className="text-[#D4AF37]"
-              size={56}
-            />
+            <CalendarDays className="text-[#D4AF37]" size={56} />
 
             <div>
               <p className="font-black uppercase text-[#D4AF37]">
@@ -313,19 +274,12 @@ export default function Contact() {
 function InfoItem({ icon: Icon, title, text }) {
   return (
     <div className="flex gap-5">
-      <Icon
-        className="text-[#D4AF37]"
-        size={34}
-      />
+      <Icon className="text-[#D4AF37]" size={34} />
 
       <div>
-        <h3 className="font-black text-white">
-          {title}
-        </h3>
+        <h3 className="font-black text-white">{title}</h3>
 
-        <p className="text-white/75">
-          {text}
-        </p>
+        <p className="text-white/75">{text}</p>
       </div>
     </div>
   );
