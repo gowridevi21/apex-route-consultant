@@ -8,7 +8,7 @@ import {
   Users,
 } from "lucide-react";
 import { Link } from "react-router";
-
+import { FaCalendarAlt } from "react-icons/fa";
 export default function Home() {
   const benefits = [
     [TrendingUp, "Maximize Profit", "Increase revenue and reduce deadhead."],
@@ -27,7 +27,7 @@ export default function Home() {
   return (
     <main className="bg-[#050505]">
       {/* HERO */}
-      <section className="relative min-h-[760px] bg-[url('/images/truck2.png')] bg-cover bg-center">
+      <section className="relative min-h-[760px] bg-[url('/images/sunsettruck.png')] bg-cover bg-center">
         <div className="absolute inset-0 bg-gradient-to-r from-black via-black/65 to-black/20"></div>
 
         <div className="relative mx-auto flex min-h-[760px] max-w-7xl items-center px-8 pt-28">
@@ -49,12 +49,13 @@ export default function Home() {
             </p>
 
             <div className="mt-9 flex gap-5">
-              <Link
-                to="/contact"
-                className="bg-[#D4AF37] px-8 py-4 text-sm font-black uppercase text-black hover:bg-white"
-              >
-                Book Consultation
-              </Link>
+            <Link
+            to="/contact"
+            className="bg-[#D4AF37] px-8 py-4 inline-flex items-center gap-2 text-sm font-bold uppercase text-black"
+            >
+            <FaCalendarAlt size={18} />
+            Book Consultation
+            </Link>
 
               <Link
                 to="/services"
@@ -142,7 +143,7 @@ export default function Home() {
       </section>
 
       {/* CTA */}
-      <section className="relative bg-[url('/images/truck1.png')] bg-cover bg-center">
+      <section className="relative bg-[url('/images/lefttruck.png')] bg-cover bg-center">
         <div className="absolute inset-0 bg-gradient-to-r from-black via-black/75 to-black/20"></div>
 
         <div className="relative mx-auto max-w-7xl px-8 py-16">
@@ -160,10 +161,11 @@ export default function Home() {
           </p>
 
           <Link
-            to="/contact"
-            className="mt-7 inline-block bg-[#D4AF37] px-8 py-4 text-sm font-black uppercase text-black hover:bg-white"
+          to="/contact"
+          className="bg-[#D4AF37] px-8 py-4 inline-flex items-center gap-2 text-sm font-bold uppercase text-black mt-10"
           >
-            Book Consultation
+          <FaCalendarAlt size={18} />
+          Book Consultation
           </Link>
         </div>
       </section>

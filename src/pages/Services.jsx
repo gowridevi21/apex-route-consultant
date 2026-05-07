@@ -5,7 +5,7 @@ import {
   Truck,
 } from "lucide-react";
 import { Link } from "react-router";
-
+import { FaCalendarAlt } from "react-icons/fa";
 export default function Services() {
   const services = [
     [Route, "Route & Lane Strategy", "We analyze market data to find the most profitable lanes and build efficient routes that maximize your miles."],
@@ -23,7 +23,7 @@ export default function Services() {
 
   return (
     <main className="bg-[#050505]">
-      <section className="relative min-h-[430px] bg-[url('/images/truck1.png')] bg-cover bg-center">
+      <section className="relative min-h-[430px] bg-[url('/images/rtruck.png')] bg-cover bg-center">
         <div className="absolute inset-0 bg-gradient-to-r from-black via-black/75 to-black/20"></div>
 
         <div className="relative mx-auto flex min-h-[430px] max-w-7xl items-center px-8 pt-28">
@@ -110,8 +110,9 @@ export default function Services() {
 
           <Link
             to="/contact"
-            className="mt-7 inline-block bg-[#D4AF37] px-8 py-4 text-sm font-black uppercase text-black hover:bg-white"
+            className="mt-12 inline-flex items-center gap-3 bg-[#D4AF37] px-8 py-4 text-sm font-black uppercase text-black hover:bg-white transition"
           >
+          <FaCalendarAlt />
             Book Your Consultation
           </Link>
         </div>

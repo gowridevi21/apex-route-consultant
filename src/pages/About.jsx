@@ -8,12 +8,13 @@ import {
   Users,
 } from "lucide-react";
 import { Link } from "react-router";
+import { FaCalendarAlt } from "react-icons/fa";
 
 export default function About() {
   return (
     <main className="bg-[#050505]">
       {/* HERO */}
-      <section className="relative min-h-[520px] bg-[url('/images/twotrucks.png')] bg-cover bg-center">
+      <section className="relative min-h-[520px] bg-[url('/images/twotrucktree.png')] bg-cover bg-center">
         <div className="absolute inset-0 bg-gradient-to-r from-black via-black/75 to-black/20"></div>
 
         <div className="relative mx-auto flex min-h-[520px] max-w-7xl items-center px-8 pt-28">
@@ -129,7 +130,7 @@ export default function About() {
       </section>
 
       {/* CTA */}
-      <section className="relative bg-[url('/images/truck1.png')] bg-cover bg-center">
+      <section className="relative bg-[url('/images/ytratio.png')] bg-cover bg-center">
         <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-black/20"></div>
 
         <div className="relative mx-auto flex max-w-7xl flex-col gap-8 px-8 py-12 md:flex-row md:items-center md:justify-between">
@@ -143,12 +144,13 @@ export default function About() {
             </p>
           </div>
 
-          <Link
-            to="/contact"
-            className="bg-[#D4AF37] px-8 py-4 text-sm font-black uppercase text-black hover:bg-white"
-          >
-            Book Consultation
-          </Link>
+        <Link
+          to="/contact"
+          className="bg-[#D4AF37] px-8 py-4 text-sm font-black uppercase text-black flex items-center gap-2"
+        >
+          <FaCalendarAlt size={16} />
+          Book Consultation
+        </Link>
         </div>
       </section>
     </main>
