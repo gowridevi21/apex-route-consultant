@@ -215,10 +215,10 @@ export default function Contact() {
 
             <div className="mt-5 flex gap-4">
               {[
-                { icon: <FaFacebookF />, url: "https://facebook.com" },
+                //{ icon: <FaFacebookF />, url: "https://facebook.com" },
                 { icon: <FaInstagram />, url: "https://www.instagram.com/transportationdla?igsh=MThsa3F2cDBsamhqZQ%3D%3D&utm_source=qr" },
-                { icon: <FaYoutube />, url: "https://youtube.com" },
-                { icon: <FaLinkedinIn />, url: "https://linkedin.com" },
+               // { icon: <FaYoutube />, url: "https://youtube.com" },
+               // { icon: <FaLinkedinIn />, url: "https://linkedin.com" },
                 { icon: <FaTiktok />, url: "https://www.tiktok.com/@realtrucklog?_r=1&_t=ZT-96Aq999LEeT" },
               ].map((item, index) => (
                 <a

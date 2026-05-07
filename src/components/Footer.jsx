@@ -27,24 +27,10 @@ export default function Footer() {
           </p>
 
           <div className="mt-4 flex gap-4">
-            <a href="https://facebook.com" target="_blank" rel="noreferrer"
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-[#D4AF37]/20 text-[#D4AF37] hover:bg-[#D4AF37] hover:text-black transition">
-              <FaFacebookF size={18} />
-            </a>
 
             <a href="https://www.instagram.com/transportationdla?igsh=MThsa3F2cDBsamhqZQ%3D%3D&utm_source=qr" target="_blank" rel="noreferrer"
               className="flex h-10 w-10 items-center justify-center rounded-full bg-[#D4AF37]/20 text-[#D4AF37] hover:bg-[#D4AF37] hover:text-black transition">
               <FaInstagram size={18} />
-            </a>
-
-            <a href="https://youtube.com" target="_blank" rel="noreferrer"
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-[#D4AF37]/20 text-[#D4AF37] hover:bg-[#D4AF37] hover:text-black transition">
-              <FaYoutube size={18} />
-            </a>
-
-            <a href="https://linkedin.com" target="_blank" rel="noreferrer"
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-[#D4AF37]/20 text-[#D4AF37] hover:bg-[#D4AF37] hover:text-black transition">
-              <FaLinkedinIn size={18} />
             </a>
 
             <a href="https://www.tiktok.com/@realtrucklog?_r=1&_t=ZT-96Aq999LEeT" target="_blank" rel="noreferrer"
