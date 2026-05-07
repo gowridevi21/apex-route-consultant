@@ -85,86 +85,90 @@ export default function Contact() {
       <section className="mx-auto grid max-w-7xl gap-6 px-8 py-16 md:grid-cols-[1.2fr_0.9fr]">
 
         <form
-          action="https://formsubmit.co/Ceo@apexrouteconsulting.com"
-          method="POST"
-          className="rounded-md border border-white/10 bg-white/[0.03] p-8"
-        >
+  action="https://formsubmit.co/Ceo@apexrouteconsulting.com"
+  method="POST"
+  className="rounded-md border border-white/10 bg-white/[0.03] p-8"
+>
 
-          {/* Optional */}
-          <input
-            type="hidden"
-            name="_captcha"
-            value="false"
-          />
+  <input type="hidden" name="_captcha" value="false" />
 
-          <input
-            type="hidden"
-            name="_subject"
-            value="New Consultation Request"
-          />
+  <input
+    type="hidden"
+    name="_subject"
+    value="New Consultation Request"
+  />
 
-          <p className="font-black uppercase text-[#D4AF37]">
-            Send Us a Message
-          </p>
+  <input
+    type="hidden"
+    name="_autoresponse"
+    value="Thank you for contacting Apex Route Consultant Group. We received your consultation request and our team will contact you soon."
+  />
 
-          <h2 className="mt-3 text-3xl font-black text-white">
-            We’d Love to Hear From You
-          </h2>
+  <p className="font-black uppercase text-[#D4AF37]">
+    Send Us a Message
+  </p>
 
-          <div className="mt-6 grid gap-4 md:grid-cols-2">
+  <h2 className="mt-3 text-3xl font-black text-white">
+    We’d Love to Hear From You
+  </h2>
 
-            <input
-              name="fullName"
-              className="w-full rounded border border-white/10 bg-black/60 p-4 text-white outline-none focus:border-[#D4AF37]"
-              placeholder="Full Name"
-              required
-            />
+  <div className="mt-6 grid gap-4 md:grid-cols-2">
 
-            <input
-              type="email"
-              name="email"
-              className="w-full rounded border border-white/10 bg-black/60 p-4 text-white outline-none focus:border-[#D4AF37]"
-              placeholder="Email Address"
-              required
-            />
+    <input
+      name="fullName"
+      className="w-full rounded border border-white/10 bg-black/60 p-4 text-white outline-none focus:border-[#D4AF37]"
+      placeholder="Full Name"
+      required
+    />
 
-            <input
-              name="phone"
-              className="w-full rounded border border-white/10 bg-black/60 p-4 text-white outline-none focus:border-[#D4AF37]"
-              placeholder="Phone Number"
-            />
+    <input
+      type="email"
+      name="email"
+      className="w-full rounded border border-white/10 bg-black/60 p-4 text-white outline-none focus:border-[#D4AF37]"
+      placeholder="Email Address"
+      required
+    />
 
-            <input
-              name="company"
-              className="w-full rounded border border-white/10 bg-black/60 p-4 text-white outline-none focus:border-[#D4AF37]"
-              placeholder="Company Name (Optional)"
-            />
-          </div>
+    <input
+      name="phone"
+      className="w-full rounded border border-white/10 bg-black/60 p-4 text-white outline-none focus:border-[#D4AF37]"
+      placeholder="Phone Number"
+      required
+    />
 
-          <input
-            name="subject"
-            className="mt-4 w-full rounded border border-white/10 bg-black/60 p-4 text-white outline-none focus:border-[#D4AF37]"
-            placeholder="Subject"
-          />
+    <input
+      name="company"
+      className="w-full rounded border border-white/10 bg-black/60 p-4 text-white outline-none focus:border-[#D4AF37]"
+      placeholder="Company Name (Optional)"
+    />
 
-          <textarea
-            name="message"
-            className="mt-4 h-36 w-full rounded border border-white/10 bg-black/60 p-4 text-white outline-none focus:border-[#D4AF37]"
-            placeholder="How can we help you?"
-            required
-          />
+  </div>
 
-          <button
-            type="submit"
-            className="mt-6 w-full bg-[#D4AF37] px-8 py-4 text-sm font-black uppercase text-black transition hover:bg-white"
-          >
-            Send Message
-          </button>
+  <input
+    name="subject"
+    className="mt-4 w-full rounded border border-white/10 bg-black/60 p-4 text-white outline-none focus:border-[#D4AF37]"
+    placeholder="Subject"
+  />
 
-          <p className="mt-4 text-xs text-white/60">
-            🔒 Your information is secure and will never be shared.
-          </p>
-        </form>
+  <textarea
+    name="message"
+    className="mt-4 h-36 w-full rounded border border-white/10 bg-black/60 p-4 text-white outline-none focus:border-[#D4AF37]"
+    placeholder="How can we help you?"
+    required
+  />
+
+  <button
+    type="submit"
+    className="mt-6 w-full bg-[#D4AF37] px-8 py-4 text-sm font-black uppercase text-black transition hover:bg-white"
+  >
+    Send Message
+  </button>
+
+  <p className="mt-4 text-xs text-white/60">
+    🔒 Your information is secure and will never be shared.
+  </p>
+
+</form>
 
         {/* RIGHT SIDE */}
         <div className="rounded-md border border-white/10 bg-white/[0.03]">
