@@ -11,10 +11,10 @@ import {
 } from "lucide-react";
 import { Link } from "react-router";
 import {
-  FaFacebookF,
+ // FaFacebookF,
   FaInstagram,
-  FaLinkedinIn,
-  FaYoutube,
+ // FaLinkedinIn,
+ // FaYoutube,
 } from "react-icons/fa";
 import { FaTiktok } from "react-icons/fa6";
 
