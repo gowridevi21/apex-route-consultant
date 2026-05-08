@@ -46,7 +46,7 @@ export default function Navbar() {
         </div>
 
         <Link
-          to="/contact"
+          to="/booking"
           className="hidden items-center gap-2 border border-[#D4AF37] px-5 py-2 text-sm font-black uppercase text-[#D4AF37] transition hover:bg-[#D4AF37] hover:text-black md:flex"
         >
           <FaCalendarAlt />
