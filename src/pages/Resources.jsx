@@ -97,7 +97,7 @@ export default function Resources() {
           </div>
 
           <Link
-            to="/contact"
+            to="/booking"
             className="inline-flex items-center gap-3 bg-[#D4AF37] px-8 py-4 text-sm font-black uppercase text-black hover:bg-white transition"
           >
             <FaCalendarAlt />

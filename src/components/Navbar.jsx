@@ -75,7 +75,7 @@ export default function Navbar() {
           ))}
 
           <Link
-            to="/contact"
+            to="/booking"
             onClick={() => setOpen(false)}
             className="mt-4 inline-flex items-center gap-2 bg-[#D4AF37] px-5 py-3 text-sm font-black uppercase text-black"
           >

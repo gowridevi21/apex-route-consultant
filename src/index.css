@@ -36,3 +36,17 @@ h1, h2, h3 {
   font-size: 18px;
   color: rgba(255,255,255,0.8);
 }
+
+.input-style {
+  width: 100%;
+  border-radius: 0.25rem;
+  border: 1px solid rgb(255 255 255 / 0.1);
+  background: rgb(0 0 0 / 0.6);
+  padding: 1rem;
+  color: white;
+  outline: none;
+}
+
+.input-style:focus {
+  border-color: #D4AF37;
+}

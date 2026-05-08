@@ -50,7 +50,7 @@ export default function Home() {
 
             <div className="mt-9 flex gap-5">
             <Link
-            to="/contact"
+            to="/booking"
             className="bg-[#D4AF37] px-8 py-4 inline-flex items-center gap-2 text-sm font-bold uppercase text-black"
             >
             <FaCalendarAlt size={18} />
@@ -161,7 +161,7 @@ export default function Home() {
           </p>
 
           <Link
-          to="/contact"
+          to="/booking"
           className="bg-[#D4AF37] px-8 py-4 inline-flex items-center gap-2 text-sm font-bold uppercase text-black mt-10"
           >
           <FaCalendarAlt size={18} />

@@ -145,7 +145,7 @@ export default function About() {
           </div>
 
         <Link
-          to="/contact"
+          to="/booking"
           className="bg-[#D4AF37] px-8 py-4 text-sm font-black uppercase text-black flex items-center gap-2"
         >
           <FaCalendarAlt size={16} />

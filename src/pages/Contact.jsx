@@ -260,7 +260,7 @@ export default function Contact() {
           </div>
 
           <Link
-            to="/contact"
+            to="/booking"
             className="border border-[#D4AF37] px-8 py-4 text-sm font-black uppercase text-white transition hover:bg-[#D4AF37] hover:text-black"
           >
             Book Your Consultation
