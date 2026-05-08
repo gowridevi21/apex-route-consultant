@@ -26,7 +26,7 @@ const consultationTypes = [
     ],
     paymentLink: "",
   },
-  {
+ /* {
     id: "operations",
     title: "Operations Growth Consultation",
     time: "45 Minutes",
@@ -54,7 +54,7 @@ const consultationTypes = [
       "Growth strategy",
     ],
     paymentLink: "PASTE_STRIPE_OR_SQUARE_LINK_HERE",
-  },
+  },*/
 ];
 
 export default function Booking() {
