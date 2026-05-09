@@ -211,7 +211,7 @@ export default function Services() {
       </section>
 
       {/* CTA */}
-      <section className="relative bg-[url('/images/truck2.png')] bg-cover bg-center">
+      <section className="relative bg-[url('/images/twotruckssunset.png')] bg-cover bg-center">
         <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-black/20"></div>
 
         <div className="relative mx-auto max-w-7xl px-6 py-16 md:px-8">
