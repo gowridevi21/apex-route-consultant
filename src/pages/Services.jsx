@@ -1,82 +1,196 @@
 import {
+ // BriefcaseBusiness,
+  CheckCircle,
   ClipboardCheck,
-  DollarSign,
-  Route,
+  MonitorSmartphone,
+ // Route,
   Truck,
+  Users,
 } from "lucide-react";
 import { Link } from "react-router";
 import { FaCalendarAlt } from "react-icons/fa";
+
 export default function Services() {
   const services = [
-    [Route, "Route & Lane Strategy", "We analyze market data to find the most profitable lanes and build efficient routes that maximize your miles."],
-    [DollarSign, "Financial Consulting", "Improve cash flow, lower costs, and increase your bottom line with proven financial strategies."],
-    [ClipboardCheck, "Compliance Support", "Stay DOT compliant and audit-ready with our expert guidance and documentation support."],
-    [Truck, "Dispatch & Operations", "Optimize load planning, reduce downtime, and run a smoother, more efficient operation."],
+    {
+      icon: Users,
+      title: "90-Day Mentorship Program",
+      subtitle:
+        "A structured 90-day mentorship for box truck and sprinter owners who want guidance, accountability, and step-by-step support building their transportation business.",
+      items: [
+        "Business setup guidance",
+        "Load strategy",
+        "Broker communication",
+        "Dispatch education",
+        "Revenue planning",
+        "Weekly support/check-ins",
+        "Operations improvement",
+      ],
+      cta: "Apply for Mentorship",
+    },
+    {
+      icon: ClipboardCheck,
+      title: "Systems & Operations Setup",
+      subtitle:
+        "For carriers who need their business organized properly with the right documents, workflows, compliance structure, and operating systems.",
+      items: [
+        "Compliance folder setup",
+        "Driver folder setup",
+        "Invoice system",
+        "Load tracking workflow",
+        "Broker/carrier packet organization",
+        "Email and document templates",
+        "Business process structure",
+      ],
+      cta: "Build My System",
+    },
+    {
+      icon: Truck,
+      title: "Dispatching Support — 7% Per Load",
+      subtitle:
+        "Professional dispatch support for qualified carriers. Apex helps with load searching, broker communication, rate negotiation, and load planning.",
+      items: [
+        "Load search support",
+        "Rate negotiation",
+        "Broker communication",
+        "Route planning",
+        "Load confirmation support",
+        "7% dispatch fee per booked load",
+      ],
+      cta: "Request Dispatch Support",
+    },
+    {
+      icon: MonitorSmartphone,
+      title: "Website & Business Brand Buildout",
+      subtitle:
+        "Premium trucking business website and branding setup for carriers, dispatch companies, consultants, and logistics businesses.",
+      items: [
+        "Website design",
+        "Brand colors/logo integration",
+        "Consultation booking funnel",
+        "Contact forms",
+        "Social media links",
+        "Mobile optimization",
+        "Domain connection",
+        "Business credibility setup",
+      ],
+      cta: "Build My Brand",
+    },
   ];
 
   const process = [
-    ["1", "Discover", "We learn about your business, goals, and challenges to identify opportunities."],
-    ["2", "Strategize", "We develop a customized plan tailored to your operation and objectives."],
-    ["3", "Implement", "We put the plan into action with tools, support, and clear execution steps."],
-    ["4", "Grow", "We track results, optimize performance, and help you scale with confidence."],
+    [
+      "1",
+      "Discover",
+      "We learn about your business, goals, and challenges to identify the right service path.",
+    ],
+    [
+      "2",
+      "Structure",
+      "We organize the strategy, systems, documents, and support needed for your operation.",
+    ],
+    [
+      "3",
+      "Implement",
+      "We help put the plan into action with practical steps and clear execution support.",
+    ],
+    [
+      "4",
+      "Grow",
+      "We help improve operations, increase confidence, and build toward long-term growth.",
+    ],
   ];
 
   return (
     <main className="bg-[#050505]">
-      <section className="relative min-h-[430px] bg-[url('/images/rtruck.png')] bg-cover bg-center">
-        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/75 to-black/20"></div>
+      {/* HERO */}
+      <section className="relative min-h-[500px] bg-[url('/images/rtruck.png')] bg-cover bg-center">
+        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-black/25"></div>
 
-        <div className="relative mx-auto flex min-h-[430px] max-w-7xl items-center px-8 pt-28">
-          <div className="max-w-2xl">
+        <div className="relative mx-auto flex min-h-[500px] max-w-7xl items-center px-6 pt-28 md:px-8">
+          <div className="max-w-4xl">
             <p className="font-black uppercase text-[#D4AF37]">Services</p>
 
-            <h1 className="mt-4 text-5xl font-black uppercase leading-tight text-white md:text-7xl">
-              Solutions That
+            <h1 className="mt-4 text-4xl font-black uppercase leading-tight text-white md:text-7xl">
+              Services Built for Carriers
               <br />
-              <span className="text-[#D4AF37]">Drive Results.</span>
+              <span className="text-[#D4AF37]">Ready to Grow</span>
             </h1>
 
-            <p className="mt-5 text-lg leading-relaxed text-white/80">
-              Strategic consulting and hands-on support to help carriers run
-              smarter, more profitable businesses.
+            <p className="mt-6 max-w-3xl text-lg leading-relaxed text-white/80">
+              From mentorship to systems, dispatching, and professional
+              branding, Apex Route Consultant Group helps transportation
+              businesses build structure, increase revenue, and operate with
+              confidence.
             </p>
           </div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl border-b border-white/10 px-8 py-16 text-center">
-        <p className="font-black uppercase text-[#D4AF37]">Our Services</p>
+      {/* SERVICES */}
+      <section className="mx-auto max-w-7xl border-b border-white/10 px-6 py-16 md:px-8">
+        <div className="text-center">
+          <p className="font-black uppercase text-[#D4AF37]">Our Services</p>
 
-        <h2 className="mt-3 text-4xl font-black text-white">
-          How We Help Carriers Win
-        </h2>
+          <h2 className="mt-3 text-3xl font-black uppercase text-white md:text-5xl">
+            Premium Support for{" "}
+            <span className="text-[#D4AF37]">Carrier Growth</span>
+          </h2>
+        </div>
 
-        <div className="mt-10 grid gap-5 md:grid-cols-4">
-          {services.map(([Icon, title, text]) => (
+        <div className="mt-12 grid gap-6 md:grid-cols-2">
+          {services.map(({ icon: Icon, title, subtitle, items, cta }) => (
             <div
               key={title}
-              className="rounded-md border border-white/10 bg-white/[0.04] p-8 transition hover:border-[#D4AF37]"
+              className="group rounded-md border border-white/10 bg-white/[0.04] p-8 transition duration-300 hover:-translate-y-1 hover:border-[#D4AF37] hover:bg-[#D4AF37]/5"
             >
-              <Icon className="mx-auto mb-5 text-[#D4AF37]" size={56} />
-              <h3 className="text-lg font-black uppercase text-white">{title}</h3>
-              <p className="mt-4 text-sm leading-relaxed text-white/70">{text}</p>
+              <div className="flex flex-col gap-5 md:flex-row md:items-start">
+                <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-[#D4AF37]/15 text-[#D4AF37] transition group-hover:bg-[#D4AF37] group-hover:text-black">
+                  <Icon size={34} />
+                </div>
+
+                <div>
+                  <h3 className="text-2xl font-black uppercase leading-tight text-white">
+                    {title}
+                  </h3>
+
+                  <p className="mt-4 text-sm leading-relaxed text-white/70">
+                    {subtitle}
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-7 grid gap-3 sm:grid-cols-2">
+                {items.map((item) => (
+                  <div key={item} className="flex gap-3 text-sm text-white/75">
+                    <CheckCircle
+                      size={17}
+                      className="mt-0.5 shrink-0 text-[#D4AF37]"
+                    />
+                    <span>{item}</span>
+                  </div>
+                ))}
+              </div>
 
               <Link
-                to="/contact"
-                className="mt-7 inline-block text-sm font-black uppercase text-[#D4AF37]"
+                to="/booking"
+                className="mt-8 inline-flex items-center gap-3 border border-[#D4AF37] px-6 py-3 text-sm font-black uppercase text-[#D4AF37] transition hover:bg-[#D4AF37] hover:text-black"
               >
-                Learn More ›
+                <FaCalendarAlt />
+                {cta}
               </Link>
             </div>
           ))}
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl border-b border-white/10 px-8 py-16 text-center">
+      {/* PROCESS */}
+      <section className="mx-auto max-w-7xl border-b border-white/10 px-6 py-16 text-center md:px-8">
         <p className="font-black uppercase text-[#D4AF37]">Our Process</p>
 
-        <h2 className="mt-3 text-4xl font-black text-white">
-          A Proven Process That Delivers
+        <h2 className="mt-3 text-3xl font-black uppercase text-white md:text-5xl">
+          A Proven Process That{" "}
+          <span className="text-[#D4AF37]">Delivers</span>
         </h2>
 
         <div className="mt-12 grid gap-8 md:grid-cols-4">
@@ -88,33 +202,43 @@ export default function Services() {
 
               <h3 className="mt-5 font-black uppercase text-white">{title}</h3>
 
-              <p className="mt-3 text-sm leading-relaxed text-white/70">{text}</p>
+              <p className="mt-3 text-sm leading-relaxed text-white/70">
+                {text}
+              </p>
             </div>
           ))}
         </div>
       </section>
 
+      {/* CTA */}
       <section className="relative bg-[url('/images/truck2.png')] bg-cover bg-center">
         <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-black/20"></div>
 
-        <div className="relative mx-auto max-w-7xl px-8 py-16">
-          <h2 className="text-4xl font-black uppercase text-white">
-            Ready to Take <span className="text-[#D4AF37]">Your Business</span>{" "}
-            Further?
-          </h2>
+        <div className="relative mx-auto max-w-7xl px-6 py-16 md:px-8">
+          <div className="max-w-3xl">
+            <p className="font-black uppercase text-[#D4AF37]">
+              Ready to Build Structure?
+            </p>
 
-          <p className="mt-4 max-w-xl text-lg text-white/80">
-            Book a free consultation and see how the right strategy can change
-            your whole business.
-          </p>
+            <h2 className="mt-3 text-4xl font-black uppercase text-white">
+              Let’s Take{" "}
+              <span className="text-[#D4AF37]">Your Carrier Business</span>{" "}
+              Further.
+            </h2>
 
-          <Link
-            to="/booking"
-            className="mt-12 inline-flex items-center gap-3 bg-[#D4AF37] px-8 py-4 text-sm font-black uppercase text-black hover:bg-white transition"
-          >
-          <FaCalendarAlt />
-            Book Your Consultation
-          </Link>
+            <p className="mt-4 max-w-xl text-lg text-white/80">
+              Choose a consultation path and tell us what support your business
+              needs. Apex will review your request and contact you shortly.
+            </p>
+
+            <Link
+              to="/booking"
+              className="mt-10 inline-flex items-center gap-3 bg-[#D4AF37] px-8 py-4 text-sm font-black uppercase text-black transition hover:bg-white"
+            >
+              <FaCalendarAlt />
+              Book Your Consultation
+            </Link>
+          </div>
         </div>
       </section>
     </main>
