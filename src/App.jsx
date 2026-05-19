@@ -1,7 +1,6 @@
 import { Route, Routes } from "react-router";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import ScrollToBottom from "./components/ScrollToBottom";
 
 import Home from "./pages/Home";
 import About from "./pages/About";
@@ -13,8 +12,6 @@ import Booking from "./pages/Booking";
 export default function App() {
   return (
     <>
-      <ScrollToBottom />
-
       <Navbar />
 
       <Routes>
