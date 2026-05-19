@@ -14,9 +14,6 @@ const consultationTypes = [
     title: "Quick Strategy Call",
     time: "15 Minutes",
     price: "Free",
-    description:
-      "Free qualification call to understand client goals and see if they are a fit.",
-    paymentLink: "",
   },
 ];
 
@@ -28,25 +25,36 @@ export default function Booking() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setSubmitted(false);
 
     const form = e.target;
     const formData = new FormData(form);
 
+    const fullName = formData.get("fullName");
+    const email = formData.get("email");
+
     const templateParams = {
       consultationType: `${selectedType.title} - ${selectedType.time} - ${selectedType.price}`,
-      fullName: formData.get("fullName"),
+      fullName,
       companyName: formData.get("companyName"),
-      email: formData.get("email"),
+      email,
       phone: formData.get("phone"),
-      mcDot: formData.get("mcDot"),
+      mcDot: formData.get("mcDot") || "Not provided",
       equipmentType: formData.get("equipmentType"),
       monthlyRevenue: formData.get("monthlyRevenue"),
       bestTime: formData.get("bestTime"),
       helpNeeded: formData.get("helpNeeded"),
+
+      // Extra EmailJS fields
+      name: fullName,
+      from_name: fullName,
+      user_name: fullName,
+      user_email: email,
+      to_email: email,
+      reply_to: email,
     };
 
     try {
-      // Send company email
       await emailjs.send(
         SERVICE_ID,
         COMPANY_TEMPLATE_ID,
@@ -54,7 +62,6 @@ export default function Booking() {
         PUBLIC_KEY
       );
 
-      // Send customer auto-reply
       await emailjs.send(
         SERVICE_ID,
         CUSTOMER_TEMPLATE_ID,
@@ -64,24 +71,16 @@ export default function Booking() {
 
       setSubmitted(true);
       form.reset();
-
-      if (
-        selectedType.id !== "quick" &&
-        selectedType.paymentLink
-      ) {
-        window.open(selectedType.paymentLink, "_blank");
-      }
     } catch (error) {
-      console.error(error);
-      alert("Something went wrong. Please try again.");
+      console.error("EmailJS error:", error);
+      alert(error?.text || "Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (
     <main className="bg-[#050505] text-white">
-      {/* HERO */}
       <section className="relative min-h-[520px] bg-[url('/images/truck2.PNG')] bg-cover bg-center">
         <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-black/30"></div>
 
@@ -94,31 +93,22 @@ export default function Booking() {
             <h1 className="mt-4 text-4xl font-black uppercase leading-tight md:text-7xl">
               Build Smarter.
               <br />
-              <span className="text-[#D4AF37]">
-                Scale Stronger.
-              </span>
+              <span className="text-[#D4AF37]">Scale Stronger.</span>
             </h1>
 
             <p className="mt-6 max-w-2xl text-lg leading-relaxed text-white/80">
-              Choose the right consultation level and tell us
-              about your trucking business. Our team will
-              review your request and contact you shortly.
+              Tell us about your trucking business. Our team will review your
+              request and contact you shortly.
             </p>
 
             <div className="mt-8 flex flex-wrap gap-4">
               <div className="flex items-center gap-2 text-white/80">
-                <Phone
-                  size={18}
-                  className="text-[#D4AF37]"
-                />
+                <Phone size={18} className="text-[#D4AF37]" />
                 603-713-7917
               </div>
 
               <div className="flex items-center gap-2 text-white/80">
-                <Mail
-                  size={18}
-                  className="text-[#D4AF37]"
-                />
+                <Mail size={18} className="text-[#D4AF37]" />
                 ceo@apexrouteconsulting.com
               </div>
             </div>
@@ -126,7 +116,6 @@ export default function Booking() {
         </div>
       </section>
 
-      {/* FORM */}
       <section className="mx-auto grid max-w-7xl gap-8 px-6 pb-20 pt-16 md:grid-cols-[1.1fr_0.9fr] md:px-8">
         <form
           onSubmit={handleSubmit}
@@ -137,68 +126,18 @@ export default function Booking() {
           </p>
 
           <h2 className="mt-3 text-3xl font-black uppercase">
-            Tell Us About{" "}
-            <span className="text-[#D4AF37]">
-              Your Business
-            </span>
+            Tell Us About <span className="text-[#D4AF37]">Your Business</span>
           </h2>
 
           <div className="mt-6 grid gap-4 md:grid-cols-2">
-            <input
-              name="fullName"
-              placeholder="Full Name"
-              required
-              className="input-style"
-            />
-
-            <input
-              name="companyName"
-              placeholder="Company Name"
-              required
-              className="input-style"
-            />
-
-            <input
-              type="email"
-              name="email"
-              placeholder="Email Address"
-              required
-              className="input-style"
-            />
-
-            <input
-              name="phone"
-              placeholder="Phone Number"
-              required
-              className="input-style"
-            />
-
-            <input
-              name="mcDot"
-              placeholder="MC/DOT Number (Optional)"
-              className="input-style"
-            />
-
-            <input
-              name="equipmentType"
-              placeholder="Equipment Type"
-              required
-              className="input-style"
-            />
-
-            <input
-              name="monthlyRevenue"
-              placeholder="Current Monthly Revenue"
-              required
-              className="input-style"
-            />
-
-            <input
-              name="bestTime"
-              placeholder="Best Time To Contact"
-              required
-              className="input-style"
-            />
+            <input name="fullName" placeholder="Full Name" required className="input-style" />
+            <input name="companyName" placeholder="Company Name" required className="input-style" />
+            <input type="email" name="email" placeholder="Email Address" required className="input-style" />
+            <input name="phone" placeholder="Phone Number" required className="input-style" />
+            <input name="mcDot" placeholder="MC/DOT Number (Optional)" className="input-style" />
+            <input name="equipmentType" placeholder="Equipment Type" required className="input-style" />
+            <input name="monthlyRevenue" placeholder="Current Monthly Revenue" required className="input-style" />
+            <input name="bestTime" placeholder="Best Time To Contact" required className="input-style" />
           </div>
 
           <textarea
@@ -211,13 +150,10 @@ export default function Booking() {
           <button
             type="submit"
             disabled={loading}
-            className="mt-6 inline-flex w-full items-center justify-center gap-3 bg-[#D4AF37] px-8 py-4 text-sm font-black uppercase text-black transition hover:bg-white"
+            className="mt-6 inline-flex w-full items-center justify-center gap-3 bg-[#D4AF37] px-8 py-4 text-sm font-black uppercase text-black transition hover:bg-white disabled:opacity-60"
           >
             <FaCalendarAlt />
-
-            {loading
-              ? "Submitting..."
-              : "Submit Consultation Request"}
+            {loading ? "Submitting..." : "Submit Consultation Request"}
           </button>
 
           {submitted && (
@@ -225,27 +161,18 @@ export default function Booking() {
               <p className="font-bold text-[#D4AF37]">
                 ✓ Request Submitted Successfully
               </p>
-
-              <p className="mt-2 text-sm text-white">
-                Thank you for booking with Apex Route
-                Consultant Group.
-              </p>
-
               <p className="mt-2 text-sm text-white/80">
-                Your consultation request has been received.
-                A pending confirmation email has been sent to
-                your inbox.
+                Your consultation request has been received. A pending
+                confirmation email has been sent to your inbox.
               </p>
             </div>
           )}
 
           <p className="mt-4 text-xs text-white/60">
-            🔒 Your information is secure and will never be
-            shared.
+            🔒 Your information is secure and will never be shared.
           </p>
         </form>
 
-        {/* RIGHT PANEL */}
         <div className="rounded-md border border-white/10 bg-white/[0.04] p-8">
           <p className="font-black uppercase text-[#D4AF37]">
             What Happens Next?
@@ -256,27 +183,16 @@ export default function Booking() {
           </h2>
 
           <ul className="mt-6 space-y-4 text-white/75">
-            <li>
-              ✅ Company receives consultation request
-            </li>
-            <li>
-              ✅ Customer receives pending confirmation
-              email
-            </li>
-            <li>
-              ✅ Team reviews request
-            </li>
-            <li>
-              ✅ Customer gets approved/cancelled email
-              later
-            </li>
+            <li>✅ Company receives consultation request</li>
+            <li>✅ Customer receives pending confirmation email</li>
+            <li>✅ Team reviews request</li>
+            <li>✅ Customer gets approved/cancelled email later</li>
           </ul>
 
           <div className="mt-8 rounded bg-black/40 p-5">
             <p className="text-sm leading-relaxed text-white/70">
-              Our team reviews each request carefully to
-              ensure the right consultation path for your
-              business needs.
+              Our team reviews each request carefully to ensure the right
+              consultation path for your business needs.
             </p>
           </div>
         </div>
