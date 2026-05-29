@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router";
 import { FaCalendarAlt } from "react-icons/fa";
+
 export default function Home() {
   const benefits = [
     [TrendingUp, "Maximize Profit", "Increase revenue and reduce deadhead."],
@@ -18,10 +19,26 @@ export default function Home() {
   ];
 
   const services = [
-    [Route, "Route & Lane Strategy", "Find the most profitable lanes and build efficient routes that maximize your miles."],
-    [DollarSign, "Financial Consulting", "Improve cash flow, lower costs, and increase your bottom line."],
-    [ClipboardCheck, "Compliance Support", "Stay DOT compliant and audit-ready with expert guidance."],
-    [Users, "Dispatch & Operations", "Optimize load planning, reduce downtime, and run a smoother operation."],
+    [
+      Route,
+      "Route & Lane Strategy",
+      "Find the most profitable lanes and build efficient routes that maximize your miles.",
+    ],
+    [
+      DollarSign,
+      "Financial Consulting",
+      "Improve cash flow, lower costs, and increase your bottom line.",
+    ],
+    [
+      ClipboardCheck,
+      "Compliance Support",
+      "Stay DOT compliant and audit-ready with expert guidance.",
+    ],
+    [
+      Users,
+      "Dispatch & Operations",
+      "Optimize load planning, reduce downtime, and run a smoother operation.",
+    ],
   ];
 
   return (
@@ -39,7 +56,9 @@ export default function Home() {
             <h1 className="heading-xl uppercase text-white">
               By Carriers.
               <br />
-              <span className="text-[#D4AF37]">For Carriers.</span>
+              <span className="text-[#D4AF37]">
+                For Carriers.
+              </span>
             </h1>
 
             <p className="mt-7 text-2xl font-semibold text-white">
@@ -48,18 +67,29 @@ export default function Home() {
               Real Results.
             </p>
 
-            <div className="mt-9 flex gap-5">
-            <Link
-            to="/booking"
-            className="bg-[#D4AF37] px-8 py-4 inline-flex items-center gap-2 text-sm font-bold uppercase text-black"
-            >
-            <FaCalendarAlt size={18} />
-            Book Consultation
-            </Link>
+            {/* BUTTONS */}
+            <div className="mt-9 flex flex-wrap gap-5">
+              <Link
+                to="/booking"
+                className="bg-[#D4AF37] px-8 py-4 inline-flex items-center gap-2 text-sm font-bold uppercase text-black transition hover:bg-white"
+              >
+                <FaCalendarAlt size={18} />
+                Book Consultation
+              </Link>
+
+              <a
+                href="https://stan.store/Apexroute"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="border border-[#D4AF37] px-8 py-4 inline-flex items-center gap-2 text-sm font-black uppercase text-white transition hover:bg-[#D4AF37] hover:text-black"
+              >
+                <FaCalendarAlt size={18} />
+                Apply For Apex Mentorship
+              </a>
 
               <Link
                 to="/services"
-                className="border border-[#D4AF37] px-8 py-4 text-sm font-black uppercase text-white hover:bg-[#D4AF37] hover:text-black"
+                className="border border-[#D4AF37] px-8 py-4 text-sm font-black uppercase text-white transition hover:bg-[#D4AF37] hover:text-black"
               >
                 Our Services
               </Link>
@@ -71,10 +101,20 @@ export default function Home() {
       {/* BENEFITS */}
       <section className="mx-auto grid max-w-7xl gap-8 border-b border-white/10 px-8 py-12 md:grid-cols-4">
         {benefits.map(([Icon, title, text]) => (
-          <div key={title} className="border-r border-white/20 text-center last:border-r-0">
-            <Icon className="mx-auto mb-4 text-[#D4AF37]" size={44} />
-            <h3 className="font-black uppercase text-white">{title}</h3>
-            <p className="mx-auto mt-2 max-w-[180px] text-sm text-white/70">{text}</p>
+          <div
+            key={title}
+            className="border-r border-white/20 text-center last:border-r-0"
+          >
+            <Icon
+              className="mx-auto mb-4 text-[#D4AF37]"
+              size={44}
+            />
+            <h3 className="font-black uppercase text-white">
+              {title}
+            </h3>
+            <p className="mx-auto mt-2 max-w-[180px] text-sm text-white/70">
+              {text}
+            </p>
           </div>
         ))}
       </section>
@@ -82,12 +122,16 @@ export default function Home() {
       {/* ABOUT */}
       <section className="mx-auto grid max-w-7xl gap-14 border-b border-white/10 px-8 py-16 md:grid-cols-2">
         <div>
-          <p className="font-black uppercase text-[#D4AF37]">About Us</p>
+          <p className="font-black uppercase text-[#D4AF37]">
+            About Us
+          </p>
 
           <h2 className="mt-4 text-4xl font-black leading-tight text-white md:text-5xl">
             We’ve Been in the Seat.
             <br />
-            <span className="text-[#D4AF37]">Now We’re in Your Corner.</span>
+            <span className="text-[#D4AF37]">
+              Now We’re in Your Corner.
+            </span>
           </h2>
 
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/75">
@@ -114,7 +158,9 @@ export default function Home() {
 
       {/* SERVICES */}
       <section className="mx-auto max-w-7xl border-b border-white/10 px-8 py-16 text-center">
-        <p className="font-black uppercase text-[#D4AF37]">Our Services</p>
+        <p className="font-black uppercase text-[#D4AF37]">
+          Our Services
+        </p>
 
         <h2 className="mt-3 text-4xl font-black text-white">
           Solutions That Drive Results
@@ -126,9 +172,19 @@ export default function Home() {
               key={title}
               className="rounded-md border border-white/10 bg-white/[0.04] p-8 transition hover:border-[#D4AF37]"
             >
-              <Icon className="mx-auto mb-5 text-[#D4AF37]" size={54} />
-              <h3 className="text-lg font-black uppercase text-white">{title}</h3>
-              <p className="mt-4 text-sm leading-relaxed text-white/70">{text}</p>
+              <Icon
+                className="mx-auto mb-5 text-[#D4AF37]"
+                size={54}
+              />
+
+              <h3 className="text-lg font-black uppercase text-white">
+                {title}
+              </h3>
+
+              <p className="mt-4 text-sm leading-relaxed text-white/70">
+                {text}
+              </p>
+
               <div className="mx-auto mt-7 h-[2px] w-24 bg-[#D4AF37]"></div>
             </div>
           ))}
@@ -147,26 +203,42 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-r from-black via-black/75 to-black/20"></div>
 
         <div className="relative mx-auto max-w-7xl px-8 py-16">
-          <p className="font-black uppercase text-[#D4AF37]">Ready to Level Up?</p>
+          <p className="font-black uppercase text-[#D4AF37]">
+            Ready to Level Up?
+          </p>
 
           <h2 className="mt-3 text-5xl font-black leading-tight text-white">
             Let’s Build Your
             <br />
-            <span className="text-[#D4AF37]">Next Successful Mile.</span>
+            <span className="text-[#D4AF37]">
+              Next Successful Mile.
+            </span>
           </h2>
 
           <p className="mt-5 max-w-xl subtext">
-            Book a free consultation and see how the right strategy can change
-            your whole business.
+            Book a free consultation or apply for mentorship and start building
+            a stronger trucking business today.
           </p>
 
-          <Link
-          to="/booking"
-          className="bg-[#D4AF37] px-8 py-4 inline-flex items-center gap-2 text-sm font-bold uppercase text-black mt-10"
-          >
-          <FaCalendarAlt size={18} />
-          Book Consultation
-          </Link>
+          <div className="mt-10 flex flex-wrap gap-5">
+            <Link
+              to="/booking"
+              className="bg-[#D4AF37] px-8 py-4 inline-flex items-center gap-2 text-sm font-bold uppercase text-black transition hover:bg-white"
+            >
+              <FaCalendarAlt size={18} />
+              Book Consultation
+            </Link>
+
+            <a
+              href="https://stan.store/Apexroute"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="border border-[#D4AF37] px-8 py-4 inline-flex items-center gap-2 text-sm font-black uppercase text-white transition hover:bg-[#D4AF37] hover:text-black"
+            >
+              <FaCalendarAlt size={18} />
+              Apply For Apex Mentorship
+            </a>
+          </div>
         </div>
       </section>
     </main>
