@@ -12,10 +12,26 @@ import { FaCalendarAlt } from "react-icons/fa";
 
 export default function Home() {
   const benefits = [
-    [TrendingUp, "Maximize Profit", "Increase revenue and reduce deadhead."],
-    [Shield, "Reduce Risk", "Stay compliant and protect your business."],
-    [Clock, "Save Time", "Streamline operations and load planning."],
-    [Users, "Real Support", "Access real carriers who understand."],
+    [
+      TrendingUp,
+      "Maximize Profit",
+      "Increase revenue and reduce deadhead.",
+    ],
+    [
+      Shield,
+      "Reduce Risk",
+      "Stay compliant and protect your business.",
+    ],
+    [
+      Clock,
+      "Save Time",
+      "Streamline operations and load planning.",
+    ],
+    [
+      Users,
+      "Real Support",
+      "Access real carriers who understand.",
+    ],
   ];
 
   const services = [
@@ -68,31 +84,39 @@ export default function Home() {
             </p>
 
             {/* BUTTONS */}
-            <div className="mt-9 flex flex-wrap gap-5">
-              <Link
-                to="/booking"
-                className="bg-[#D4AF37] px-8 py-4 inline-flex items-center gap-2 text-sm font-bold uppercase text-black transition hover:bg-white"
-              >
-                <FaCalendarAlt size={18} />
-                Book Consultation
-              </Link>
+            <div className="mt-9">
+              {/* TOP ROW */}
+              <div className="flex flex-wrap gap-5">
+                {/* BOOK CONSULTATION */}
+                <Link
+                  to="/booking"
+                  className="bg-[#D4AF37] px-8 py-4 inline-flex items-center gap-2 text-sm font-bold uppercase text-black transition hover:bg-white"
+                >
+                  <FaCalendarAlt size={18} />
+                  Book Consultation
+                </Link>
 
-              <a
-                href="https://stan.store/Apexroute"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="border border-[#D4AF37] px-8 py-4 inline-flex items-center gap-2 text-sm font-black uppercase text-white transition hover:bg-[#D4AF37] hover:text-black"
-              >
-                <FaCalendarAlt size={18} />
-                Apply For Apex Mentorship
-              </a>
+                {/* OUR SERVICES */}
+                <Link
+                  to="/services"
+                  className="border border-[#D4AF37] px-8 py-4 inline-flex items-center gap-2 text-sm font-black uppercase text-white transition hover:bg-[#D4AF37] hover:text-black"
+                >
+                  Our Services
+                </Link>
+              </div>
 
-              <Link
-                to="/services"
-                className="border border-[#D4AF37] px-8 py-4 text-sm font-black uppercase text-white transition hover:bg-[#D4AF37] hover:text-black"
-              >
-                Our Services
-              </Link>
+              {/* BOTTOM BUTTON */}
+              <div className="mt-4">
+                <a
+                  href="https://stan.store/Apexroute"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-[#D4AF37] px-8 py-4 inline-flex items-center gap-2 text-sm font-bold uppercase text-black transition hover:bg-white"
+                >
+                  <FaCalendarAlt size={18} />
+                  Apply For Apex Mentorship
+                </a>
+              </div>
             </div>
           </div>
         </div>
@@ -135,10 +159,11 @@ export default function Home() {
           </h2>
 
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/75">
-            Apex Route Consultant Group was founded by carriers who’ve lived the
-            grind. We know the challenges because we’ve faced them ourselves.
-            Now, we help carriers across the country build stronger, more
-            profitable businesses.
+            Apex Route Consultant Group was founded by
+            carriers who’ve lived the grind. We know the
+            challenges because we’ve faced them ourselves.
+            Now, we help carriers across the country build
+            stronger, more profitable businesses.
           </p>
 
           <Link
@@ -184,8 +209,6 @@ export default function Home() {
               <p className="mt-4 text-sm leading-relaxed text-white/70">
                 {text}
               </p>
-
-              <div className="mx-auto mt-7 h-[2px] w-24 bg-[#D4AF37]"></div>
             </div>
           ))}
         </div>
@@ -196,50 +219,6 @@ export default function Home() {
         >
           View All Services
         </Link>
-      </section>
-
-      {/* CTA */}
-      <section className="relative bg-[url('/images/lefttruck.png')] bg-cover bg-center">
-        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/75 to-black/20"></div>
-
-        <div className="relative mx-auto max-w-7xl px-8 py-16">
-          <p className="font-black uppercase text-[#D4AF37]">
-            Ready to Level Up?
-          </p>
-
-          <h2 className="mt-3 text-5xl font-black leading-tight text-white">
-            Let’s Build Your
-            <br />
-            <span className="text-[#D4AF37]">
-              Next Successful Mile.
-            </span>
-          </h2>
-
-          <p className="mt-5 max-w-xl subtext">
-            Book a free consultation or apply for mentorship and start building
-            a stronger trucking business today.
-          </p>
-
-          <div className="mt-10 flex flex-wrap gap-5">
-            <Link
-              to="/booking"
-              className="bg-[#D4AF37] px-8 py-4 inline-flex items-center gap-2 text-sm font-bold uppercase text-black transition hover:bg-white"
-            >
-              <FaCalendarAlt size={18} />
-              Book Consultation
-            </Link>
-
-            <a
-              href="https://stan.store/Apexroute"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="border border-[#D4AF37] px-8 py-4 inline-flex items-center gap-2 text-sm font-black uppercase text-white transition hover:bg-[#D4AF37] hover:text-black"
-            >
-              <FaCalendarAlt size={18} />
-              Apply For Apex Mentorship
-            </a>
-          </div>
-        </div>
       </section>
     </main>
   );
