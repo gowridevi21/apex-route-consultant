@@ -1,11 +1,16 @@
 import { useState } from "react";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { Link, useNavigate } from "react-router";
 import { auth } from "../firebase";
 
 export default function Signin() {
   const navigate = useNavigate();
-  const [form, setForm] = useState({ email: "", password: "" });
+
+  const [form, setForm] = useState({
+    email: "",
+    password: "",
+  });
+
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -15,7 +20,19 @@ export default function Signin() {
     setLoading(true);
 
     try {
-      await signInWithEmailAndPassword(auth, form.email, form.password);
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        form.email,
+        form.password
+      );
+
+      if (!userCredential.user.emailVerified) {
+        await signOut(auth);
+        setError("Please verify your email before signing in.");
+        setLoading(false);
+        return;
+      }
+
       navigate("/");
     } catch (err) {
       setError(err.message);
@@ -29,9 +46,7 @@ export default function Signin() {
       <div className="mx-auto max-w-md rounded-md border border-white/10 bg-white/[0.04] p-8">
         <p className="font-black uppercase text-[#D4AF37]">Welcome Back</p>
 
-        <h1 className="mt-3 text-3xl font-black uppercase">
-          Sign In
-        </h1>
+        <h1 className="mt-3 text-3xl font-black uppercase">Sign In</h1>
 
         <form onSubmit={handleSignin} className="mt-6 space-y-4">
           <input
@@ -54,7 +69,7 @@ export default function Signin() {
 
           <button
             disabled={loading}
-            className="w-full bg-[#D4AF37] px-8 py-4 text-sm font-black uppercase text-black hover:bg-white"
+            className="w-full bg-[#D4AF37] px-8 py-4 text-sm font-black uppercase text-black hover:bg-white disabled:opacity-60"
           >
             {loading ? "Signing In..." : "Sign In"}
           </button>

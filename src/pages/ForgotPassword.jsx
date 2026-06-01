@@ -4,18 +4,29 @@ import { Link } from "react-router";
 import { auth } from "../firebase";
 
 export default function ForgotPassword() {
-  const [email, setEmail] = useState("");
+  const [identifier, setIdentifier] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+
+  const isEmail = identifier.includes("@");
 
   const handleReset = async (e) => {
     e.preventDefault();
     setMessage("");
     setError("");
 
+    if (!isEmail) {
+      setError(
+        "Password reset is currently available by email only. Please enter your account email address."
+      );
+      return;
+    }
+
     try {
-      await sendPasswordResetEmail(auth, email);
-      setMessage("Password reset link sent. Please check your email.");
+      await sendPasswordResetEmail(auth, identifier);
+      setMessage(
+        "Password reset link sent. Please check your email, reset your password, then return to sign in."
+      );
     } catch (err) {
       setError(err.message);
     }
@@ -26,17 +37,19 @@ export default function ForgotPassword() {
       <div className="mx-auto max-w-md rounded-md border border-white/10 bg-white/[0.04] p-8">
         <p className="font-black uppercase text-[#D4AF37]">Reset Password</p>
 
-        <h1 className="mt-3 text-3xl font-black uppercase">
-          Forgot Password
-        </h1>
+        <h1 className="mt-3 text-3xl font-black uppercase">Forgot Password</h1>
+
+        <p className="mt-3 text-sm text-white/70">
+          Enter your email address to receive a password reset link.
+        </p>
 
         <form onSubmit={handleReset} className="mt-6 space-y-4">
           <input
             required
-            type="email"
-            placeholder="Email Address"
+            type="text"
+            placeholder="Email Address or Phone Number"
             className="input-style"
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => setIdentifier(e.target.value)}
           />
 
           {message && <p className="text-sm text-green-400">{message}</p>}
