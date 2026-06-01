@@ -97,14 +97,7 @@ export default function Navbar() {
           ))}
 
           <div className="mt-4 flex flex-col gap-3">
-            <Link
-              to="/signin"
-              onClick={() => setOpen(false)}
-              className="border border-white/20 px-5 py-3 text-center text-sm font-black uppercase text-white"
-            >
-              Sign In
-            </Link>
-
+            
             <Link
               to="/signup"
               onClick={() => setOpen(false)}

@@ -1,16 +1,21 @@
+// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
 
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyDioa6dQt0RrsxKoz1pmiWOivqWa37UKdA",
-  authDomain: "apex-route-website.firebaseapp.com",
-  projectId: "apex-route-website",
-  storageBucket: "apex-route-website.firebasestorage.app",
-  messagingSenderId: "547865633571",
-  appId: "1:547865633571:web:f7eb187c8f083b6838e296",
-  measurementId: "G-9MV99CHP39",
+  apiKey: "AIzaSyBjE-_d-UsuRp_wt2hfl6iDUsijZ0KgrtY",
+  authDomain: "apex-route-website-ee028.firebaseapp.com",
+  projectId: "apex-route-website-ee028",
+  storageBucket: "apex-route-website-ee028.firebasestorage.app",
+  messagingSenderId: "363309109942",
+  appId: "1:363309109942:web:f2b471d12aa3f62f550c17",
+  measurementId: "G-FDZQSFPMY7"
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-
 export const auth = getAuth(app);
