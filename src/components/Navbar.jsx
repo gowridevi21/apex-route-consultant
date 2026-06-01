@@ -50,13 +50,7 @@ export default function Navbar() {
 
         {/* DESKTOP BUTTONS */}
         <div className="hidden items-center gap-3 md:flex">
-          <Link
-            to="/signin"
-            className="border border-white/20 px-4 py-2 text-sm font-black uppercase text-white transition hover:border-[#D4AF37] hover:text-[#D4AF37]"
-          >
-            Sign In
-          </Link>
-
+          
           <Link
             to="/signup"
             className="bg-[#D4AF37] px-4 py-2 text-sm font-black uppercase text-black transition hover:bg-white"
