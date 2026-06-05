@@ -55,7 +55,7 @@ export default function Navbar() {
             to="/signup"
             className="bg-[#D4AF37] px-4 py-2 text-sm font-black uppercase text-black transition hover:bg-white"
           >
-            Sign Up
+            Sign Up/Signin
           </Link>
 
           <Link
