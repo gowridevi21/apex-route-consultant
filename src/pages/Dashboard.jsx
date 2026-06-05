@@ -43,7 +43,7 @@ export default function Dashboard() {
   ];
 
   return (
-    <main className="min-h-screen bg-[#050505] px-4 pb-16 pt-28 text-black md:px-8">
+    <main className="min-h-screen bg-[#050505] px-4 pb-16 pt-8 text-black md:px-8">
       <section className="mx-auto max-w-7xl">
         {/* PAGE INTRO */}
         <div className="mb-8">
