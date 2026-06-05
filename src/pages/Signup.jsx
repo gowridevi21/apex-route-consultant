@@ -44,20 +44,13 @@ await setDoc(doc(db, "users", userCredential.user.uid), {
   fullName: form.name,
   phone: form.phone,
   email: form.email,
-
   progress: 0,
-
   purchases: [],
-
   documents: [],
-
-  timeline: [
-    {
-      phase: "Phase 1",
-      status: "Pending",
-    },
-  ],
-
+  nextStep: "No action assigned yet",
+  timeline: [],
+  currentPhase: "Not started",
+  role: "client",
   createdAt: new Date(),
 });
 
