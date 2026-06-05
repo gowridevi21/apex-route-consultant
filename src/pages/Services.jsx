@@ -25,6 +25,7 @@ export default function Services() {
         "Revenue planning",
         "Weekly support/check-ins",
         "Operations improvement",
+        "System & operations setup for free",
       ],
       cta: "Apply For Mentorship",
       link: "https://stan.store/Apexroute",
