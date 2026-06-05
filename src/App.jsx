@@ -21,6 +21,7 @@ export default function App() {
   const location = useLocation();
   const hideLayout =
   location.pathname === "/load-analyzer-export";
+  location.pathname === "/dashboard";
   return (
     <>
       <ScrollToTop />
