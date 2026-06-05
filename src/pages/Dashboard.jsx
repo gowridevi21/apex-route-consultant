@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { onAuthStateChanged, signOut } from "firebase/auth";
-import { auth } from "../firebase";
+import { doc, getDoc } from "firebase/firestore";
+import { auth, db } from "../firebase";
 import {
   FileText,
   LayoutDashboard,
@@ -16,36 +17,50 @@ import {
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  const [clientName, setClientName] = useState("Client");
 
-  const clientData = {
-    purchasedSystems: "90-Day Mentorship Program",
-    progressScore: "62% complete",
-    nextStep: "Book weekly call",
-    documents: [
-      { name: "Mentorship Agreement.pdf", type: "Agreement" },
-      { name: "Operations Setup Checklist.pdf", type: "Checklist" },
-      { name: "Apex Money System.pdf", type: "Money System" },
-      { name: "Progress Report.pdf", type: "Progress" },
-    ],
-    progressTimeline: [
-      { phase: "Phase 1 - Complete", status: "complete" },
-      { phase: "Phase 2 - Active", status: "active" },
-      { phase: "Phase 3 - Locked", status: "locked" },
-    ],
-    currentPhase: "Phase 2 - Operational Training Dashboard",
-  };
+  const [loading, setLoading] = useState(true);
+  const [clientName, setClientName] = useState("Client");
+  const [clientData, setClientData] = useState({
+    purchases: [],
+    documents: [],
+    progress: 0,
+    nextStep: "No action assigned yet",
+    timeline: [],
+    currentPhase: "Not started",
+  });
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (!user) {
         navigate("/signin");
         return;
       }
 
-      const displayName = user.displayName || "Client";
-      const cleanName = displayName.split("|")[0].trim();
-      setClientName(cleanName);
+      try {
+        const userRef = doc(db, "users", user.uid);
+        const userSnap = await getDoc(userRef);
+
+        if (userSnap.exists()) {
+          const data = userSnap.data();
+
+          setClientName(data.fullName || user.displayName || "Client");
+
+          setClientData({
+            purchases: data.purchases || [],
+            documents: data.documents || [],
+            progress: data.progress || 0,
+            nextStep: data.nextStep || "No action assigned yet",
+            timeline: data.timeline || [],
+            currentPhase: data.currentPhase || "Not started",
+          });
+        } else {
+          setClientName(user.displayName || "Client");
+        }
+      } catch (error) {
+        console.error("Dashboard data error:", error);
+      }
+
+      setLoading(false);
     });
 
     return () => unsubscribe();
@@ -66,6 +81,14 @@ export default function Dashboard() {
     ["Support", "/support", MessageSquare],
     ["Profile", "/profile", User],
   ];
+
+  if (loading) {
+    return (
+      <main className="min-h-screen bg-[#050505] px-4 pt-8 text-white md:px-8">
+        <p className="text-[#D4AF37]">Loading dashboard...</p>
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-[#050505] px-4 pb-16 pt-8 text-black md:px-8">
@@ -138,16 +161,17 @@ export default function Dashboard() {
               </h2>
 
               <p className="mt-3 text-gray-600">
-                Your purchases, progress reports, action steps, and resources are organized here.
+                Your purchases, progress reports, action steps, and resources
+                are organized here.
               </p>
 
               <div className="mt-6 grid gap-5 md:grid-cols-3">
                 <div className="border border-gray-300 bg-white p-5 shadow-sm">
                   <p className="text-sm font-black uppercase text-gray-500">
-                    Purchased System
+                    Purchased Systems
                   </p>
-                  <p className="mt-2 text-xl font-black text-[#c28f00]">
-                    {clientData.purchasedSystems}
+                  <p className="mt-2 text-2xl font-black text-[#c28f00]">
+                    {clientData.purchases.length}
                   </p>
                 </div>
 
@@ -156,7 +180,7 @@ export default function Dashboard() {
                     Progress Score
                   </p>
                   <p className="mt-2 text-2xl font-black text-[#c28f00]">
-                    {clientData.progressScore}
+                    {clientData.progress}% complete
                   </p>
                 </div>
 
@@ -164,7 +188,7 @@ export default function Dashboard() {
                   <p className="text-sm font-black uppercase text-gray-500">
                     Next Step
                   </p>
-                  <p className="mt-2 text-2xl font-black text-[#c28f00]">
+                  <p className="mt-2 text-xl font-black text-[#c28f00]">
                     {clientData.nextStep}
                   </p>
                 </div>
@@ -186,27 +210,41 @@ export default function Dashboard() {
                   </div>
 
                   <div className="mt-5 space-y-3">
-                    {clientData.documents.map((doc) => (
-                      <div
-                        key={doc.name}
-                        className="flex flex-col gap-3 border-b border-gray-200 pb-3 last:border-b-0 sm:flex-row sm:items-center sm:justify-between"
-                      >
-                        <div className="flex items-center gap-3">
-                          <span className="flex h-7 w-7 items-center justify-center border-2 border-[#caa12a]">
-                            <FileText size={15} className="text-[#caa12a]" />
-                          </span>
+                    {clientData.documents.length === 0 ? (
+                      <div className="rounded border border-dashed border-gray-300 p-6 text-sm text-gray-500">
+                        No purchased documents yet. Once a product is purchased,
+                        documents will appear here.
+                      </div>
+                    ) : (
+                      clientData.documents.map((docItem) => (
+                        <div
+                          key={docItem.name}
+                          className="flex flex-col gap-3 border-b border-gray-200 pb-3 last:border-b-0 sm:flex-row sm:items-center sm:justify-between"
+                        >
+                          <div className="flex items-center gap-3">
+                            <span className="flex h-7 w-7 items-center justify-center border-2 border-[#caa12a]">
+                              <FileText
+                                size={15}
+                                className="text-[#caa12a]"
+                              />
+                            </span>
 
-                          <div>
-                            <p className="text-sm font-bold">{doc.name}</p>
-                            <p className="text-xs text-gray-500">{doc.type}</p>
+                            <div>
+                              <p className="text-sm font-bold">
+                                {docItem.name}
+                              </p>
+                              <p className="text-xs text-gray-500">
+                                {docItem.type || "Document"}
+                              </p>
+                            </div>
+                          </div>
+
+                          <div className="text-sm font-bold text-[#c28f00]">
+                            View | Save
                           </div>
                         </div>
-
-                        <div className="text-sm font-bold text-[#c28f00]">
-                          View | Save
-                        </div>
-                      </div>
-                    ))}
+                      ))
+                    )}
                   </div>
                 </div>
 
@@ -214,30 +252,36 @@ export default function Dashboard() {
                   <h3 className="text-xl font-black">Progress Timeline</h3>
 
                   <div className="mt-6 space-y-5">
-                    {clientData.progressTimeline.map((item) => (
-                      <div
-                        key={item.phase}
-                        className={`flex items-center gap-4 ${
-                          item.status === "locked" ? "text-gray-500" : ""
-                        }`}
-                      >
-                        {item.status === "locked" ? (
-                          <span className="flex h-5 w-5 items-center justify-center bg-gray-300">
-                            <Lock size={13} />
-                          </span>
-                        ) : (
-                          <span className="h-5 w-5 bg-[#caa12a]"></span>
-                        )}
-
-                        <span
-                          className={
-                            item.status === "locked" ? "" : "font-bold"
-                          }
-                        >
-                          {item.phase}
-                        </span>
+                    {clientData.timeline.length === 0 ? (
+                      <div className="rounded border border-dashed border-gray-300 p-5 text-sm text-gray-500">
+                        No progress started yet.
                       </div>
-                    ))}
+                    ) : (
+                      clientData.timeline.map((item) => (
+                        <div
+                          key={item.phase}
+                          className={`flex items-center gap-4 ${
+                            item.status === "locked" ? "text-gray-500" : ""
+                          }`}
+                        >
+                          {item.status === "locked" ? (
+                            <span className="flex h-5 w-5 items-center justify-center bg-gray-300">
+                              <Lock size={13} />
+                            </span>
+                          ) : (
+                            <span className="h-5 w-5 bg-[#caa12a]"></span>
+                          )}
+
+                          <span
+                            className={
+                              item.status === "locked" ? "" : "font-bold"
+                            }
+                          >
+                            {item.phase}
+                          </span>
+                        </div>
+                      ))
+                    )}
                   </div>
 
                   <div className="mt-8 border-l-4 border-[#caa12a] bg-[#f2efe4] p-4">
@@ -283,12 +327,6 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
-
-        <p className="mt-5 text-sm text-white/50">
-          Note: Purchased documents and progress are currently sample data. Next
-          step is connecting Firestore so Apex admin can update each client’s
-          purchases, documents, and progress separately.
-        </p>
       </section>
     </main>
   );
