@@ -33,7 +33,7 @@ export default function Signin() {
         return;
       }
 
-      navigate("/");
+      navigate("/dashboard");
     } catch (err) {
       setError(err.message);
     }

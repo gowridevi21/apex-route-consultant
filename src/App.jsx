@@ -7,6 +7,7 @@ import Signup from "./pages/Signup";
 import ForgotPassword from "./pages/ForgotPassword";
 import Dashboard from "./pages/Dashboard";
 import LoadAnalyzerExport from "./pages/LoadAnalyzerExport";
+import { useLocation } from "react-router";
 
 import Home from "./pages/Home";
 import About from "./pages/About";
@@ -17,11 +18,14 @@ import Booking from "./pages/Booking";
 
 
 export default function App() {
+  const location = useLocation();
+  const hideLayout =
+  location.pathname === "/load-analyzer-export";
   return (
     <>
       <ScrollToTop />
 
-      <Navbar />
+      {!hideLayout && <Navbar />}
 
       <Routes>
         <Route path="/" element={<Home />} />

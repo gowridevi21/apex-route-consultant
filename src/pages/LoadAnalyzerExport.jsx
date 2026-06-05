@@ -29,7 +29,7 @@ export default function LoadAnalyzerExport() {
     "Hi, thank you for the offer. Based on the loaded miles, deadhead, fuel cost, and current profitability target, we would be able to move this load at $2,150. That rate allows us to cover operating costs and maintain a safe profit margin. Please let me know if we can get this approved.";
 
   return (
-    <main className="min-h-screen bg-[#050505] px-6 pb-20 pt-32 text-white md:px-8">
+    <main className="min-h-screen bg-[#050505] px-6 py-6 text-white md:px-8">
       <section className="mx-auto max-w-6xl rounded-md border border-[#D4AF37]/30 bg-black p-8">
         {/* HEADER */}
         <div className="flex flex-col gap-6 border-b border-[#D4AF37]/30 pb-8 md:flex-row md:items-center md:justify-between">
@@ -41,20 +41,20 @@ export default function LoadAnalyzerExport() {
             />
 
             <div>
-              <p className="font-black uppercase text-[#D4AF37]">
-                Apex Load Analyzer
-              </p>
-
-              <h1 className="text-3xl font-black uppercase text-white md:text-5xl">
-                Export Summary
+              <h1 className="text-4xl font-black uppercase text-white">
+                Universal Load Analyzer
               </h1>
+
+              <p className="mt-2 font-semibold uppercase tracking-wider text-[#D4AF37]">
+                Professional Export Report
+              </p>
             </div>
           </div>
 
           <div className="flex flex-wrap gap-3 print:hidden">
             <button
               onClick={handlePrint}
-              className="inline-flex items-center gap-2 bg-[#D4AF37] px-5 py-3 text-sm font-black uppercase text-black hover:bg-white"
+              className="inline-flex items-center gap-2 bg-[#D4AF37] px-5 py-3 text-sm font-black uppercase text-black transition hover:bg-white"
             >
               <Download size={18} />
               Export PDF
@@ -62,7 +62,7 @@ export default function LoadAnalyzerExport() {
 
             <button
               onClick={handlePrint}
-              className="inline-flex items-center gap-2 border border-[#D4AF37] px-5 py-3 text-sm font-black uppercase text-[#D4AF37] hover:bg-[#D4AF37] hover:text-black"
+              className="inline-flex items-center gap-2 border border-[#D4AF37] px-5 py-3 text-sm font-black uppercase text-[#D4AF37] transition hover:bg-[#D4AF37] hover:text-black"
             >
               <Printer size={18} />
               Print
@@ -102,8 +102,10 @@ export default function LoadAnalyzerExport() {
           </div>
         </section>
 
+        <div className="my-10 h-px bg-[#D4AF37]/30"></div>
+
         {/* KPI DASHBOARD */}
-        <section className="mt-12">
+        <section>
           <div className="flex items-center gap-3">
             <BarChart3 className="text-[#D4AF37]" size={28} />
             <h2 className="text-2xl font-black uppercase">
@@ -134,8 +136,10 @@ export default function LoadAnalyzerExport() {
           </div>
         </section>
 
+        <div className="my-10 h-px bg-[#D4AF37]/30"></div>
+
         {/* COUNTER OFFER */}
-        <section className="mt-12 rounded-md border border-[#D4AF37]/30 bg-[#D4AF37]/10 p-6">
+        <section className="rounded-md border border-[#D4AF37]/30 bg-[#D4AF37]/10 p-6">
           <p className="font-black uppercase text-[#D4AF37]">
             Auto Counter Offer
           </p>
@@ -149,8 +153,10 @@ export default function LoadAnalyzerExport() {
           </p>
         </section>
 
+        <div className="my-10 h-px bg-[#D4AF37]/30"></div>
+
         {/* EXPORT FEATURES */}
-        <section className="mt-12 print:hidden">
+        <section className="print:hidden">
           <h2 className="text-2xl font-black uppercase text-white">
             Export Features
           </h2>
@@ -158,7 +164,7 @@ export default function LoadAnalyzerExport() {
           <div className="mt-6 grid gap-5 md:grid-cols-4">
             <button
               onClick={handlePrint}
-              className="inline-flex items-center justify-center gap-2 border border-[#D4AF37] px-5 py-4 text-sm font-black uppercase text-[#D4AF37] hover:bg-[#D4AF37] hover:text-black"
+              className="inline-flex items-center justify-center gap-2 border border-[#D4AF37] px-5 py-4 text-sm font-black uppercase text-[#D4AF37] transition hover:bg-[#D4AF37] hover:text-black"
             >
               <Download size={18} />
               Save as PDF
@@ -166,7 +172,7 @@ export default function LoadAnalyzerExport() {
 
             <button
               onClick={handlePrint}
-              className="inline-flex items-center justify-center gap-2 border border-[#D4AF37] px-5 py-4 text-sm font-black uppercase text-[#D4AF37] hover:bg-[#D4AF37] hover:text-black"
+              className="inline-flex items-center justify-center gap-2 border border-[#D4AF37] px-5 py-4 text-sm font-black uppercase text-[#D4AF37] transition hover:bg-[#D4AF37] hover:text-black"
             >
               <Printer size={18} />
               Print Report
@@ -174,21 +180,23 @@ export default function LoadAnalyzerExport() {
 
             <a
               href="mailto:ceo@apexrouteconsulting.com?subject=Load Analyzer Report"
-              className="inline-flex items-center justify-center gap-2 border border-[#D4AF37] px-5 py-4 text-sm font-black uppercase text-[#D4AF37] hover:bg-[#D4AF37] hover:text-black"
+              className="inline-flex items-center justify-center gap-2 border border-[#D4AF37] px-5 py-4 text-sm font-black uppercase text-[#D4AF37] transition hover:bg-[#D4AF37] hover:text-black"
             >
               <Mail size={18} />
               Email Report
             </a>
 
-            <button className="inline-flex items-center justify-center gap-2 border border-[#D4AF37] px-5 py-4 text-sm font-black uppercase text-[#D4AF37] hover:bg-[#D4AF37] hover:text-black">
+            <button className="inline-flex items-center justify-center gap-2 border border-[#D4AF37] px-5 py-4 text-sm font-black uppercase text-[#D4AF37] transition hover:bg-[#D4AF37] hover:text-black">
               <Save size={18} />
               Save to Client Folder
             </button>
           </div>
         </section>
 
+        <div className="my-10 h-px bg-[#D4AF37]/30"></div>
+
         {/* BRANDING INFO */}
-        <section className="mt-12 rounded border border-white/10 bg-white/[0.04] p-6">
+        <section className="rounded border border-white/10 bg-white/[0.04] p-6">
           <p className="font-black uppercase text-[#D4AF37]">
             Company Branding
           </p>

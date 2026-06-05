@@ -50,3 +50,23 @@ h1, h2, h3 {
 .input-style:focus {
   border-color: #D4AF37;
 }
+
+@media print {
+  body {
+    background: #000 !important;
+  }
+
+  header,
+  footer,
+  .print\:hidden {
+    display: none !important;
+  }
+
+  main {
+    padding: 0 !important;
+  }
+
+  section {
+    box-shadow: none !important;
+  }
+}
