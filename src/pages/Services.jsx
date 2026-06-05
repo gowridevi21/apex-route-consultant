@@ -4,8 +4,9 @@ import {
   MonitorSmartphone,
   Truck,
   Users,
+  BarChart3,
+  Palette,
 } from "lucide-react";
-//import { Link } from "react-router";
 import { FaCalendarAlt } from "react-icons/fa";
 
 export default function Services() {
@@ -15,6 +16,7 @@ export default function Services() {
       title: "90-Day Mentorship Program",
       subtitle:
         "A structured 90-day mentorship for box truck and sprinter owners who want guidance, accountability, and step-by-step support building their transportation business.",
+      price: null,
       items: [
         "Business setup guidance",
         "Load strategy",
@@ -28,10 +30,53 @@ export default function Services() {
       link: "https://stan.store/Apexroute",
     },
     {
+      icon: BarChart3,
+      title: "Universal Load Analyzer",
+      subtitle:
+        "Professional freight pricing and profitability software that helps carriers calculate profitability, identify break-even points, and create smart counter offers before booking freight.",
+      price: "$297",
+      items: [
+        "Profitability analysis",
+        "Break-even calculations",
+        "Quick book counter",
+        "Target ask calculator",
+        "Market counter pricing",
+        "Premium counter pricing",
+        "Load scoring system",
+        "Deadhead & fuel cost tracking",
+        "Box truck, sprinter, hotshot & semi support",
+        "Editable business presets",
+        "KPI dashboard overview",
+        "Instructions tab included",
+      ],
+      cta: "Get The Load Analyzer",
+      link: "https://stan.store/Apexroute",
+    },
+    {
+      icon: Palette,
+      title: "Logo & Color Integration",
+      subtitle:
+        "Apex creates a custom logo and integrates a professional color palette that represents your brand and builds trust with your customers.",
+      price: "$150",
+      items: [
+        "Custom logo design",
+        "Unlimited revisions",
+        "Color palette development",
+        "Brand style guide",
+        "Logo variations",
+        "High-resolution files",
+        "Commercial use license",
+        "2-3 business day delivery",
+      ],
+      cta: "Get Your Logo & Colors Today",
+      link: "https://stan.store/Apexroute",
+    },
+    {
       icon: ClipboardCheck,
       title: "Systems & Operations Setup",
       subtitle:
         "For carriers who need their business organized properly with the right documents, workflows, compliance structure, and operating systems.",
+      price: null,
       items: [
         "Compliance folder setup",
         "Driver folder setup",
@@ -49,6 +94,7 @@ export default function Services() {
       title: "Dispatching Support — 7% Per Load",
       subtitle:
         "Professional dispatch support for qualified carriers. Apex helps with load searching, broker communication, rate negotiation, and load planning.",
+      price: null,
       items: [
         "Load search support",
         "Rate negotiation",
@@ -65,6 +111,7 @@ export default function Services() {
       title: "Website & Business Brand Buildout",
       subtitle:
         "Premium trucking business website and branding setup for carriers, dispatch companies, consultants, and logistics businesses.",
+      price: null,
       items: [
         "Website design",
         "Brand colors/logo integration",
@@ -111,27 +158,21 @@ export default function Services() {
 
         <div className="relative mx-auto flex min-h-[500px] max-w-7xl items-center px-6 pt-28 md:px-8">
           <div className="max-w-4xl">
-            <p className="font-black uppercase text-[#D4AF37]">
-              Services
-            </p>
+            <p className="font-black uppercase text-[#D4AF37]">Services</p>
 
             <h1 className="mt-4 text-4xl font-black uppercase leading-tight text-white md:text-7xl">
               Services Built for Carriers
               <br />
-              <span className="text-[#D4AF37]">
-                Ready to Grow
-              </span>
+              <span className="text-[#D4AF37]">Ready to Grow</span>
             </h1>
 
             <p className="mt-6 max-w-3xl text-lg leading-relaxed text-white/80">
-              From mentorship to systems, dispatching,
-              and professional branding, Apex Route
-              Consultant Group helps transportation
-              businesses build structure, increase
-              revenue, and operate with confidence.
+              From mentorship to systems, dispatching, software tools, and
+              professional branding, Apex Route Consultant Group helps
+              transportation businesses build structure, increase revenue, and
+              operate with confidence.
             </p>
 
-            {/* NEW HERO BUTTON */}
             <a
               href="https://stan.store/Apexroute"
               target="_blank"
@@ -148,90 +189,78 @@ export default function Services() {
       {/* SERVICES */}
       <section className="mx-auto max-w-7xl border-b border-white/10 px-6 py-16 md:px-8">
         <div className="text-center">
-          <p className="font-black uppercase text-[#D4AF37]">
-            Our Services
-          </p>
+          <p className="font-black uppercase text-[#D4AF37]">Our Services</p>
 
           <h2 className="mt-3 text-3xl font-black uppercase text-white md:text-5xl">
             Premium Support for{" "}
-            <span className="text-[#D4AF37]">
-              Carrier Growth
-            </span>
+            <span className="text-[#D4AF37]">Carrier Growth</span>
           </h2>
         </div>
 
         <div className="mt-12 grid gap-6 md:grid-cols-2">
-          {services.map(
-            ({
-              icon: Icon,
-              title,
-              subtitle,
-              items,
-              cta,
-              link,
-            }) => (
-              <div
-                key={title}
-                className="group rounded-md border border-white/10 bg-white/[0.04] p-8 transition duration-300 hover:-translate-y-1 hover:border-[#D4AF37] hover:bg-[#D4AF37]/5"
-              >
-                <div className="flex flex-col gap-5 md:flex-row md:items-start">
-                  <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-[#D4AF37]/15 text-[#D4AF37] transition group-hover:bg-[#D4AF37] group-hover:text-black">
-                    <Icon size={34} />
-                  </div>
+          {services.map(({ icon: Icon, title, subtitle, price, items, cta, link }) => (
+            <div
+              key={title}
+              className="group rounded-md border border-white/10 bg-white/[0.04] p-8 transition duration-300 hover:-translate-y-1 hover:border-[#D4AF37] hover:bg-[#D4AF37]/5"
+            >
+              <div className="flex flex-col gap-5 md:flex-row md:items-start">
+                <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-[#D4AF37]/15 text-[#D4AF37] transition group-hover:bg-[#D4AF37] group-hover:text-black">
+                  <Icon size={34} />
+                </div>
 
-                  <div>
-                    <h3 className="text-2xl font-black uppercase leading-tight text-white">
-                      {title}
-                    </h3>
+                <div>
+                  <h3 className="text-2xl font-black uppercase leading-tight text-white">
+                    {title}
+                  </h3>
 
-                    <p className="mt-4 text-sm leading-relaxed text-white/70">
-                      {subtitle}
+                  {price && (
+                    <p className="mt-3 text-4xl font-black text-[#D4AF37]">
+                      {price}
+                      <span className="ml-2 text-sm uppercase text-white/60">
+                        one-time purchase
+                      </span>
                     </p>
-                  </div>
-                </div>
+                  )}
 
-                <div className="mt-7 grid gap-3 sm:grid-cols-2">
-                  {items.map((item) => (
-                    <div
-                      key={item}
-                      className="flex gap-3 text-sm text-white/75"
-                    >
-                      <CheckCircle
-                        size={17}
-                        className="mt-0.5 shrink-0 text-[#D4AF37]"
-                      />
-                      <span>{item}</span>
-                    </div>
-                  ))}
+                  <p className="mt-4 text-sm leading-relaxed text-white/70">
+                    {subtitle}
+                  </p>
                 </div>
-
-                {/* STAN STORE BUTTON */}
-                <a
-                  href={link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-8 inline-flex items-center gap-3 border border-[#D4AF37] px-6 py-3 text-sm font-black uppercase text-[#D4AF37] transition hover:bg-[#D4AF37] hover:text-black"
-                >
-                  <FaCalendarAlt />
-                  {cta}
-                </a>
               </div>
-            )
-          )}
+
+              <div className="mt-7 grid gap-3 sm:grid-cols-2">
+                {items.map((item) => (
+                  <div key={item} className="flex gap-3 text-sm text-white/75">
+                    <CheckCircle
+                      size={17}
+                      className="mt-0.5 shrink-0 text-[#D4AF37]"
+                    />
+                    <span>{item}</span>
+                  </div>
+                ))}
+              </div>
+
+              <a
+                href={link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-8 inline-flex items-center gap-3 border border-[#D4AF37] px-6 py-3 text-sm font-black uppercase text-[#D4AF37] transition hover:bg-[#D4AF37] hover:text-black"
+              >
+                <FaCalendarAlt />
+                {cta}
+              </a>
+            </div>
+          ))}
         </div>
       </section>
 
       {/* PROCESS */}
       <section className="mx-auto max-w-7xl border-b border-white/10 px-6 py-16 text-center md:px-8">
-        <p className="font-black uppercase text-[#D4AF37]">
-          Our Process
-        </p>
+        <p className="font-black uppercase text-[#D4AF37]">Our Process</p>
 
         <h2 className="mt-3 text-3xl font-black uppercase text-white md:text-5xl">
           A Proven Process That{" "}
-          <span className="text-[#D4AF37]">
-            Delivers
-          </span>
+          <span className="text-[#D4AF37]">Delivers</span>
         </h2>
 
         <div className="mt-12 grid gap-8 md:grid-cols-4">
@@ -241,9 +270,7 @@ export default function Services() {
                 {num}
               </div>
 
-              <h3 className="mt-5 font-black uppercase text-white">
-                {title}
-              </h3>
+              <h3 className="mt-5 font-black uppercase text-white">{title}</h3>
 
               <p className="mt-3 text-sm leading-relaxed text-white/70">
                 {text}
@@ -272,8 +299,8 @@ export default function Services() {
             </h2>
 
             <p className="mt-4 max-w-xl text-lg text-white/80">
-              Choose a consultation path and tell us
-              what support your business needs.
+              Choose a consultation path and tell us what support your business
+              needs.
             </p>
 
             <a

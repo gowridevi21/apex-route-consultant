@@ -1,240 +1,186 @@
 import { Link } from "react-router";
-import {
-  FileText,
-  TrendingUp,
-  CalendarCheck,
-  MessageSquare,
-  Download,
-  Lock,
-  CheckCircle,
-} from "lucide-react";
 
 export default function Dashboard() {
-  const clientName = "Client";
-
   const documents = [
-    {
-      title: "Mentorship Agreement.pdf",
-      category: "Agreements",
-      status: "Available",
-    },
-    {
-      title: "Operations Setup Checklist.pdf",
-      category: "Systems",
-      status: "Available",
-    },
-    {
-      title: "Apex Money System.pdf",
-      category: "Money Tools",
-      status: "Available",
-    },
-    {
-      title: "Progress Report.pdf",
-      category: "Progress",
-      status: "Available",
-    },
-  ];
-
-  const progress = [
-    ["Phase 1", "Complete"],
-    ["Phase 2", "Active"],
-    ["Phase 3", "Locked"],
+    "Mentorship Agreement.pdf",
+    "Operations Setup Checklist.pdf",
+    "Apex Money System.pdf",
+    "Progress Report.pdf",
   ];
 
   return (
-    <main className="min-h-screen bg-[#050505] px-6 pb-20 pt-32 text-white md:px-8">
+    <main className="min-h-screen bg-white px-6 pb-20 pt-32 text-black">
       <section className="mx-auto max-w-7xl">
-        <div className="mb-10">
-          <p className="font-black uppercase text-[#D4AF37]">
-            Apex Client Command Center
-          </p>
+        <h1 className="text-3xl font-black">Apex Client Command Center</h1>
 
-          <h1 className="mt-3 text-4xl font-black uppercase md:text-6xl">
-            Welcome back,{" "}
-            <span className="text-[#D4AF37]">{clientName}</span>
-          </h1>
+        <p className="mt-3 max-w-4xl text-lg">
+          Your purchases, progress reports, action steps and resources are
+          organized here.
+        </p>
 
-          <p className="mt-4 max-w-3xl text-white/70">
-            Your purchases, progress reports, action steps, resources, and
-            support are organized in one place.
-          </p>
-        </div>
-
-        {/* TOP CARDS */}
-        <div className="grid gap-5 md:grid-cols-4">
-          <div className="rounded-md border border-white/10 bg-white/[0.04] p-6">
-            <FileText className="text-[#D4AF37]" size={34} />
-            <p className="mt-5 text-sm uppercase text-white/60">
-              Purchased Systems
-            </p>
-            <h2 className="mt-2 text-3xl font-black text-white">4 Files</h2>
-          </div>
-
-          <div className="rounded-md border border-white/10 bg-white/[0.04] p-6">
-            <TrendingUp className="text-[#D4AF37]" size={34} />
-            <p className="mt-5 text-sm uppercase text-white/60">
-              Progress Score
-            </p>
-            <h2 className="mt-2 text-3xl font-black text-white">
-              62% Complete
+        <div className="mt-8 overflow-hidden border border-gray-300">
+          {/* TOP BAR */}
+          <div className="flex items-center justify-between bg-[#0b1118] px-8 py-5 text-white">
+            <h2 className="text-xl font-black uppercase">
+              Apex Client Portal
             </h2>
-          </div>
 
-          <div className="rounded-md border border-white/10 bg-white/[0.04] p-6">
-            <CalendarCheck className="text-[#D4AF37]" size={34} />
-            <p className="mt-5 text-sm uppercase text-white/60">Next Step</p>
-            <h2 className="mt-2 text-2xl font-black text-white">
-              Book Weekly Call
-            </h2>
-          </div>
-
-          <div className="rounded-md border border-white/10 bg-white/[0.04] p-6">
-            <MessageSquare className="text-[#D4AF37]" size={34} />
-            <p className="mt-5 text-sm uppercase text-white/60">Support</p>
-            <h2 className="mt-2 text-2xl font-black text-white">
-              Contact Apex
-            </h2>
-          </div>
-        </div>
-
-        {/* MAIN GRID */}
-        <div className="mt-8 grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
-          {/* DOCUMENT VAULT */}
-          <div className="rounded-md border border-white/10 bg-white/[0.04] p-8">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <p className="font-black uppercase text-[#D4AF37]">
-                  Client Vault
-                </p>
-                <h2 className="mt-2 text-3xl font-black uppercase text-white">
-                  Recent Purchased Documents
-                </h2>
-              </div>
-
-              <Link
-                to="/my-vault"
-                className="border border-[#D4AF37] px-5 py-3 text-sm font-black uppercase text-[#D4AF37] transition hover:bg-[#D4AF37] hover:text-black"
-              >
-                View All
+            <div className="text-sm">
+              <Link to="/profile" className="hover:text-[#D4AF37]">
+                Profile
+              </Link>{" "}
+              |{" "}
+              <Link to="/support" className="hover:text-[#D4AF37]">
+                Support
+              </Link>{" "}
+              |{" "}
+              <Link to="/signin" className="hover:text-[#D4AF37]">
+                Logout
               </Link>
             </div>
+          </div>
 
-            <div className="mt-8 space-y-4">
-              {documents.map((doc) => (
-                <div
-                  key={doc.title}
-                  className="flex flex-col gap-4 rounded border border-white/10 bg-black/40 p-4 sm:flex-row sm:items-center sm:justify-between"
+          <div className="grid md:grid-cols-[230px_1fr]">
+            {/* SIDEBAR */}
+            <aside className="bg-[#eee9dc] p-5">
+              {[
+                ["Dashboard", "/dashboard"],
+                ["My Purchases", "/my-vault"],
+                ["Progress", "/progress"],
+                ["Training", "/training"],
+                ["Invoices", "/invoices"],
+                ["Messages", "/support"],
+              ].map(([name, path], index) => (
+                <Link
+                  key={name}
+                  to={path}
+                  className={`mb-3 block px-5 py-4 text-sm font-bold ${
+                    index === 0
+                      ? "bg-[#caa12a] text-black"
+                      : "text-black hover:bg-[#d8cfae]"
+                  }`}
                 >
-                  <div className="flex items-start gap-3">
-                    <FileText className="mt-1 text-[#D4AF37]" size={22} />
+                  {name}
+                </Link>
+              ))}
+            </aside>
 
-                    <div>
-                      <h3 className="font-bold text-white">{doc.title}</h3>
-                      <p className="mt-1 text-sm text-white/60">
-                        {doc.category} • {doc.status}
-                      </p>
+            {/* CONTENT */}
+            <div className="bg-[#f7f7f7] p-8">
+              <h2 className="text-3xl font-black">
+                Welcome back, Client Name
+              </h2>
+
+              <p className="mt-3 text-gray-600">
+                Your purchases, progress reports, action steps and resources are
+                organized here.
+              </p>
+
+              {/* CARDS */}
+              <div className="mt-6 grid gap-5 md:grid-cols-3">
+                <div className="border border-gray-300 bg-white p-5">
+                  <p className="font-black">Purchased Systems</p>
+                  <p className="mt-2 text-xl font-black text-[#c28f00]">
+                    4 files
+                  </p>
+                </div>
+
+                <div className="border border-gray-300 bg-white p-5">
+                  <p className="font-black">Progress Score</p>
+                  <p className="mt-2 text-xl font-black text-[#c28f00]">
+                    62% complete
+                  </p>
+                </div>
+
+                <div className="border border-gray-300 bg-white p-5">
+                  <p className="font-black">Next Step</p>
+                  <p className="mt-2 text-xl font-black text-[#c28f00]">
+                    Book weekly call
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-8 grid gap-8 lg:grid-cols-[1.4fr_0.8fr]">
+                {/* DOCUMENTS */}
+                <div className="border border-gray-300 bg-white p-6">
+                  <h3 className="text-xl font-black">
+                    Recent Purchased Documents
+                  </h3>
+
+                  <div className="mt-5 space-y-3">
+                    {documents.map((doc) => (
+                      <div
+                        key={doc}
+                        className="flex items-center justify-between gap-4"
+                      >
+                        <div className="flex items-center gap-3">
+                          <span className="h-6 w-6 border-2 border-[#caa12a]"></span>
+                          <span className="text-sm">{doc}</span>
+                        </div>
+
+                        <div className="text-sm font-bold text-[#c28f00]">
+                          View | Save
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* PROGRESS */}
+                <div className="border border-gray-300 bg-white p-6">
+                  <h3 className="text-xl font-black">Progress Timeline</h3>
+
+                  <div className="mt-6 space-y-5">
+                    <div className="flex items-center gap-4">
+                      <span className="h-5 w-5 bg-[#caa12a]"></span>
+                      <span>Phase 1 - Complete</span>
+                    </div>
+
+                    <div className="flex items-center gap-4">
+                      <span className="h-5 w-5 bg-[#caa12a]"></span>
+                      <span>Phase 2 - Active</span>
+                    </div>
+
+                    <div className="flex items-center gap-4 text-gray-500">
+                      <span className="h-5 w-5 bg-gray-300"></span>
+                      <span>Phase 3 - Locked</span>
                     </div>
                   </div>
-
-                  <div className="flex gap-3">
-                    <button className="text-sm font-black uppercase text-[#D4AF37]">
-                      View
-                    </button>
-
-                    <button className="inline-flex items-center gap-1 text-sm font-black uppercase text-[#D4AF37]">
-                      <Download size={15} />
-                      Save
-                    </button>
-                  </div>
                 </div>
-              ))}
-            </div>
-          </div>
+              </div>
 
-          {/* PROGRESS TIMELINE */}
-          <div className="rounded-md border border-white/10 bg-white/[0.04] p-8">
-            <p className="font-black uppercase text-[#D4AF37]">
-              Progress Timeline
-            </p>
-
-            <h2 className="mt-2 text-3xl font-black uppercase text-white">
-              Program Status
-            </h2>
-
-            <div className="mt-8 space-y-5">
-              {progress.map(([phase, status]) => (
-                <div
-                  key={phase}
-                  className="flex items-center justify-between border-b border-white/10 pb-4"
+              {/* QUICK LINKS */}
+              <div className="mt-8 grid gap-4 md:grid-cols-4">
+                <Link
+                  to="/my-vault"
+                  className="bg-[#caa12a] px-5 py-4 text-center text-sm font-black uppercase text-black"
                 >
-                  <div className="flex items-center gap-3">
-                    {status === "Locked" ? (
-                      <Lock className="text-white/40" size={20} />
-                    ) : (
-                      <CheckCircle className="text-[#D4AF37]" size={20} />
-                    )}
+                  My Vault
+                </Link>
 
-                    <span className="font-bold text-white">{phase}</span>
-                  </div>
+                <Link
+                  to="/progress"
+                  className="border border-[#caa12a] px-5 py-4 text-center text-sm font-black uppercase text-black"
+                >
+                  Progress
+                </Link>
 
-                  <span
-                    className={
-                      status === "Locked"
-                        ? "text-sm font-bold text-white/40"
-                        : "text-sm font-bold text-[#D4AF37]"
-                    }
-                  >
-                    {status}
-                  </span>
-                </div>
-              ))}
-            </div>
+                <Link
+                  to="/training"
+                  className="border border-[#caa12a] px-5 py-4 text-center text-sm font-black uppercase text-black"
+                >
+                  Training
+                </Link>
 
-            <div className="mt-8 rounded bg-black/40 p-5">
-              <p className="text-sm leading-relaxed text-white/70">
-                Current Phase:{" "}
-                <span className="font-bold text-[#D4AF37]">
-                  Phase 2 - Operational Training Dashboard
-                </span>
-              </p>
-
-              <p className="mt-3 text-sm leading-relaxed text-white/70">
-                Next milestone: Complete insurance quote, load board training,
-                and compliance folder setup.
-              </p>
+                <Link
+                  to="/support"
+                  className="border border-[#caa12a] px-5 py-4 text-center text-sm font-black uppercase text-black"
+                >
+                  Support
+                </Link>
+              </div>
             </div>
           </div>
-        </div>
-
-        {/* QUICK LINKS */}
-        <div className="mt-8 grid gap-5 md:grid-cols-4">
-          <Link
-            to="/my-vault"
-            className="rounded-md border border-white/10 bg-white/[0.04] p-6 text-center font-black uppercase text-white transition hover:border-[#D4AF37] hover:text-[#D4AF37]"
-          >
-            My Vault
-          </Link>
-
-          <Link
-            to="/progress"
-            className="rounded-md border border-white/10 bg-white/[0.04] p-6 text-center font-black uppercase text-white transition hover:border-[#D4AF37] hover:text-[#D4AF37]"
-          >
-            Progress
-          </Link>
-
-          <Link
-            to="/training"
-            className="rounded-md border border-white/10 bg-white/[0.04] p-6 text-center font-black uppercase text-white transition hover:border-[#D4AF37] hover:text-[#D4AF37]"
-          >
-            Training
-          </Link>
-
-          <Link
-            to="/support"
-            className="rounded-md border border-white/10 bg-white/[0.04] p-6 text-center font-black uppercase text-white transition hover:border-[#D4AF37] hover:text-[#D4AF37]"
-          >
-            Support
-          </Link>
         </div>
       </section>
     </main>
