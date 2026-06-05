@@ -6,6 +6,7 @@ import Signin from "./pages/Signin";
 import Signup from "./pages/Signup";
 import ForgotPassword from "./pages/ForgotPassword";
 import Dashboard from "./pages/Dashboard";
+import LoadAnalyzerExport from "./pages/LoadAnalyzerExport";
 
 import Home from "./pages/Home";
 import About from "./pages/About";
@@ -33,6 +34,7 @@ export default function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/load-analyzer-export" element={<LoadAnalyzerExport />} />
       </Routes>
 
       <Footer />
