@@ -1,4 +1,7 @@
-import { Link } from "react-router";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { auth } from "../firebase";
 import {
   FileText,
   LayoutDashboard,
@@ -12,24 +15,46 @@ import {
 } from "lucide-react";
 
 export default function Dashboard() {
-  const documents = [
-    {
-      name: "Mentorship Agreement.pdf",
-      type: "Agreement",
-    },
-    {
-      name: "Operations Setup Checklist.pdf",
-      type: "Checklist",
-    },
-    {
-      name: "Apex Money System.pdf",
-      type: "Money System",
-    },
-    {
-      name: "Progress Report.pdf",
-      type: "Progress",
-    },
-  ];
+  const navigate = useNavigate();
+  const [clientName, setClientName] = useState("Client");
+
+  const clientData = {
+    purchasedSystems: "90-Day Mentorship Program",
+    progressScore: "62% complete",
+    nextStep: "Book weekly call",
+    documents: [
+      { name: "Mentorship Agreement.pdf", type: "Agreement" },
+      { name: "Operations Setup Checklist.pdf", type: "Checklist" },
+      { name: "Apex Money System.pdf", type: "Money System" },
+      { name: "Progress Report.pdf", type: "Progress" },
+    ],
+    progressTimeline: [
+      { phase: "Phase 1 - Complete", status: "complete" },
+      { phase: "Phase 2 - Active", status: "active" },
+      { phase: "Phase 3 - Locked", status: "locked" },
+    ],
+    currentPhase: "Phase 2 - Operational Training Dashboard",
+  };
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        navigate("/signin");
+        return;
+      }
+
+      const displayName = user.displayName || "Client";
+      const cleanName = displayName.split("|")[0].trim();
+      setClientName(cleanName);
+    });
+
+    return () => unsubscribe();
+  }, [navigate]);
+
+  const handleLogout = async () => {
+    await signOut(auth);
+    navigate("/signin");
+  };
 
   const sidebarLinks = [
     ["Dashboard", "/dashboard", LayoutDashboard],
@@ -45,7 +70,6 @@ export default function Dashboard() {
   return (
     <main className="min-h-screen bg-[#050505] px-4 pb-16 pt-8 text-black md:px-8">
       <section className="mx-auto max-w-7xl">
-        {/* PAGE INTRO */}
         <div className="mb-8">
           <p className="font-black uppercase tracking-wide text-[#D4AF37]">
             Apex Client Portal
@@ -56,13 +80,12 @@ export default function Dashboard() {
           </h1>
 
           <p className="mt-3 max-w-3xl text-white/70">
-            Your purchases, progress reports, action steps, training resources, uploads, invoices, and support are organized in one secure place.
+            Your purchases, progress reports, action steps, training resources,
+            uploads, invoices, and support are organized in one secure place.
           </p>
         </div>
 
-        {/* PORTAL BOX */}
         <div className="overflow-hidden rounded-md border border-[#D4AF37]/30 bg-white shadow-2xl">
-          {/* TOP BAR */}
           <div className="flex flex-col gap-4 bg-[#0b1118] px-6 py-5 text-white md:flex-row md:items-center md:justify-between md:px-8">
             <div className="flex items-center gap-3">
               <img
@@ -85,14 +108,13 @@ export default function Dashboard() {
                 Support
               </Link>{" "}
               |{" "}
-              <Link to="/signin" className="hover:text-[#D4AF37]">
+              <button onClick={handleLogout} className="hover:text-[#D4AF37]">
                 Logout
-              </Link>
+              </button>
             </div>
           </div>
 
           <div className="grid md:grid-cols-[260px_1fr]">
-            {/* SIDEBAR */}
             <aside className="bg-[#eee9dc] p-5">
               {sidebarLinks.map(([name, path, Icon], index) => (
                 <Link
@@ -110,10 +132,9 @@ export default function Dashboard() {
               ))}
             </aside>
 
-            {/* CONTENT */}
             <div className="bg-[#f7f7f7] p-6 md:p-8">
               <h2 className="text-3xl font-black text-black">
-                Welcome back, Client Name
+                Welcome back, {clientName}
               </h2>
 
               <p className="mt-3 text-gray-600">
@@ -121,14 +142,13 @@ export default function Dashboard() {
                 are organized here.
               </p>
 
-              {/* CARDS */}
               <div className="mt-6 grid gap-5 md:grid-cols-3">
                 <div className="border border-gray-300 bg-white p-5 shadow-sm">
                   <p className="text-sm font-black uppercase text-gray-500">
-                    Purchased Systems
+                    Purchased System
                   </p>
-                  <p className="mt-2 text-2xl font-black text-[#c28f00]">
-                    4 files
+                  <p className="mt-2 text-xl font-black text-[#c28f00]">
+                    {clientData.purchasedSystems}
                   </p>
                 </div>
 
@@ -137,7 +157,7 @@ export default function Dashboard() {
                     Progress Score
                   </p>
                   <p className="mt-2 text-2xl font-black text-[#c28f00]">
-                    62% complete
+                    {clientData.progressScore}
                   </p>
                 </div>
 
@@ -146,13 +166,12 @@ export default function Dashboard() {
                     Next Step
                   </p>
                   <p className="mt-2 text-2xl font-black text-[#c28f00]">
-                    Book weekly call
+                    {clientData.nextStep}
                   </p>
                 </div>
               </div>
 
               <div className="mt-8 grid gap-8 lg:grid-cols-[1.4fr_0.8fr]">
-                {/* DOCUMENTS */}
                 <div className="border border-gray-300 bg-white p-6 shadow-sm">
                   <div className="flex items-center justify-between gap-4">
                     <h3 className="text-xl font-black">
@@ -168,7 +187,7 @@ export default function Dashboard() {
                   </div>
 
                   <div className="mt-5 space-y-3">
-                    {documents.map((doc) => (
+                    {clientData.documents.map((doc) => (
                       <div
                         key={doc.name}
                         className="flex flex-col gap-3 border-b border-gray-200 pb-3 last:border-b-0 sm:flex-row sm:items-center sm:justify-between"
@@ -192,27 +211,34 @@ export default function Dashboard() {
                   </div>
                 </div>
 
-                {/* PROGRESS */}
                 <div className="border border-gray-300 bg-white p-6 shadow-sm">
                   <h3 className="text-xl font-black">Progress Timeline</h3>
 
                   <div className="mt-6 space-y-5">
-                    <div className="flex items-center gap-4">
-                      <span className="h-5 w-5 bg-[#caa12a]"></span>
-                      <span className="font-bold">Phase 1 - Complete</span>
-                    </div>
+                    {clientData.progressTimeline.map((item) => (
+                      <div
+                        key={item.phase}
+                        className={`flex items-center gap-4 ${
+                          item.status === "locked" ? "text-gray-500" : ""
+                        }`}
+                      >
+                        {item.status === "locked" ? (
+                          <span className="flex h-5 w-5 items-center justify-center bg-gray-300">
+                            <Lock size={13} />
+                          </span>
+                        ) : (
+                          <span className="h-5 w-5 bg-[#caa12a]"></span>
+                        )}
 
-                    <div className="flex items-center gap-4">
-                      <span className="h-5 w-5 bg-[#caa12a]"></span>
-                      <span className="font-bold">Phase 2 - Active</span>
-                    </div>
-
-                    <div className="flex items-center gap-4 text-gray-500">
-                      <span className="flex h-5 w-5 items-center justify-center bg-gray-300">
-                        <Lock size={13} />
-                      </span>
-                      <span>Phase 3 - Locked</span>
-                    </div>
+                        <span
+                          className={
+                            item.status === "locked" ? "" : "font-bold"
+                          }
+                        >
+                          {item.phase}
+                        </span>
+                      </div>
+                    ))}
                   </div>
 
                   <div className="mt-8 border-l-4 border-[#caa12a] bg-[#f2efe4] p-4">
@@ -220,13 +246,12 @@ export default function Dashboard() {
                       Current Phase
                     </p>
                     <p className="mt-1 text-sm text-gray-700">
-                      Phase 2 - Operational Training Dashboard
+                      {clientData.currentPhase}
                     </p>
                   </div>
                 </div>
               </div>
 
-              {/* QUICK LINKS */}
               <div className="mt-8 grid gap-4 md:grid-cols-4">
                 <Link
                   to="/my-vault"
@@ -259,6 +284,12 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
+
+        <p className="mt-5 text-sm text-white/50">
+          Note: Purchased documents and progress are currently sample data. Next
+          step is connecting Firestore so Apex admin can update each client’s
+          purchases, documents, and progress separately.
+        </p>
       </section>
     </main>
   );
