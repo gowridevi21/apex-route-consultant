@@ -19,9 +19,20 @@ import Booking from "./pages/Booking";
 
 export default function App() {
   const location = useLocation();
-  const hideLayout =
+  const dashboardRoutes = [
+  "/dashboard",
+  "/my-vault",
+  "/progress",
+  "/training",
+  "/uploads",
+  "/invoices",
+  "/support",
+  "/profile",
+];
+
+const hideLayout =
   location.pathname === "/load-analyzer-export" ||
-  location.pathname === "/dashboard";
+  dashboardRoutes.includes(location.pathname);
   return (
     <>
       <ScrollToTop />
