@@ -6,6 +6,8 @@ import {
 } from "firebase/auth";
 import { Link, useNavigate } from "react-router";
 import { auth } from "../firebase";
+import { db } from "../firebase";
+import { doc, setDoc } from "firebase/firestore";
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -35,10 +37,31 @@ export default function Signup() {
       );
 
       await updateProfile(userCredential.user, {
-        displayName: `${form.name} | ${form.phone}`,
-      });
+  displayName: form.name,
+});
 
-      await sendEmailVerification(userCredential.user);
+await setDoc(doc(db, "users", userCredential.user.uid), {
+  fullName: form.name,
+  phone: form.phone,
+  email: form.email,
+
+  progress: 0,
+
+  purchases: [],
+
+  documents: [],
+
+  timeline: [
+    {
+      phase: "Phase 1",
+      status: "Pending",
+    },
+  ],
+
+  createdAt: new Date(),
+});
+
+await sendEmailVerification(userCredential.user);
 
       setMessage(
         "Account created successfully. A confirmation email has been sent. Please verify your email before signing in."
