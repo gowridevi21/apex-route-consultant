@@ -5,6 +5,7 @@ import ScrollToTop from "./components/ScrollToTop";
 import Signin from "./pages/Signin";
 import Signup from "./pages/Signup";
 import ForgotPassword from "./pages/ForgotPassword";
+import Dashboard from "./pages/Dashboard";
 
 import Home from "./pages/Home";
 import About from "./pages/About";
@@ -12,6 +13,7 @@ import Services from "./pages/Services";
 import Resources from "./pages/Resources";
 import Contact from "./pages/Contact";
 import Booking from "./pages/Booking";
+
 
 export default function App() {
   return (
@@ -30,6 +32,7 @@ export default function App() {
         <Route path="/signin" element={<Signin />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
 
       <Footer />
