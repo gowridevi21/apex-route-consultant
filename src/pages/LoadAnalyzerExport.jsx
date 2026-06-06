@@ -7,6 +7,9 @@ import {
   FileText,
 } from "lucide-react";
 import { useLocation } from "react-router";
+import { auth, db } from "../firebase";
+import { doc, updateDoc, arrayUnion } from "firebase/firestore";
+
 
 export default function LoadAnalyzerExport() {
   const location = useLocation();
@@ -63,11 +66,40 @@ Thank you.`
     window.location.href = `mailto:ceo@apexrouteconsulting.com?subject=${subject}&body=${body}`;
   };
 
-  const handleSaveToClientFolder = () => {
-    alert(
-      "Save to Client Folder will be connected to the client portal soon. For now, please export the report as PDF and upload it to the client vault."
-    );
-  };
+const handleSaveToClientFolder = async () => {
+  try {
+    const user = auth.currentUser;
+
+    if (!user) {
+      alert("Please sign in first.");
+      return;
+    }
+
+    await updateDoc(doc(db, "users", user.uid), {
+      documents: arrayUnion({
+        name: `Load Analysis ${new Date().toLocaleDateString()}`,
+        type: "Universal Load Analyzer",
+        createdAt: new Date().toISOString(),
+
+        loadScore: report.loadScore,
+        brokerRate: report.brokerRate,
+        targetAskRate: report.targetAskRate,
+        expectedProfit: report.expectedProfit,
+        revenuePerMile: report.revenuePerMile,
+        loadedMiles: report.loadedMiles,
+        deadheadMiles: report.deadheadMiles,
+        fuelCost: report.fuelCost,
+        breakEvenRate: report.breakEvenRate,
+        netMargin: report.netMargin,
+      }),
+    });
+
+    alert("Report saved successfully to Client Folder.");
+  } catch (error) {
+    console.error(error);
+    alert("Failed to save report.");
+  }
+};
 
   return (
     <main className="min-h-screen bg-[#050505] px-6 py-6 text-white md:px-8">

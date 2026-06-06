@@ -8,7 +8,7 @@ import {
   Palette,
 } from "lucide-react";
 import { FaCalendarAlt } from "react-icons/fa";
-import { Link } from "react-router";
+//import { Link } from "react-router";
 
 export default function Services() {
   const services = [
@@ -52,7 +52,7 @@ export default function Services() {
         "Instructions tab included",
       ],
       cta: "Get The Load Analyzer",
-      link: "/load-analyzer",
+      link: "https://stan.store/Apexroute", 
     },
     {
       icon: Palette,
@@ -242,13 +242,15 @@ export default function Services() {
                 ))}
               </div>
 
-              <Link
-  to={link}
+              <a
+  href={link}
+  target="_blank"
+  rel="noopener noreferrer"
   className="mt-8 inline-flex items-center gap-3 border border-[#D4AF37] px-6 py-3 text-sm font-black uppercase text-[#D4AF37] transition hover:bg-[#D4AF37] hover:text-black"
 >
   <FaCalendarAlt />
   {cta}
-</Link>
+</a>
             </div>
           ))}
         </div>
@@ -303,13 +305,15 @@ export default function Services() {
               needs.
             </p>
 
-<Link
-  to="/load-analyzer"
+<a
+  href="https://stan.store/Apexroute"
+  target="_blank"
+  rel="noopener noreferrer"
   className="mt-10 inline-flex items-center gap-3 bg-[#D4AF37] px-8 py-4 text-sm font-black uppercase text-black transition hover:bg-white"
 >
   <FaCalendarAlt />
   Get The Load Analyzer
-</Link>
+</a>
           </div>
         </div>
       </section>
