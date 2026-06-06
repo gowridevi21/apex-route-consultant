@@ -10,6 +10,7 @@ import Dashboard from "./pages/Dashboard";
 import { useLocation } from "react-router";
 //import Loadbalancer from "./pages/Loadbalancer";
 import MyVault from "./pages/MyVault";
+import Profile from "./pages/Profile";
 
 import Home from "./pages/Home";
 import About from "./pages/About";
@@ -53,6 +54,7 @@ const hideLayout =
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/my-vault" element={<MyVault />} />
+        <Route path="/profile" element={<Profile />} />
       </Routes>
 
       <Footer />
