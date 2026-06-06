@@ -52,7 +52,7 @@ export default function Services() {
         "Instructions tab included",
       ],
       cta: "Get The Load Analyzer",
-      link: "/loadanalyzerexport",
+      link: "/load-analyzer-export",
     },
     {
       icon: Palette,
@@ -242,15 +242,13 @@ export default function Services() {
                 ))}
               </div>
 
-              <a
-                href={link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-8 inline-flex items-center gap-3 border border-[#D4AF37] px-6 py-3 text-sm font-black uppercase text-[#D4AF37] transition hover:bg-[#D4AF37] hover:text-black"
-              >
-                <FaCalendarAlt />
-                {cta}
-              </a>
+              <Link
+  to={link}
+  className="mt-8 inline-flex items-center gap-3 border border-[#D4AF37] px-6 py-3 text-sm font-black uppercase text-[#D4AF37] transition hover:bg-[#D4AF37] hover:text-black"
+>
+  <FaCalendarAlt />
+  {cta}
+</Link>
             </div>
           ))}
         </div>
