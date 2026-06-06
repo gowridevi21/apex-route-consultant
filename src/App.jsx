@@ -52,7 +52,7 @@ const hideLayout =
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/load-analyzer-export" element={<LoadAnalyzerExport />} />
-        <Route path="/load-balancer" element={<Loadbalancer />} />
+        <Route path="/load-analyzer" element={<Loadbalancer />} />
       </Routes>
 
       <Footer />
