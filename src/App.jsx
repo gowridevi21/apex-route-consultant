@@ -9,7 +9,7 @@ import Dashboard from "./pages/Dashboard";
 import LoadAnalyzerExport from "./pages/LoadAnalyzerExport";
 import { useLocation } from "react-router";
 import Loadbalancer from "./pages/Loadbalancer";
-import MyVault from "./pages/MyVault";
+import Myvault from "./pages/Myvault";
 
 import Home from "./pages/Home";
 import About from "./pages/About";
@@ -54,7 +54,7 @@ const hideLayout =
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/load-analyzer-export" element={<LoadAnalyzerExport />} />
         <Route path="/load-analyzer" element={<Loadbalancer />} />
-        <Route path="/my-vault" element={<MyVault />} />
+        <Route path="/my-vault" element={<Myvault />} />
       </Routes>
 
       <Footer />
