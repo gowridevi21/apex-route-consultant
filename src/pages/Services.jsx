@@ -52,7 +52,7 @@ export default function Services() {
         "Instructions tab included",
       ],
       cta: "Get The Load Analyzer",
-      link: "/load-analyzer-export",
+      link: "/load-analyzer",
     },
     {
       icon: Palette,
@@ -304,7 +304,7 @@ export default function Services() {
             </p>
 
 <Link
-  to="/load-analyzer-export"
+  to="/load-analyzer"
   className="mt-10 inline-flex items-center gap-3 bg-[#D4AF37] px-8 py-4 text-sm font-black uppercase text-black transition hover:bg-white"
 >
   <FaCalendarAlt />

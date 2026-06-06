@@ -8,6 +8,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import Dashboard from "./pages/Dashboard";
 import LoadAnalyzerExport from "./pages/LoadAnalyzerExport";
 import { useLocation } from "react-router";
+import LoadBalancer from "./pages/LoadBalancer";
 
 import Home from "./pages/Home";
 import About from "./pages/About";
@@ -51,6 +52,7 @@ const hideLayout =
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/load-analyzer-export" element={<LoadAnalyzerExport />} />
+        <Route path="/load-balancer" element={<LoadBalancer />} />
       </Routes>
 
       <Footer />
