@@ -6,23 +6,27 @@ import {
   BarChart3,
   FileText,
 } from "lucide-react";
+import { useLocation } from "react-router";
 
 export default function LoadAnalyzerExport() {
-  const report = {
-    loadScore: "Elite",
-    brokerRate: "$1,850",
-    targetAskRate: "$2,150",
-    expectedProfit: "$684",
-    revenuePerMile: "$3.42",
-    loadedMiles: "540",
-    deadheadMiles: "42",
-    fuelCost: "$312",
-    breakEvenRate: "$2.18",
-    netMargin: "31.8%",
+  const location = useLocation();
+
+  const report = location.state?.report || {
+    loadScore: "No Data",
+    brokerRate: "$0.00",
+    targetAskRate: "$0.00",
+    expectedProfit: "$0.00",
+    revenuePerMile: "$0.00",
+    loadedMiles: "0",
+    deadheadMiles: "0",
+    fuelCost: "$0.00",
+    breakEvenRate: "$0.00",
+    netMargin: "0%",
+    counterOffer:
+      "No analyzer data was passed. Please return to the Load Analyzer page, enter load details, and export again.",
   };
 
-  const counterOffer =
-    "Hi, thank you for the offer. Based on the loaded miles, deadhead, fuel cost, and current profitability target, we would be able to move this load at $2,150. That rate allows us to cover operating costs and maintain a safe profit margin. Please let me know if we can get this approved.";
+  const counterOffer = report.counterOffer;
 
   const handlePrint = () => {
     window.print();
@@ -33,8 +37,30 @@ export default function LoadAnalyzerExport() {
   };
 
   const handleEmailReport = () => {
-    window.location.href =
-      "mailto:ceo@apexrouteconsulting.com?subject=Load Analyzer Report&body=Hello Apex Team,%0D%0A%0D%0AI would like to share my Load Analyzer report.%0D%0A%0D%0AThank you.";
+    const subject = encodeURIComponent("Load Analyzer Report");
+    const body = encodeURIComponent(
+      `Hello Apex Team,
+
+I would like to share my Load Analyzer report.
+
+Load Score: ${report.loadScore}
+Broker Rate: ${report.brokerRate}
+Target Ask Rate: ${report.targetAskRate}
+Expected Profit: ${report.expectedProfit}
+Revenue Per Mile: ${report.revenuePerMile}
+Loaded Miles: ${report.loadedMiles}
+Deadhead Miles: ${report.deadheadMiles}
+Fuel Cost: ${report.fuelCost}
+Break-Even Rate: ${report.breakEvenRate}
+Net Margin: ${report.netMargin}
+
+Counter Offer:
+${counterOffer}
+
+Thank you.`
+    );
+
+    window.location.href = `mailto:ceo@apexrouteconsulting.com?subject=${subject}&body=${body}`;
   };
 
   const handleSaveToClientFolder = () => {
@@ -123,9 +149,7 @@ export default function LoadAnalyzerExport() {
         <section>
           <div className="flex items-center gap-3">
             <BarChart3 className="text-[#D4AF37]" size={28} />
-            <h2 className="text-2xl font-black uppercase">
-              KPI Dashboard
-            </h2>
+            <h2 className="text-2xl font-black uppercase">KPI Dashboard</h2>
           </div>
 
           <div className="mt-6 grid gap-5 md:grid-cols-5">
@@ -143,17 +167,13 @@ export default function LoadAnalyzerExport() {
                 <p className="text-xs font-black uppercase text-white/50">
                   {label}
                 </p>
-                <p className="mt-3 text-2xl font-black text-white">
-                  {value}
-                </p>
+                <p className="mt-3 text-2xl font-black text-white">{value}</p>
               </div>
             ))}
           </div>
         </section>
 
         <div className="my-10 h-px bg-[#D4AF37]/30"></div>
-        <div className="my-10 h-px bg-[#D4AF37]/30"></div>
-
 
         {/* COUNTER OFFER */}
         <section className="rounded-md border border-[#D4AF37]/30 bg-[#D4AF37]/10 p-6">

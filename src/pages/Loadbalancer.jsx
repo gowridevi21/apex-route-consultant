@@ -253,12 +253,30 @@ export default function LoadAnalyzer() {
                 Review the analysis, then export a professional summary report.
               </p>
 
-              <Link
-                to="/load-analyzer-export"
-                className="mt-6 inline-flex w-full justify-center bg-[#D4AF37] px-6 py-4 text-sm font-black uppercase text-black hover:bg-white"
-              >
-                Export Summary
-              </Link>
+<Link
+  to="/load-analyzer-export"
+  state={{
+    report: {
+      loadScore:
+        netProfit > 250 ? "Elite" : netProfit > 0 ? "Good" : "Decline",
+      brokerRate: `$${Number(inputs.loadPay).toFixed(2)}`,
+      targetAskRate: `$${targetAsk.toFixed(2)}`,
+      expectedProfit: `$${netProfit.toFixed(2)}`,
+      revenuePerMile: `$${rateLoadedMile.toFixed(2)}`,
+      loadedMiles: `${inputs.loadedMiles}`,
+      deadheadMiles: `${inputs.deadheadMiles}`,
+      fuelCost: `$${fuelCost.toFixed(2)}`,
+      breakEvenRate: `$${(totalTripCost / totalMiles).toFixed(2)}`,
+      netMargin: `${profitMargin.toFixed(1)}%`,
+      counterOffer: `Hi, thank you for the offer. Based on the loaded miles, deadhead, fuel cost, and current profitability target, we would be able to move this load at $${targetAsk.toFixed(
+        2
+      )}. That rate allows us to cover operating costs and maintain a safe profit margin. Please let me know if we can get this approved.`,
+    },
+  }}
+  className="mt-6 inline-flex w-full justify-center bg-[#D4AF37] px-6 py-4 text-sm font-black uppercase text-black hover:bg-white"
+>
+  Export Summary
+</Link>
             </div>
           </div>
         )}
