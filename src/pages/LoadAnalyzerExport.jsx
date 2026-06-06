@@ -21,12 +21,27 @@ export default function LoadAnalyzerExport() {
     netMargin: "31.8%",
   };
 
+  const counterOffer =
+    "Hi, thank you for the offer. Based on the loaded miles, deadhead, fuel cost, and current profitability target, we would be able to move this load at $2,150. That rate allows us to cover operating costs and maintain a safe profit margin. Please let me know if we can get this approved.";
+
   const handlePrint = () => {
     window.print();
   };
 
-  const counterOffer =
-    "Hi, thank you for the offer. Based on the loaded miles, deadhead, fuel cost, and current profitability target, we would be able to move this load at $2,150. That rate allows us to cover operating costs and maintain a safe profit margin. Please let me know if we can get this approved.";
+  const handleExportPdf = () => {
+    window.print();
+  };
+
+  const handleEmailReport = () => {
+    window.location.href =
+      "mailto:ceo@apexrouteconsulting.com?subject=Load Analyzer Report&body=Hello Apex Team,%0D%0A%0D%0AI would like to share my Load Analyzer report.%0D%0A%0D%0AThank you.";
+  };
+
+  const handleSaveToClientFolder = () => {
+    alert(
+      "Save to Client Folder will be connected to the client portal soon. For now, please export the report as PDF and upload it to the client vault."
+    );
+  };
 
   return (
     <main className="min-h-screen bg-[#050505] px-6 py-6 text-white md:px-8">
@@ -53,7 +68,7 @@ export default function LoadAnalyzerExport() {
 
           <div className="flex flex-wrap gap-3 print:hidden">
             <button
-              onClick={handlePrint}
+              onClick={handleExportPdf}
               className="inline-flex items-center gap-2 bg-[#D4AF37] px-5 py-3 text-sm font-black uppercase text-black transition hover:bg-white"
             >
               <Download size={18} />
@@ -163,7 +178,7 @@ export default function LoadAnalyzerExport() {
 
           <div className="mt-6 grid gap-5 md:grid-cols-4">
             <button
-              onClick={handlePrint}
+              onClick={handleExportPdf}
               className="inline-flex items-center justify-center gap-2 border border-[#D4AF37] px-5 py-4 text-sm font-black uppercase text-[#D4AF37] transition hover:bg-[#D4AF37] hover:text-black"
             >
               <Download size={18} />
@@ -178,15 +193,18 @@ export default function LoadAnalyzerExport() {
               Print Report
             </button>
 
-            <a
-              href="mailto:ceo@apexrouteconsulting.com?subject=Load Analyzer Report"
+            <button
+              onClick={handleEmailReport}
               className="inline-flex items-center justify-center gap-2 border border-[#D4AF37] px-5 py-4 text-sm font-black uppercase text-[#D4AF37] transition hover:bg-[#D4AF37] hover:text-black"
             >
               <Mail size={18} />
               Email Report
-            </a>
+            </button>
 
-            <button className="inline-flex items-center justify-center gap-2 border border-[#D4AF37] px-5 py-4 text-sm font-black uppercase text-[#D4AF37] transition hover:bg-[#D4AF37] hover:text-black">
+            <button
+              onClick={handleSaveToClientFolder}
+              className="inline-flex items-center justify-center gap-2 border border-[#D4AF37] px-5 py-4 text-sm font-black uppercase text-[#D4AF37] transition hover:bg-[#D4AF37] hover:text-black"
+            >
               <Save size={18} />
               Save to Client Folder
             </button>
