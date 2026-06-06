@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
-import { onAuthStateChanged, signOut } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
+import { onAuthStateChanged, signOut, updateProfile } from "firebase/auth";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { auth, db } from "../firebase";
 import {
   FileText,
@@ -17,9 +17,12 @@ import {
 export default function Profile() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+
+  const [currentUser, setCurrentUser] = useState(null);
 
   const [profile, setProfile] = useState({
-    fullName: "Client",
+    fullName: "",
     email: "",
     phone: "",
     role: "client",
@@ -34,7 +37,10 @@ export default function Profile() {
         return;
       }
 
-      const userSnap = await getDoc(doc(db, "users", user.uid));
+      setCurrentUser(user);
+
+      const userRef = doc(db, "users", user.uid);
+      const userSnap = await getDoc(userRef);
 
       if (userSnap.exists()) {
         const data = userSnap.data();
@@ -47,6 +53,29 @@ export default function Profile() {
           purchases: data.purchases || [],
           progress: data.progress || 0,
         });
+      } else {
+        setProfile({
+          fullName: user.displayName || "Client",
+          email: user.email || "",
+          phone: "",
+          role: "client",
+          purchases: [],
+          progress: 0,
+        });
+
+        await setDoc(userRef, {
+          fullName: user.displayName || "Client",
+          email: user.email || "",
+          phone: "",
+          role: "client",
+          purchases: [],
+          documents: [],
+          progress: 0,
+          nextStep: "No action assigned yet",
+          timeline: [],
+          currentPhase: "Not started",
+          createdAt: new Date(),
+        });
       }
 
       setLoading(false);
@@ -54,6 +83,39 @@ export default function Profile() {
 
     return () => unsubscribe();
   }, [navigate]);
+
+  const handleSaveProfile = async () => {
+    if (!currentUser) return;
+
+    setSaving(true);
+
+    try {
+      await updateProfile(currentUser, {
+        displayName: profile.fullName,
+      });
+
+      await setDoc(
+        doc(db, "users", currentUser.uid),
+        {
+          fullName: profile.fullName,
+          email: profile.email,
+          phone: profile.phone,
+          role: profile.role,
+          purchases: profile.purchases,
+          progress: profile.progress,
+          updatedAt: new Date(),
+        },
+        { merge: true }
+      );
+
+      alert("Profile updated successfully.");
+    } catch (error) {
+      console.error(error);
+      alert("Failed to update profile.");
+    }
+
+    setSaving(false);
+  };
 
   const handleLogout = async () => {
     await signOut(auth);
@@ -145,46 +207,57 @@ export default function Profile() {
 
             <div className="bg-[#f7f7f7] p-6 md:p-8">
               <h2 className="text-3xl font-black text-black">
-                {profile.fullName}
+                {profile.fullName || "Client"}
               </h2>
 
               <p className="mt-3 text-gray-600">
-                Your account information is shown below.
+                Edit your account information below.
               </p>
 
               <div className="mt-8 grid gap-5 md:grid-cols-2">
                 <div className="border border-gray-300 bg-white p-5 shadow-sm">
-                  <p className="text-sm font-black uppercase text-gray-500">
+                  <label className="text-sm font-black uppercase text-gray-500">
                     Full Name
-                  </p>
-                  <p className="mt-2 text-xl font-black text-black">
-                    {profile.fullName}
-                  </p>
+                  </label>
+                  <input
+                    value={profile.fullName}
+                    onChange={(e) =>
+                      setProfile({ ...profile, fullName: e.target.value })
+                    }
+                    className="mt-3 w-full border border-gray-300 px-4 py-3 text-lg font-bold outline-none focus:border-[#caa12a]"
+                  />
                 </div>
 
                 <div className="border border-gray-300 bg-white p-5 shadow-sm">
-                  <p className="text-sm font-black uppercase text-gray-500">
+                  <label className="text-sm font-black uppercase text-gray-500">
                     Email
-                  </p>
-                  <p className="mt-2 text-xl font-black text-black">
-                    {profile.email}
-                  </p>
+                  </label>
+                  <input
+                    value={profile.email}
+                    disabled
+                    className="mt-3 w-full border border-gray-200 bg-gray-100 px-4 py-3 text-lg font-bold text-gray-500 outline-none"
+                  />
                 </div>
 
                 <div className="border border-gray-300 bg-white p-5 shadow-sm">
-                  <p className="text-sm font-black uppercase text-gray-500">
+                  <label className="text-sm font-black uppercase text-gray-500">
                     Phone
-                  </p>
-                  <p className="mt-2 text-xl font-black text-black">
-                    {profile.phone || "Not provided"}
-                  </p>
+                  </label>
+                  <input
+                    value={profile.phone}
+                    onChange={(e) =>
+                      setProfile({ ...profile, phone: e.target.value })
+                    }
+                    placeholder="Enter phone number"
+                    className="mt-3 w-full border border-gray-300 px-4 py-3 text-lg font-bold outline-none focus:border-[#caa12a]"
+                  />
                 </div>
 
                 <div className="border border-gray-300 bg-white p-5 shadow-sm">
                   <p className="text-sm font-black uppercase text-gray-500">
                     Role
                   </p>
-                  <p className="mt-2 text-xl font-black capitalize text-[#c28f00]">
+                  <p className="mt-3 text-xl font-black capitalize text-[#c28f00]">
                     {profile.role}
                   </p>
                 </div>
@@ -209,9 +282,17 @@ export default function Profile() {
               </div>
 
               <div className="mt-8 flex flex-wrap gap-4">
+                <button
+                  onClick={handleSaveProfile}
+                  disabled={saving}
+                  className="bg-[#caa12a] px-6 py-3 text-sm font-black uppercase text-black transition hover:bg-black hover:text-white disabled:opacity-60"
+                >
+                  {saving ? "Saving..." : "Save Profile"}
+                </button>
+
                 <Link
                   to="/dashboard"
-                  className="bg-[#caa12a] px-6 py-3 text-sm font-black uppercase text-black transition hover:bg-black hover:text-white"
+                  className="border border-[#caa12a] px-6 py-3 text-sm font-black uppercase text-black transition hover:bg-[#caa12a]"
                 >
                   Back to Dashboard
                 </Link>
@@ -223,6 +304,10 @@ export default function Profile() {
                   Logout
                 </button>
               </div>
+
+              <p className="mt-6 text-xs text-gray-500">
+                Signed in UID: {currentUser?.uid}
+              </p>
             </div>
           </div>
         </div>
