@@ -154,64 +154,7 @@ export default function LoadAnalyzerExport() {
         <div className="my-10 h-px bg-[#D4AF37]/30"></div>
         <div className="my-10 h-px bg-[#D4AF37]/30"></div>
 
-{/* EXCEL WORKSHEETS */}
-<section>
-  <div className="flex items-center gap-3">
-    <FileText className="text-[#D4AF37]" size={28} />
-    <h2 className="text-2xl font-black uppercase">
-      Analyzer Workbook Sheets
-    </h2>
-  </div>
 
-  <p className="mt-4 text-sm leading-relaxed text-white/70">
-    This document was exported from Numbers. Each table was converted to an
-    Excel worksheet. Formula calculations may differ in Excel.
-  </p>
-
-  <div className="mt-6 overflow-hidden rounded-md border border-[#D4AF37]/30">
-    <table className="w-full border-collapse text-left text-sm">
-      <thead className="bg-[#D4AF37] text-black">
-        <tr>
-          <th className="p-4 font-black uppercase">
-            Numbers Sheet Name
-          </th>
-          <th className="p-4 font-black uppercase">
-            Numbers Table Name
-          </th>
-          <th className="p-4 font-black uppercase">
-            Excel Worksheet Name
-          </th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr className="border-t border-white/10 bg-white/[0.04]">
-          <td className="p-4 font-bold text-white">Universal Analyzer</td>
-          <td className="p-4 text-white/80">Table 1</td>
-          <td className="p-4 font-bold text-[#D4AF37]">
-            Universal Analyzer
-          </td>
-        </tr>
-
-        <tr className="border-t border-white/10 bg-white/[0.02]">
-          <td className="p-4 font-bold text-white">Instructions</td>
-          <td className="p-4 text-white/80">Table 1</td>
-          <td className="p-4 font-bold text-[#D4AF37]">
-            Instructions
-          </td>
-        </tr>
-
-        <tr className="border-t border-white/10 bg-white/[0.04]">
-          <td className="p-4 font-bold text-white">Presets</td>
-          <td className="p-4 text-white/80">Table 1</td>
-          <td className="p-4 font-bold text-[#D4AF37]">
-            Presets
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</section>
         {/* COUNTER OFFER */}
         <section className="rounded-md border border-[#D4AF37]/30 bg-[#D4AF37]/10 p-6">
           <p className="font-black uppercase text-[#D4AF37]">
