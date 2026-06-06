@@ -6,9 +6,9 @@ import Signin from "./pages/Signin";
 import Signup from "./pages/Signup";
 import ForgotPassword from "./pages/ForgotPassword";
 import Dashboard from "./pages/Dashboard";
-import LoadAnalyzerExport from "./pages/LoadAnalyzerExport";
+//import LoadAnalyzerExport from "./pages/LoadAnalyzerExport";
 import { useLocation } from "react-router";
-import Loadbalancer from "./pages/Loadbalancer";
+//import Loadbalancer from "./pages/Loadbalancer";
 import MyVault from "./pages/MyVault";
 
 import Home from "./pages/Home";
@@ -52,8 +52,6 @@ const hideLayout =
         <Route path="/signup" element={<Signup />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/load-analyzer-export" element={<LoadAnalyzerExport />} />
-        <Route path="/load-analyzer" element={<Loadbalancer />} />
         <Route path="/my-vault" element={<MyVault />} />
       </Routes>
 
