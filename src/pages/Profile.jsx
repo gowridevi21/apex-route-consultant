@@ -59,7 +59,9 @@ export default function Profile() {
         const data = userSnap.data();
 
         const loadedProfile = {
-          fullName: data.fullName || user.displayName || "Client",
+          fullName: (data.fullName || user.displayName || "Client")
+  .split("|")[0]
+  .trim(),
           email: data.email || user.email || "",
           phone: data.phone || "",
           role: data.role || "client",
@@ -263,7 +265,7 @@ export default function Profile() {
               <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <div>
                   <h2 className="text-3xl font-black text-black">
-                    {profile.fullName || "Client"}
+                    {profile.fullName.split("|")[0].trim()}
                   </h2>
 
                   <p className="mt-3 text-gray-600">
