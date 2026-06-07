@@ -134,7 +134,7 @@ setClientName(cleanName);
 
             <div className="bg-[#f7f7f7] p-6 md:p-8">
               <h2 className="text-3xl font-black text-black">
-                {clientName}'s Client Vault
+                {clientName}'s Vault
               </h2>
 
               <p className="mt-3 text-gray-600">
