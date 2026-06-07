@@ -11,6 +11,8 @@ import { useLocation } from "react-router";
 //import Loadbalancer from "./pages/Loadbalancer";
 import MyVault from "./pages/MyVault";
 import Profile from "./pages/Profile";
+import Progress from "./pages/Progress";
+
 
 import Home from "./pages/Home";
 import About from "./pages/About";
@@ -55,6 +57,7 @@ const hideLayout =
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/my-vault" element={<MyVault />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/progress" element={<Progress />} />
       </Routes>
 
       <Footer />
