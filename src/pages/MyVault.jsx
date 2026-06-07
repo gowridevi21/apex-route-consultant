@@ -5,8 +5,8 @@ import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "../firebase";
 import {
   FileText,
+  Folder,
   LayoutDashboard,
-  //Lock,
   MessageSquare,
   Receipt,
   TrendingUp,
@@ -22,6 +22,17 @@ export default function MyVault() {
   const [clientName, setClientName] = useState("Client");
   const [documents, setDocuments] = useState([]);
 
+  const categories = [
+    "01 - Agreements & Receipts",
+    "02 - Mentorship Program",
+    "03 - Operations Setup & Systems",
+    "04 - Dispatch / Broker / Load Systems",
+    "05 - Money System / Startup Cost Tools",
+    "06 - Progress Reports",
+    "07 - Client Uploads",
+    "08 - Bonus Resources",
+  ];
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (!user) {
@@ -33,14 +44,19 @@ export default function MyVault() {
 
       if (userSnap.exists()) {
         const data = userSnap.data();
-        const cleanName = (data.fullName || user.displayName || "Client")
-  .split("|")[0]
-  .trim();
 
-setClientName(cleanName);
+        const cleanName = (data.fullName || user.displayName || "Client")
+          .split("|")[0]
+          .trim();
+
+        setClientName(cleanName);
         setDocuments(data.documents || []);
       } else {
-        setClientName(user.displayName || "Client");
+        const cleanName = (user.displayName || "Client")
+          .split("|")[0]
+          .trim();
+
+        setClientName(cleanName);
       }
 
       setLoading(false);
@@ -65,6 +81,10 @@ setClientName(cleanName);
     ["Profile", "/profile", User],
   ];
 
+  const getDocumentsByCategory = (category) => {
+    return documents.filter((docItem) => docItem.category === category);
+  };
+
   if (loading) {
     return (
       <main className="min-h-screen bg-[#050505] px-4 pt-8 text-white md:px-8">
@@ -86,14 +106,18 @@ setClientName(cleanName);
           </h1>
 
           <p className="mt-3 max-w-3xl text-white/70">
-            View your purchased documents, reports, resources, and saved files.
+            Your purchased PDFs, reports, agreements, uploads, invoices, and bonus resources are organized by category.
           </p>
         </div>
 
         <div className="overflow-hidden rounded-md border border-[#D4AF37]/30 bg-white shadow-2xl">
           <div className="flex flex-col gap-4 bg-[#0b1118] px-6 py-5 text-white md:flex-row md:items-center md:justify-between md:px-8">
             <div className="flex items-center gap-3">
-              <img src="/images/logo1.png" alt="Apex Logo" className="h-10 w-auto" />
+              <img
+                src="/images/logo1.png"
+                alt="Apex Logo"
+                className="h-10 w-auto"
+              />
               <h2 className="text-lg font-black uppercase tracking-wide">
                 Apex Client Portal
               </h2>
@@ -138,90 +162,123 @@ setClientName(cleanName);
               </h2>
 
               <p className="mt-3 text-gray-600">
-                All purchased PDFs, saved reports, agreements, and resources will appear here.
+                Every client only sees the files assigned to their account.
               </p>
 
-              <div className="mt-8">
-                {documents.length === 0 ? (
-                  <div className="rounded border border-dashed border-gray-300 bg-white p-8 text-center">
-                    <FileText className="mx-auto text-[#caa12a]" size={46} />
+              <div className="mt-8 grid gap-5">
+                {categories.map((category) => {
+                  const categoryDocs = getDocumentsByCategory(category);
 
-                    <h3 className="mt-4 text-xl font-black text-black">
-                      No documents yet
-                    </h3>
-
-                    <p className="mx-auto mt-3 max-w-xl text-sm text-gray-600">
-                      Once you purchase a service or Apex adds documents to your account,
-                      your files will appear here.
-                    </p>
-
-                    <Link
-                      to="/services"
-                      className="mt-6 inline-flex bg-[#caa12a] px-6 py-3 text-sm font-black uppercase text-black transition hover:bg-black hover:text-white"
+                  return (
+                    <div
+                      key={category}
+                      className="border border-gray-300 bg-white p-6 shadow-sm"
                     >
-                      View Services
-                    </Link>
-                  </div>
-                ) : (
-                  <div className="grid gap-5 md:grid-cols-2">
-                    {documents.map((docItem, index) => (
-                      <div
-                        key={`${docItem.name}-${index}`}
-                        className="border border-gray-300 bg-white p-6 shadow-sm"
-                      >
-                        <div className="flex items-start gap-4">
-                          <span className="flex h-11 w-11 shrink-0 items-center justify-center border-2 border-[#caa12a]">
-                            <FileText size={22} className="text-[#caa12a]" />
+                      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                        <div className="flex items-center gap-3">
+                          <span className="flex h-10 w-10 items-center justify-center bg-[#f2efe4]">
+                            <Folder size={22} className="text-[#caa12a]" />
                           </span>
 
                           <div>
                             <h3 className="font-black text-black">
-                              {docItem.name || "Untitled Document"}
+                              {category}
                             </h3>
-
-                            <p className="mt-1 text-sm text-gray-500">
-                              {docItem.type || "Document"}
+                            <p className="text-sm text-gray-500">
+                              {categoryDocs.length} file
+                              {categoryDocs.length === 1 ? "" : "s"}
                             </p>
-
-                            {docItem.createdAt && (
-                              <p className="mt-1 text-xs text-gray-400">
-                                Saved: {new Date(docItem.createdAt).toLocaleDateString()}
-                              </p>
-                            )}
                           </div>
                         </div>
-
-                        <div className="mt-6 flex flex-wrap gap-3">
-                          {docItem.url ? (
-                            <a
-                              href={docItem.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex items-center gap-2 bg-[#caa12a] px-5 py-3 text-sm font-black uppercase text-black"
-                            >
-                              View
-                            </a>
-                          ) : (
-                            <button className="inline-flex items-center gap-2 bg-gray-200 px-5 py-3 text-sm font-black uppercase text-gray-500">
-                              View
-                            </button>
-                          )}
-
-                          <button className="inline-flex items-center gap-2 border border-[#caa12a] px-5 py-3 text-sm font-black uppercase text-black">
-                            <Download size={16} />
-                            Save
-                          </button>
-                        </div>
                       </div>
-                    ))}
-                  </div>
-                )}
+
+                      <div className="mt-5">
+                        {categoryDocs.length === 0 ? (
+                          <div className="rounded border border-dashed border-gray-300 p-5 text-sm text-gray-500">
+                            No files added to this category yet.
+                          </div>
+                        ) : (
+                          <div className="space-y-3">
+                            {categoryDocs.map((docItem, index) => (
+                              <div
+                                key={`${docItem.name}-${index}`}
+                                className="flex flex-col gap-3 border-b border-gray-200 pb-3 last:border-b-0 sm:flex-row sm:items-center sm:justify-between"
+                              >
+                                <div className="flex items-start gap-3">
+                                  <span className="flex h-8 w-8 shrink-0 items-center justify-center border-2 border-[#caa12a]">
+                                    <FileText
+                                      size={16}
+                                      className="text-[#caa12a]"
+                                    />
+                                  </span>
+
+                                  <div>
+                                    <p className="text-sm font-black text-black">
+                                      {docItem.name || "Untitled Document"}
+                                    </p>
+
+                                    <p className="mt-1 text-xs text-gray-500">
+                                      {docItem.type || "Document"}
+                                    </p>
+
+                                    {docItem.createdAt && (
+                                      <p className="mt-1 text-xs text-gray-400">
+                                        Saved:{" "}
+                                        {new Date(
+                                          docItem.createdAt
+                                        ).toLocaleDateString()}
+                                      </p>
+                                    )}
+                                  </div>
+                                </div>
+
+                                <div className="flex flex-wrap gap-3">
+                                  {docItem.url ? (
+                                    <a
+                                      href={docItem.url}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="inline-flex items-center gap-2 bg-[#caa12a] px-4 py-2 text-xs font-black uppercase text-black transition hover:bg-black hover:text-white"
+                                    >
+                                      View
+                                    </a>
+                                  ) : (
+                                    <button className="inline-flex items-center gap-2 bg-gray-200 px-4 py-2 text-xs font-black uppercase text-gray-500">
+                                      View
+                                    </button>
+                                  )}
+
+                                  {docItem.url ? (
+                                    <a
+                                      href={docItem.url}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="inline-flex items-center gap-2 border border-[#caa12a] px-4 py-2 text-xs font-black uppercase text-black transition hover:bg-[#caa12a]"
+                                    >
+                                      <Download size={14} />
+                                      Download
+                                    </a>
+                                  ) : (
+                                    <button className="inline-flex items-center gap-2 border border-gray-300 px-4 py-2 text-xs font-black uppercase text-gray-400">
+                                      <Download size={14} />
+                                      Download
+                                    </button>
+                                  )}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
 
               <div className="mt-8 rounded border border-[#caa12a]/40 bg-[#f2efe4] p-5">
                 <p className="text-sm font-bold text-black">
                   Note: Only documents assigned to your account are visible here.
-                  You cannot access another client's files.
+                  Paid resources should not be shared publicly.
                 </p>
               </div>
             </div>

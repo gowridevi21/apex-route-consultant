@@ -4,6 +4,7 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "../firebase";
 import {
+  CheckCircle,
   FileText,
   LayoutDashboard,
   Lock,
@@ -20,9 +21,15 @@ export default function Progress() {
 
   const [loading, setLoading] = useState(true);
   const [progressData, setProgressData] = useState({
+    clientName: "Client",
+    programPurchased: "No program assigned yet",
+    startDate: "Not assigned",
     progress: 0,
-    nextStep: "No action assigned yet",
     currentPhase: "Not started",
+    completedItems: [],
+    openTasks: [],
+    nextCall: "Not scheduled",
+    clientNotes: "No notes added yet",
     timeline: [],
   });
 
@@ -37,11 +44,21 @@ export default function Progress() {
 
       if (userSnap.exists()) {
         const data = userSnap.data();
+        const cleanName = (data.fullName || user.displayName || "Client")
+          .split("|")[0]
+          .trim();
 
         setProgressData({
+          clientName: cleanName,
+          programPurchased:
+            data.programPurchased || data.purchases?.join(" + ") || "No program assigned yet",
+          startDate: data.startDate || "Not assigned",
           progress: data.progress || 0,
-          nextStep: data.nextStep || "No action assigned yet",
           currentPhase: data.currentPhase || "Not started",
+          completedItems: data.completedItems || [],
+          openTasks: data.openTasks || [],
+          nextCall: data.nextCall || data.nextStep || "Not scheduled",
+          clientNotes: data.clientNotes || "No notes added yet",
           timeline: data.timeline || [],
         });
       }
@@ -85,11 +102,11 @@ export default function Progress() {
           </p>
 
           <h1 className="mt-2 text-3xl font-black uppercase text-white md:text-5xl">
-            Progress
+            Progress Report
           </h1>
 
           <p className="mt-3 max-w-3xl text-white/70">
-            Track your current phase, next step, and overall client progress.
+            Track your program, current phase, completed items, open tasks, and next milestone.
           </p>
         </div>
 
@@ -142,39 +159,58 @@ export default function Progress() {
 
             <div className="bg-[#f7f7f7] p-6 md:p-8">
               <h2 className="text-3xl font-black text-black">
-                Progress Overview
+                {progressData.clientName}'s Progress
               </h2>
 
               <p className="mt-3 text-gray-600">
-                Your current client journey status is shown below.
+                This page documents what has been delivered, what is open, and what is next.
               </p>
 
-              <div className="mt-8 grid gap-5 md:grid-cols-3">
-                <div className="border border-gray-300 bg-white p-5 shadow-sm">
-                  <p className="text-sm font-black uppercase text-gray-500">
-                    Progress Score
-                  </p>
-                  <p className="mt-2 text-3xl font-black text-[#c28f00]">
-                    {progressData.progress}% complete
-                  </p>
+              <div className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+                <InfoCard label="Client Name" value={progressData.clientName} />
+                <InfoCard label="Program Purchased" value={progressData.programPurchased} gold />
+                <InfoCard label="Start Date" value={progressData.startDate} />
+                <InfoCard label="Completion" value={`${progressData.progress}% complete`} gold />
+              </div>
+
+              <div className="mt-6 grid gap-5 md:grid-cols-2">
+                <InfoCard label="Current Phase" value={progressData.currentPhase} gold />
+                <InfoCard label="Next Call / Next Step" value={progressData.nextCall} gold />
+              </div>
+
+              <div className="mt-8 grid gap-8 lg:grid-cols-2">
+                <div className="border border-gray-300 bg-white p-6 shadow-sm">
+                  <h3 className="text-xl font-black">Completed Items</h3>
+
+                  <div className="mt-5 space-y-3">
+                    {progressData.completedItems.length === 0 ? (
+                      <EmptyBox text="No completed items added yet." />
+                    ) : (
+                      progressData.completedItems.map((item, index) => (
+                        <div key={`${item}-${index}`} className="flex gap-3">
+                          <CheckCircle className="mt-0.5 text-[#caa12a]" size={18} />
+                          <p className="text-sm font-bold text-black">{item}</p>
+                        </div>
+                      ))
+                    )}
+                  </div>
                 </div>
 
-                <div className="border border-gray-300 bg-white p-5 shadow-sm">
-                  <p className="text-sm font-black uppercase text-gray-500">
-                    Current Phase
-                  </p>
-                  <p className="mt-2 text-xl font-black text-[#c28f00]">
-                    {progressData.currentPhase}
-                  </p>
-                </div>
+                <div className="border border-gray-300 bg-white p-6 shadow-sm">
+                  <h3 className="text-xl font-black">Open Tasks</h3>
 
-                <div className="border border-gray-300 bg-white p-5 shadow-sm">
-                  <p className="text-sm font-black uppercase text-gray-500">
-                    Next Step
-                  </p>
-                  <p className="mt-2 text-xl font-black text-[#c28f00]">
-                    {progressData.nextStep}
-                  </p>
+                  <div className="mt-5 space-y-3">
+                    {progressData.openTasks.length === 0 ? (
+                      <EmptyBox text="No open tasks assigned yet." />
+                    ) : (
+                      progressData.openTasks.map((item, index) => (
+                        <div key={`${item}-${index}`} className="flex gap-3">
+                          <span className="mt-1 h-4 w-4 shrink-0 border-2 border-[#caa12a]"></span>
+                          <p className="text-sm font-bold text-black">{item}</p>
+                        </div>
+                      ))
+                    )}
+                  </div>
                 </div>
               </div>
 
@@ -183,9 +219,7 @@ export default function Progress() {
 
                 <div className="mt-6 space-y-5">
                   {progressData.timeline.length === 0 ? (
-                    <div className="rounded border border-dashed border-gray-300 p-6 text-sm text-gray-500">
-                      No progress timeline has been assigned yet.
-                    </div>
+                    <EmptyBox text="No progress timeline has been assigned yet." />
                   ) : (
                     progressData.timeline.map((item, index) => (
                       <div
@@ -218,6 +252,13 @@ export default function Progress() {
                 </div>
               </div>
 
+              <div className="mt-8 border border-gray-300 bg-white p-6 shadow-sm">
+                <h3 className="text-xl font-black">Client-Facing Notes</h3>
+                <p className="mt-3 text-sm leading-relaxed text-gray-700">
+                  {progressData.clientNotes}
+                </p>
+              </div>
+
               <div className="mt-8 flex flex-wrap gap-4">
                 <Link
                   to="/dashboard"
@@ -238,5 +279,28 @@ export default function Progress() {
         </div>
       </section>
     </main>
+  );
+}
+
+function InfoCard({ label, value, gold = false }) {
+  return (
+    <div className="border border-gray-300 bg-white p-5 shadow-sm">
+      <p className="text-sm font-black uppercase text-gray-500">{label}</p>
+      <p
+        className={`mt-2 text-xl font-black ${
+          gold ? "text-[#c28f00]" : "text-black"
+        }`}
+      >
+        {value}
+      </p>
+    </div>
+  );
+}
+
+function EmptyBox({ text }) {
+  return (
+    <div className="rounded border border-dashed border-gray-300 p-5 text-sm text-gray-500">
+      {text}
+    </div>
   );
 }

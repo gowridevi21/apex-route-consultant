@@ -175,7 +175,7 @@ setClientName(cleanName);
                     Purchased Systems
                   </p>
                   <p className="mt-2 text-2xl font-black text-[#c28f00]">
-                    {clientData.purchases.length}
+                    {clientData.documents.length} files
                   </p>
                 </div>
 
