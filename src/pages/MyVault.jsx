@@ -33,7 +33,11 @@ export default function MyVault() {
 
       if (userSnap.exists()) {
         const data = userSnap.data();
-        setClientName(data.fullName || user.displayName || "Client");
+        const cleanName = (data.fullName || user.displayName || "Client")
+  .split("|")[0]
+  .trim();
+
+setClientName(cleanName);
         setDocuments(data.documents || []);
       } else {
         setClientName(user.displayName || "Client");
