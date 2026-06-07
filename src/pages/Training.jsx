@@ -6,6 +6,7 @@ import { auth, db } from "../firebase";
 import {
   FileText,
   LayoutDashboard,
+  Lock,
   MessageSquare,
   Receipt,
   TrendingUp,
@@ -19,6 +20,8 @@ export default function Training() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [training, setTraining] = useState([]);
+
+  const categories = ["Videos", "Guides", "Walkthroughs", "SOPs", "Homework"];
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -77,7 +80,8 @@ export default function Training() {
           </h1>
 
           <p className="mt-3 max-w-3xl text-white/70">
-            Access training videos, guides, and learning resources assigned to your account.
+            Access videos, guides, walkthroughs, SOPs, and weekly homework
+            assigned to your account.
           </p>
         </div>
 
@@ -89,6 +93,7 @@ export default function Training() {
                 alt="Apex Logo"
                 className="h-10 w-auto"
               />
+
               <h2 className="text-lg font-black uppercase tracking-wide">
                 Apex Client Portal
               </h2>
@@ -133,8 +138,21 @@ export default function Training() {
               </h2>
 
               <p className="mt-3 text-gray-600">
-                Your assigned Apex training resources will appear here.
+                Apex training content assigned to your program will appear here.
               </p>
+
+              <div className="mt-8 grid gap-5 md:grid-cols-5">
+                {categories.map((item) => (
+                  <div
+                    key={item}
+                    className="border border-[#caa12a]/30 bg-white p-4 text-center shadow-sm"
+                  >
+                    <p className="font-black uppercase text-[#caa12a]">
+                      {item}
+                    </p>
+                  </div>
+                ))}
+              </div>
 
               <div className="mt-8">
                 {training.length === 0 ? (
@@ -142,12 +160,12 @@ export default function Training() {
                     <PlayCircle className="mx-auto text-[#caa12a]" size={52} />
 
                     <h3 className="mt-4 text-xl font-black text-black">
-                      No training assigned yet
+                      Training resources will appear here
                     </h3>
 
                     <p className="mx-auto mt-3 max-w-xl text-sm text-gray-600">
-                      Once Apex assigns training videos or resources to your account,
-                      they will appear here.
+                      Once Apex assigns videos, guides, walkthroughs, SOPs, or
+                      weekly homework to your program, they will appear here.
                     </p>
 
                     <Link
@@ -166,7 +184,14 @@ export default function Training() {
                       >
                         <div className="flex items-start gap-4">
                           <span className="flex h-12 w-12 shrink-0 items-center justify-center border-2 border-[#caa12a]">
-                            <PlayCircle size={24} className="text-[#caa12a]" />
+                            {item.locked ? (
+                              <Lock size={24} className="text-[#caa12a]" />
+                            ) : (
+                              <PlayCircle
+                                size={24}
+                                className="text-[#caa12a]"
+                              />
+                            )}
                           </span>
 
                           <div>
@@ -175,17 +200,34 @@ export default function Training() {
                             </h3>
 
                             <p className="mt-2 text-sm text-gray-600">
-                              {item.description || "Apex assigned training material."}
+                              {item.description ||
+                                "Apex assigned training material."}
                             </p>
 
-                            <p className="mt-2 text-xs font-bold uppercase text-[#c28f00]">
-                              {item.type || "Training"}
-                            </p>
+                            <div className="mt-3 flex flex-wrap gap-2">
+                              <span className="rounded bg-[#f2efe4] px-3 py-1 text-xs font-black uppercase text-[#c28f00]">
+                                {item.type || "Training"}
+                              </span>
+
+                              {item.locked ? (
+                                <span className="rounded bg-red-100 px-3 py-1 text-xs font-black uppercase text-red-600">
+                                  Locked
+                                </span>
+                              ) : (
+                                <span className="rounded bg-green-100 px-3 py-1 text-xs font-black uppercase text-green-600">
+                                  Unlocked
+                                </span>
+                              )}
+                            </div>
                           </div>
                         </div>
 
                         <div className="mt-6">
-                          {item.url ? (
+                          {item.locked ? (
+                            <button className="inline-flex bg-gray-200 px-5 py-3 text-sm font-black uppercase text-gray-500">
+                              Locked Content
+                            </button>
+                          ) : item.url ? (
                             <a
                               href={item.url}
                               target="_blank"
