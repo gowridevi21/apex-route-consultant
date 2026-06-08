@@ -141,13 +141,13 @@ export default function Training() {
                 Apex training content assigned to your program will appear here.
               </p>
 
-              <div className="mt-8 grid gap-5 md:grid-cols-5">
+              <div className="mt-8 grid gap-5 md:grid-cols-3 lg:grid-cols-5">
                 {categories.map((item) => (
                   <div
                     key={item}
-                    className="border border-[#caa12a]/30 bg-white p-4 text-center shadow-sm"
+                    className="border border-[#caa12a]/30 bg-white p-4 text-center shadow-sm min-h-[80px] flex items-center justify-center"
                   >
-                    <p className="font-black uppercase text-[#caa12a]">
+                    <p className="text-sm font-black uppercase text-[#caa12a]">
                       {item}
                     </p>
                   </div>
