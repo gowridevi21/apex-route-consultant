@@ -21,7 +21,7 @@ export default function Training() {
   const [loading, setLoading] = useState(true);
   const [training, setTraining] = useState([]);
 
-  const categories = ["Videos", "Guides", "Walkthroughs", "SOPs", "Homework"];
+  const categories = ["Videos", "Guides", "Walkthroughs ", "SOPs", "Homework"];
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
