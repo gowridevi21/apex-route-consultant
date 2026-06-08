@@ -36,7 +36,7 @@ export default function Services() {
       title: "Universal Load Analyzer",
       subtitle:
         "Professional freight pricing and profitability software that helps carriers calculate profitability, identify break-even points, and create smart counter offers before booking freight.",
-      price: "$297",
+      price: "$197",
       items: [
         "Profitability analysis",
         "Break-even calculations",
