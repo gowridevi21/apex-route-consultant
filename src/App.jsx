@@ -13,6 +13,7 @@ import MyVault from "./pages/MyVault";
 import Profile from "./pages/Profile";
 import Progress from "./pages/Progress";
 import Training from "./pages/Training";
+import Uploads from "./pages/Uploads";
 
 import Home from "./pages/Home";
 import About from "./pages/About";
@@ -59,6 +60,7 @@ const hideLayout =
         <Route path="/profile" element={<Profile />} />
         <Route path="/progress" element={<Progress />} />
         <Route path="/training" element={<Training />} />
+        <Route path="/uploads" element={<Uploads />} />
       </Routes>
 
       <Footer />
