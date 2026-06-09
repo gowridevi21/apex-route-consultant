@@ -165,7 +165,7 @@ export default function Uploads() {
       alert("Document uploaded successfully.");
     } catch (error) {
       console.error(error);
-      alert("Upload failed. Please check Firebase Storage setup.");
+      //alert("Upload failed. Please check Firebase Storage setup.");
     }
 
     setUploadingKey("");
