@@ -37,6 +37,7 @@ export default function App() {
   "/invoices",
   "/support",
   "/profile",
+  "/admin",
 ];
 
 const hideLayout =
