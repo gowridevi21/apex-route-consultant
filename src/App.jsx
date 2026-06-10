@@ -16,6 +16,7 @@ import Training from "./pages/Training";
 import Uploads from "./pages/Uploads";
 import Support from "./pages/Support";
 import Invoices from "./pages/Invoices";
+import Admin from "./pages/Admin";
 
 import Home from "./pages/Home";
 import About from "./pages/About";
@@ -65,6 +66,7 @@ const hideLayout =
         <Route path="/uploads" element={<Uploads />} />
         <Route path="/support" element={<Support />} />
         <Route path="/invoices" element={<Invoices />} />
+        <Route path="/admin" element={<Admin />} />
       </Routes>
 
       <Footer />
