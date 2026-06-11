@@ -97,7 +97,7 @@ export default function Navbar() {
               onClick={() => setOpen(false)}
               className="bg-[#D4AF37] px-5 py-3 text-center text-sm font-black uppercase text-black"
             >
-              Sign Up
+              Sign Up/Signin
             </Link>
 
             <Link
