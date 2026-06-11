@@ -43,10 +43,11 @@ export default function Admin() {
       }
 
       const adminData = adminSnap.data();
+    const adminRole = adminData.role || adminData.documents?.role;
 
-      if (adminData.role !== "admin") {
-        navigate("/dashboard");
-        return;
+if (adminRole !== "admin") {
+  navigate("/dashboard");
+  return;
       }
 
       const cleanName = (adminData.fullName || user.displayName || "Admin")
@@ -65,7 +66,7 @@ export default function Admin() {
           fullName: (data.fullName || "Client").split("|")[0].trim(),
           email: data.email || "",
           phone: data.phone || "",
-          role: data.role || "client",
+          role: data.role || data.documents?.role || "client",
           progress: data.progress || 0,
           currentPhase: data.currentPhase || "Not started",
           nextStep: data.nextStep || "No action assigned yet",
