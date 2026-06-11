@@ -7,20 +7,24 @@ import {
   FileText,
   LayoutDashboard,
   Lock,
+  Menu,
   MessageSquare,
   Receipt,
   TrendingUp,
   UploadCloud,
   User,
   Video,
+  X,
 } from "lucide-react";
 
 export default function Dashboard() {
   const navigate = useNavigate();
 
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [clientName, setClientName] = useState("Client");
   const [userRole, setUserRole] = useState("client");
+
   const [clientData, setClientData] = useState({
     purchases: [],
     documents: [],
@@ -38,28 +42,33 @@ export default function Dashboard() {
       }
 
       try {
-        const userRef = doc(db, "users", user.uid);
-        const userSnap = await getDoc(userRef);
+        const userSnap = await getDoc(doc(db, "users", user.uid));
 
         if (userSnap.exists()) {
           const data = userSnap.data();
-          setUserRole(data.role || data.documents?.role || "client");
-          const cleanName = (data.fullName || user.displayName || "Client")
-  .split("|")[0]
-  .trim();
 
-setClientName(cleanName);
+          setUserRole(data.role || data.documents?.role || "client");
+
+          const cleanName = (data.fullName || user.displayName || "Client")
+            .split("|")[0]
+            .trim();
+
+          setClientName(cleanName);
 
           setClientData({
             purchases: data.purchases || [],
-            documents: data.documents || [],
+            documents: Array.isArray(data.documents) ? data.documents : [],
             progress: data.progress || 0,
             nextStep: data.nextStep || "No action assigned yet",
             timeline: data.timeline || [],
             currentPhase: data.currentPhase || "Not started",
           });
         } else {
-          setClientName(user.displayName || "Client");
+          const cleanName = (user.displayName || "Client")
+            .split("|")[0]
+            .trim();
+
+          setClientName(cleanName);
         }
       } catch (error) {
         console.error("Dashboard data error:", error);
@@ -115,16 +124,25 @@ setClientName(cleanName);
 
         <div className="overflow-hidden rounded-md border border-[#D4AF37]/30 bg-white shadow-2xl">
           <div className="flex flex-col gap-4 bg-[#0b1118] px-6 py-5 text-white md:flex-row md:items-center md:justify-between md:px-8">
-            <div className="flex items-center gap-3">
-              <img
-                src="/images/logo1.png"
-                alt="Apex Logo"
-                className="h-10 w-auto"
-              />
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <img
+                  src="/images/logo1.png"
+                  alt="Apex Logo"
+                  className="h-10 w-auto"
+                />
 
-              <h2 className="text-lg font-black uppercase tracking-wide">
-                Apex Client Portal
-              </h2>
+                <h2 className="text-lg font-black uppercase tracking-wide">
+                  Apex Client Portal
+                </h2>
+              </div>
+
+              <button
+                onClick={() => setMobileMenuOpen(true)}
+                className="md:hidden"
+              >
+                <Menu size={24} />
+              </button>
             </div>
 
             <div className="text-sm font-bold">
@@ -143,11 +161,31 @@ setClientName(cleanName);
           </div>
 
           <div className="grid md:grid-cols-[260px_1fr]">
-            <aside className="bg-[#eee9dc] p-5">
+            {mobileMenuOpen && (
+              <div
+                className="fixed inset-0 z-40 bg-black/50 md:hidden"
+                onClick={() => setMobileMenuOpen(false)}
+              />
+            )}
+
+            <aside
+              className={`fixed left-0 top-0 z-50 h-full w-72 bg-[#eee9dc] p-5 transition-transform duration-300 md:static md:h-auto md:w-auto md:translate-x-0 ${
+                mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+              }`}
+            >
+              <div className="mb-6 flex items-center justify-between md:hidden">
+                <h3 className="font-black">Menu</h3>
+
+                <button onClick={() => setMobileMenuOpen(false)}>
+                  <X size={22} />
+                </button>
+              </div>
+
               {sidebarLinks.map(([name, path, Icon], index) => (
                 <Link
                   key={name}
                   to={path}
+                  onClick={() => setMobileMenuOpen(false)}
                   className={`mb-3 flex items-center gap-3 px-5 py-4 text-sm font-black uppercase transition ${
                     index === 0
                       ? "bg-[#caa12a] text-black"
@@ -158,10 +196,21 @@ setClientName(cleanName);
                   {name}
                 </Link>
               ))}
+
+              {userRole === "admin" && (
+                <Link
+                  to="/admin"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="mb-3 flex items-center gap-3 bg-black px-5 py-4 text-sm font-black uppercase text-[#caa12a] transition hover:bg-[#caa12a] hover:text-black"
+                >
+                  <LayoutDashboard size={18} />
+                  Admin
+                </Link>
+              )}
             </aside>
 
-            <div className="bg-[#f7f7f7] p-6 md:p-8">
-              <h2 className="text-3xl font-black text-black">
+            <div className="bg-[#f7f7f7] p-4 md:p-8">
+              <h2 className="text-2xl font-black text-black md:text-3xl">
                 Welcome back, {clientName}
               </h2>
 
@@ -170,7 +219,7 @@ setClientName(cleanName);
                 are organized here.
               </p>
 
-              <div className="mt-6 grid gap-5 md:grid-cols-3">
+              <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
                 <div className="border border-gray-300 bg-white p-5 shadow-sm">
                   <p className="text-sm font-black uppercase text-gray-500">
                     Purchased Systems
@@ -217,13 +266,13 @@ setClientName(cleanName);
                   <div className="mt-5 space-y-3">
                     {clientData.documents.length === 0 ? (
                       <div className="rounded border border-dashed border-gray-300 p-6 text-sm text-gray-500">
-                        No purchased documents yet. Once a product is purchased,
-                        documents will appear here.
+                        No purchased documents yet. Once Apex assigns files to
+                        your account, they will appear here.
                       </div>
                     ) : (
-                      clientData.documents.map((docItem) => (
+                      clientData.documents.map((docItem, index) => (
                         <div
-                          key={docItem.name}
+                          key={`${docItem.name}-${index}`}
                           className="flex flex-col gap-3 border-b border-gray-200 pb-3 last:border-b-0 sm:flex-row sm:items-center sm:justify-between"
                         >
                           <div className="flex items-center gap-3">
@@ -262,9 +311,9 @@ setClientName(cleanName);
                         No progress started yet.
                       </div>
                     ) : (
-                      clientData.timeline.map((item) => (
+                      clientData.timeline.map((item, index) => (
                         <div
-                          key={item.phase}
+                          key={`${item.phase}-${index}`}
                           className={`flex items-center gap-4 ${
                             item.status === "locked" ? "text-gray-500" : ""
                           }`}
@@ -274,7 +323,7 @@ setClientName(cleanName);
                               <Lock size={13} />
                             </span>
                           ) : (
-                            <span className="h-5 w-5 bg-[#caa12a]"></span>
+                            <span className="h-5 w-5 bg-[#caa12a]" />
                           )}
 
                           <span
@@ -300,7 +349,7 @@ setClientName(cleanName);
                 </div>
               </div>
 
-              <div className="mt-8 grid gap-4 md:grid-cols-5">
+              <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
                 <Link
                   to="/my-vault"
                   className="bg-[#caa12a] px-5 py-4 text-center text-sm font-black uppercase text-black transition hover:bg-black hover:text-white"
@@ -328,14 +377,15 @@ setClientName(cleanName);
                 >
                   Support
                 </Link>
-                  {userRole === "admin" && (
-    <Link
-      to="/admin"
-      className="bg-black px-5 py-4 text-center text-sm font-black uppercase text-[#caa12a] transition hover:bg-[#caa12a] hover:text-black"
-    >
-      Admin
-    </Link>
-  )}
+
+                {userRole === "admin" && (
+                  <Link
+                    to="/admin"
+                    className="bg-black px-5 py-4 text-center text-sm font-black uppercase text-[#caa12a] transition hover:bg-[#caa12a] hover:text-black"
+                  >
+                    Admin
+                  </Link>
+                )}
               </div>
             </div>
           </div>
