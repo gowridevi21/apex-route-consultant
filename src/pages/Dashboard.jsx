@@ -20,6 +20,7 @@ export default function Dashboard() {
 
   const [loading, setLoading] = useState(true);
   const [clientName, setClientName] = useState("Client");
+  const [userRole, setUserRole] = useState("client");
   const [clientData, setClientData] = useState({
     purchases: [],
     documents: [],
@@ -42,7 +43,7 @@ export default function Dashboard() {
 
         if (userSnap.exists()) {
           const data = userSnap.data();
-
+          setUserRole(data.role || data.documents?.role || "client");
           const cleanName = (data.fullName || user.displayName || "Client")
   .split("|")[0]
   .trim();
@@ -299,7 +300,7 @@ setClientName(cleanName);
                 </div>
               </div>
 
-              <div className="mt-8 grid gap-4 md:grid-cols-4">
+              <div className="mt-8 grid gap-4 md:grid-cols-5">
                 <Link
                   to="/my-vault"
                   className="bg-[#caa12a] px-5 py-4 text-center text-sm font-black uppercase text-black transition hover:bg-black hover:text-white"
@@ -327,6 +328,14 @@ setClientName(cleanName);
                 >
                   Support
                 </Link>
+                  {userRole === "admin" && (
+    <Link
+      to="/admin"
+      className="bg-black px-5 py-4 text-center text-sm font-black uppercase text-[#caa12a] transition hover:bg-[#caa12a] hover:text-black"
+    >
+      Admin
+    </Link>
+  )}
               </div>
             </div>
           </div>
