@@ -17,6 +17,7 @@ import Uploads from "./pages/Uploads";
 import Support from "./pages/Support";
 import Invoices from "./pages/Invoices";
 import Admin from "./pages/Admin";
+import AdminClient from "./pages/AdminClient";
 
 import Home from "./pages/Home";
 import About from "./pages/About";
@@ -42,7 +43,8 @@ export default function App() {
 
 const hideLayout =
   location.pathname === "/load-analyzer-export" ||
-  dashboardRoutes.includes(location.pathname);
+  dashboardRoutes.includes(location.pathname) ||
+  location.pathname.startsWith("/admin/client/");
   return (
     <>
       <ScrollToTop />
@@ -68,6 +70,7 @@ const hideLayout =
         <Route path="/support" element={<Support />} />
         <Route path="/invoices" element={<Invoices />} />
         <Route path="/admin" element={<Admin />} />
+        <Route path="/admin/client/:clientId" element={<AdminClient />} />
       </Routes>
 
       <Footer />
