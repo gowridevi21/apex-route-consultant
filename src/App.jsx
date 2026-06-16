@@ -19,6 +19,7 @@ import Invoices from "./pages/Invoices";
 import Admin from "./pages/Admin";
 import AdminClient from "./pages/AdminClient";
 import AdminFiles from "./pages/AdminFiles";
+import AdminSupport from "./pages/AdminSupport";
 
 import Home from "./pages/Home";
 import About from "./pages/About";
@@ -73,6 +74,7 @@ const hideLayout =
         <Route path="/admin" element={<Admin />} />
         <Route path="/admin/client/:clientId" element={<AdminClient />} />
         <Route path="/admin/files" element={<AdminFiles />} />
+        <Route path="/admin/support" element={<AdminSupport />} />
       </Routes>
 
       <Footer />
