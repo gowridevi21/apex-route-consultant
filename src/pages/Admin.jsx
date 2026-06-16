@@ -163,23 +163,25 @@ if (adminRole !== "admin") {
         <div className="mt-6 flex flex-wrap gap-4">
   <Link
     to="/admin/files"
-    className="bg-[#caa12a] px-6 py-3 text-sm font-black uppercase text-black transition hover:bg-black hover:text-white"
+    className="w-56 bg-[#caa12a] px-6 py-3 text-center text-sm font-black uppercase text-black transition hover:bg-black hover:text-white"
   >
     File Manager
   </Link>
+
+  <Link
+    to="/admin/support"
+    className="w-56 bg-[#caa12a] px-6 py-3 text-center text-sm font-black uppercase text-black transition hover:bg-black hover:text-white"
+  >
+    Support Center
+  </Link>
+
+  <Link
+    to="/admin/uploads"
+    className="w-56 bg-[#caa12a] px-6 py-3 text-center text-sm font-black uppercase text-black transition hover:bg-black hover:text-white"
+  >
+    Upload Review
+  </Link>
 </div>
-<Link
-  to="/admin/support"
-  className="bg-[#caa12a] px-6 py-3 text-sm font-black uppercase text-black transition hover:bg-black hover:text-white"
->
-  Support Center
-</Link>
-<Link
-  to="/admin/uploads"
-  className="bg-[#caa12a] px-6 py-3 text-sm font-black uppercase text-black transition hover:bg-black hover:text-white"
->
-  Upload Review
-</Link>
 
         <div className="mt-8 overflow-hidden rounded-md border border-[#D4AF37]/30 bg-white shadow-2xl">
           <div className="flex flex-col gap-4 bg-[#0b1118] px-6 py-5 text-white md:flex-row md:items-center md:justify-between">
