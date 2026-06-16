@@ -160,6 +160,14 @@ if (adminRole !== "admin") {
           <StatCard icon={Receipt} label="Invoices" value={totalInvoices} />
           <StatCard icon={MessageSquare} label="Tickets" value={totalTickets} />
         </div>
+        <div className="mt-6 flex flex-wrap gap-4">
+  <Link
+    to="/admin/files"
+    className="bg-[#caa12a] px-6 py-3 text-sm font-black uppercase text-black transition hover:bg-black hover:text-white"
+  >
+    File Manager
+  </Link>
+</div>
 
         <div className="mt-8 overflow-hidden rounded-md border border-[#D4AF37]/30 bg-white shadow-2xl">
           <div className="flex flex-col gap-4 bg-[#0b1118] px-6 py-5 text-white md:flex-row md:items-center md:justify-between">
