@@ -42,6 +42,9 @@ export default function App() {
   "/support",
   "/profile",
   "/admin",
+  "/admin/files",
+  "/admin/support",
+  "/admin/uploads",
 ];
 
 const hideLayout =
