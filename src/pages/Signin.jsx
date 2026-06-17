@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { signInWithEmailAndPassword, signOut } from "firebase/auth";
+import {
+  signInWithEmailAndPassword,
+  signOut,
+  setPersistence,
+  browserLocalPersistence,
+  browserSessionPersistence,
+} from "firebase/auth";
 import { Link, useNavigate } from "react-router";
 import { auth } from "../firebase";
 
@@ -11,6 +17,7 @@ export default function Signin() {
     password: "",
   });
 
+  const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -20,6 +27,11 @@ export default function Signin() {
     setLoading(true);
 
     try {
+      await setPersistence(
+        auth,
+        rememberMe ? browserLocalPersistence : browserSessionPersistence
+      );
+
       const userCredential = await signInWithEmailAndPassword(
         auth,
         form.email,
@@ -54,6 +66,7 @@ export default function Signin() {
             type="email"
             placeholder="Email Address"
             className="input-style"
+            value={form.email}
             onChange={(e) => setForm({ ...form, email: e.target.value })}
           />
 
@@ -62,8 +75,23 @@ export default function Signin() {
             type="password"
             placeholder="Password"
             className="input-style"
+            value={form.password}
             onChange={(e) => setForm({ ...form, password: e.target.value })}
           />
+
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="rememberMe"
+              checked={rememberMe}
+              onChange={(e) => setRememberMe(e.target.checked)}
+              className="h-4 w-4 accent-[#D4AF37]"
+            />
+
+            <label htmlFor="rememberMe" className="text-sm text-white/80">
+              Remember me
+            </label>
+          </div>
 
           {error && <p className="text-sm text-red-400">{error}</p>}
 
