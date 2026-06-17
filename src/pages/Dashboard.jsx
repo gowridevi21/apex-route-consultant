@@ -97,7 +97,8 @@ export default function Dashboard() {
     ["Support", "/support", MessageSquare],
     ["Profile", "/profile", User],
   ];
-
+  const totalDocuments = clientData.documents.length;
+  //const totalPurchases = clientData.purchases.length;
   if (loading) {
     return (
       <main className="min-h-screen bg-[#050505] px-4 pt-8 text-white md:px-8">
@@ -247,9 +248,28 @@ export default function Dashboard() {
                   <p className="mt-2 text-xl font-black text-[#c28f00]">
                     {clientData.nextStep}
                   </p>
+                  <div className="border border-gray-300 bg-white p-5 shadow-sm">
+  <p className="text-sm font-black uppercase text-gray-500">
+    Current Phase
+  </p>
+
+  <p className="mt-2 text-xl font-black text-[#c28f00]">
+    {clientData.currentPhase}
+  </p>
+</div>
+
+<div className="border border-gray-300 bg-white p-5 shadow-sm">
+  <p className="text-sm font-black uppercase text-gray-500">
+    Documents
+  </p>
+
+  <p className="mt-2 text-2xl font-black text-[#c28f00]">
+    {totalDocuments}
+  </p>
+</div>
                 </div>
               </div>
-
+              
               <div className="mt-8 grid gap-8 lg:grid-cols-[1.4fr_0.8fr]">
                 <div className="border border-gray-300 bg-white p-6 shadow-sm">
                   <div className="flex items-center justify-between gap-4">
