@@ -218,7 +218,8 @@ export default function Dashboard() {
               </h2>
 
               <p className="mt-3 text-gray-600">
-                Your purchases, progress reports, action steps, and resources are organized here.
+                Your purchases, progress reports, action steps, and resources
+                are organized here.
               </p>
 
               <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -314,9 +315,14 @@ export default function Dashboard() {
                             </div>
                           </div>
 
-                          <div className="text-sm font-bold text-[#c28f00]">
-                            View | Save
-                          </div>
+                          <a
+  href={docItem.url}
+  target="_blank"
+  rel="noopener noreferrer"
+  className="text-sm font-bold text-[#c28f00]"
+>
+  View Document
+</a>
                         </div>
                       ))
                     )}

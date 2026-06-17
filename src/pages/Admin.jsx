@@ -161,8 +161,7 @@ const filteredClients = clients.filter((client) =>
             </h1>
 
             <p className="mt-3 max-w-3xl text-white/70">
-              Welcome back, {adminName}. Manage clients, progress, documents,
-              uploads, invoices, and support requests.
+              Welcome back, {adminName}. Manage clients, progress, documents, uploads, invoices, and support.
             </p>
           </div>
 

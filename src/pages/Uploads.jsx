@@ -142,7 +142,7 @@ export default function Uploads() {
         type: uploadType.title,
         category: uploadType.category,
         url: downloadURL,
-        status: "Uploaded",
+        status: "Pending Review",
         createdAt: new Date().toISOString(),
       };
 
