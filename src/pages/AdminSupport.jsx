@@ -208,30 +208,42 @@ export default function AdminSupport() {
                     </div>
 
                     <div className="flex flex-wrap gap-3">
-                      <button
-                        onClick={() => updateTicketStatus(ticket, "Open")}
-                        className="border border-[#caa12a] px-4 py-2 text-xs font-black uppercase text-black hover:bg-[#caa12a]"
-                      >
-                        Open
-                      </button>
+  <button
+    onClick={() => updateTicketStatus(ticket, "Open")}
+    className="border border-[#caa12a] px-4 py-2 text-xs font-black uppercase text-black hover:bg-[#caa12a]"
+  >
+    Open
+  </button>
 
-                      <button
-                        onClick={() =>
-                          updateTicketStatus(ticket, "In Progress")
-                        }
-                        className="border border-[#caa12a] px-4 py-2 text-xs font-black uppercase text-black hover:bg-[#caa12a]"
-                      >
-                        In Progress
-                      </button>
+  <button
+    onClick={() => updateTicketStatus(ticket, "In Progress")}
+    className="border border-[#caa12a] px-4 py-2 text-xs font-black uppercase text-black hover:bg-[#caa12a]"
+  >
+    In Progress
+  </button>
 
-                      <button
-                        onClick={() => updateTicketStatus(ticket, "Closed")}
-                        className="inline-flex items-center gap-2 bg-[#caa12a] px-4 py-2 text-xs font-black uppercase text-black hover:bg-black hover:text-white"
-                      >
-                        <Save size={14} />
-                        Closed
-                      </button>
-                    </div>
+  <button
+    onClick={() => updateTicketStatus(ticket, "Waiting on Client")}
+    className="border border-[#caa12a] px-4 py-2 text-xs font-black uppercase text-black hover:bg-[#caa12a]"
+  >
+    Waiting
+  </button>
+
+  <button
+    onClick={() => updateTicketStatus(ticket, "Resolved")}
+    className="border border-[#caa12a] px-4 py-2 text-xs font-black uppercase text-black hover:bg-[#caa12a]"
+  >
+    Resolved
+  </button>
+
+  <button
+    onClick={() => updateTicketStatus(ticket, "Closed")}
+    className="inline-flex items-center gap-2 bg-[#caa12a] px-4 py-2 text-xs font-black uppercase text-black hover:bg-black hover:text-white"
+  >
+    <Save size={14} />
+    Closed
+  </button>
+</div>
                   </div>
                 </div>
               ))
