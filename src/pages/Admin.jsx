@@ -29,7 +29,8 @@ export default function Admin() {
   const [adminName, setAdminName] = useState("Admin");
   const [clients, setClients] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-
+  const [filter, setFilter] = useState("all");
+  
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (!user) {
@@ -219,6 +220,16 @@ const filteredClients = clients.filter((client) =>
       onChange={(e) => setSearchTerm(e.target.value)}
       className="w-full rounded-md border-4 border-[#caa12a] bg-[#111] py-3 pl-12 pr-4 text-white outline-none"
     />
+    <select
+  value={filter}
+  onChange={(e) => setFilter(e.target.value)}
+  className="border-2 border-[#D4AF37] bg-white px-4 py-3"
+>
+  <option value="all">All Clients</option>
+  <option value="active">Active</option>
+  <option value="completed">Completed</option>
+  <option value="admin">Admins</option>
+</select>
   </div>
 </div>
         <div className="mt-8 overflow-hidden rounded-md border border-[#D4AF37]/30 bg-white shadow-2xl">

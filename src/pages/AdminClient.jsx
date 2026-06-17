@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { doc, getDoc, setDoc, arrayUnion } from "firebase/firestore";
+import emailjs from "@emailjs/browser";
 import { auth, db } from "../firebase";
 import {
   ArrowLeft,
@@ -13,6 +14,9 @@ import {
   UploadCloud,
 } from "lucide-react";
 
+const SERVICE_ID = "service_5vyb6vb";
+const CUSTOMER_TEMPLATE_ID = "template_hwroov8";
+const PUBLIC_KEY = "R82-i7Mc5PSHOL3Yi";
 export default function AdminClient() {
   const { clientId } = useParams();
   const navigate = useNavigate();
@@ -224,6 +228,25 @@ export default function AdminClient() {
       },
       { merge: true }
     );
+    await emailjs.send(
+  SERVICE_ID,
+  CUSTOMER_TEMPLATE_ID,
+  {
+    name: clientName,
+    from_name: "Apex Route Consultant Group",
+    user_name: clientName,
+    user_email: client.email || client.documents?.email || "",
+    to_email: client.email || client.documents?.email || "",
+    reply_to: "ceo@apexrouteconsulting.com",
+
+    invoice_number: invoiceForm.invoiceNumber,
+    invoice_service: invoiceForm.service,
+    invoice_amount: invoiceForm.amount,
+    invoice_status: invoiceForm.status,
+    message: `A new invoice has been added to your Apex client portal.`,
+  },
+  PUBLIC_KEY
+);
     await addActivity(`Invoice added: ${invoiceForm.invoiceNumber}.`);
     setInvoiceForm({
       invoiceNumber: "",

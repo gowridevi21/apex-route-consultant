@@ -11,7 +11,11 @@ import {
   UploadCloud,
   XCircle,
 } from "lucide-react";
+import emailjs from "@emailjs/browser";
 
+const SERVICE_ID = "service_5vyb6vb";
+const CUSTOMER_TEMPLATE_ID = "template_hwroov8";
+const PUBLIC_KEY = "R82-i7Mc5PSHOL3Yi";
 export default function AdminUploads() {
   const navigate = useNavigate();
 
@@ -97,7 +101,23 @@ export default function AdminUploads() {
     await updateDoc(userRef, {
       uploads: updatedUploads,
     });
+await emailjs.send(
+  SERVICE_ID,
+  CUSTOMER_TEMPLATE_ID,
+  {
+    name: uploadToUpdate.clientName,
+    from_name: "Apex Route Consultant Group",
+    user_name: uploadToUpdate.clientName,
+    user_email: uploadToUpdate.clientEmail,
+    to_email: uploadToUpdate.clientEmail,
+    reply_to: "ceo@apexrouteconsulting.com",
 
+    upload_name: uploadToUpdate.name || "Uploaded Document",
+    upload_status: newStatus,
+    message: `Your uploaded document status has been updated to ${newStatus}.`,
+  },
+  PUBLIC_KEY
+);
     setUploads((prev) =>
       prev.map((upload) =>
         upload.clientId === uploadToUpdate.clientId &&
