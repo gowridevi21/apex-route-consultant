@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import {
   FileText,
@@ -21,6 +21,40 @@ export default function PortalLayout({
   showAdmin = false,
 }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  useEffect(() => {
+  let timeout;
+
+  const resetTimer = () => {
+    clearTimeout(timeout);
+
+    timeout = setTimeout(() => {
+      handleLogout();
+      alert("Session expired. Please sign in again.");
+    }, 15 * 60 * 1000);
+  };
+
+  const events = [
+    "mousemove",
+    "mousedown",
+    "keypress",
+    "scroll",
+    "touchstart",
+  ];
+
+  events.forEach((event) =>
+    window.addEventListener(event, resetTimer)
+  );
+
+  resetTimer();
+
+  return () => {
+    clearTimeout(timeout);
+
+    events.forEach((event) =>
+      window.removeEventListener(event, resetTimer)
+    );
+  };
+}, [handleLogout]);
 
   const sidebarLinks = [
     ["Dashboard", "/dashboard", LayoutDashboard],

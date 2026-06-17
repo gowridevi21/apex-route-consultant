@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "../firebase";
+
 //import PortalLayout from "../components/PortalLayout";
 import {
   FileText,
