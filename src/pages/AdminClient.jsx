@@ -414,11 +414,6 @@ export default function AdminClient() {
           <ListCard title="Support Tickets" icon={MessageSquare} items={client.supportTickets || []} />
         </div>     
 
-{/* ADMIN NOTES SECTION */}
-<div className="mt-8 border border-gray-300 bg-white p-6 shadow-sm">
-  ...
-</div>
-
 {/* ACTIVITY TIMELINE SECTION */}
 <div className="mt-8 border border-gray-300 bg-white p-6 shadow-sm">
   <h2 className="text-xl font-black text-black">
