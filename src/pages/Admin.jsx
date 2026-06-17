@@ -93,36 +93,67 @@ if (adminRole !== "admin") {
     navigate("/signin");
   };
 
-  const totalDocuments = clients.reduce(
-    (sum, client) => sum + client.documents.length,
-    0
-  );
+ const totalDocuments = clients.reduce(
+  (sum, client) => sum + client.documents.length,
+  0
+);
 
-  const totalTraining = clients.reduce(
-    (sum, client) => sum + client.training.length,
-    0
-  );
+const totalTraining = clients.reduce(
+  (sum, client) => sum + client.training.length,
+  0
+);
 
-  const totalUploads = clients.reduce(
-    (sum, client) => sum + client.uploads.length,
-    0
-  );
+const totalUploads = clients.reduce(
+  (sum, client) => sum + client.uploads.length,
+  0
+);
 
-  const totalInvoices = clients.reduce(
-    (sum, client) => sum + client.invoices.length,
-    0
-  );
+const totalInvoices = clients.reduce(
+  (sum, client) => sum + client.invoices.length,
+  0
+);
 
-  const totalTickets = clients.reduce(
-    (sum, client) => sum + client.supportTickets.length,
-    0
-  );
-  const filteredClients = clients.filter((client) =>
+const totalTickets = clients.reduce(
+  (sum, client) => sum + client.supportTickets.length,
+  0
+);
+
+const activeClients = clients.filter(
+  (client) => client.role !== "admin"
+).length;
+
+const openTickets = clients.reduce(
+  (sum, client) =>
+    sum +
+    client.supportTickets.filter(
+      (ticket) => ticket.status !== "Closed"
+    ).length,
+  0
+);
+
+const pendingUploads = clients.reduce(
+  (sum, client) =>
+    sum +
+    client.uploads.filter(
+      (upload) => upload.status !== "Approved"
+    ).length,
+  0
+);
+
+const pendingInvoices = clients.reduce(
+  (sum, client) =>
+    sum +
+    client.invoices.filter(
+      (invoice) => invoice.status !== "Paid"
+    ).length,
+  0
+);
+
+const filteredClients = clients.filter((client) =>
   `${client.fullName} ${client.email}`
     .toLowerCase()
     .includes(searchTerm.toLowerCase())
 );
-
   if (loading) {
     return (
       <main className="min-h-screen bg-[#050505] px-4 pt-8 text-white md:px-8">
@@ -159,14 +190,14 @@ if (adminRole !== "admin") {
           </button>
         </div>
 
-        <div className="grid gap-5 md:grid-cols-3 lg:grid-cols-6">
-          <StatCard icon={Users} label="Clients" value={clients.length} />
-          <StatCard icon={FileText} label="Documents" value={totalDocuments} />
-          <StatCard icon={UploadCloud} label="Uploads" value={totalUploads} />
-          <StatCard icon={TrendingUp} label="Training" value={totalTraining} />
-          <StatCard icon={Receipt} label="Invoices" value={totalInvoices} />
-          <StatCard icon={MessageSquare} label="Tickets" value={totalTickets} />
-        </div>
+        <div className="grid gap-5 md:grid-cols-3 lg:grid-cols-4">
+  <StatCard icon={Users} label="Active Clients" value={activeClients} />
+  <StatCard icon={FileText} label="Documents" value={totalDocuments} />
+  <StatCard icon={UploadCloud} label="Pending Uploads" value={pendingUploads} />
+  <StatCard icon={TrendingUp} label="Training Items" value={totalTraining} />
+  <StatCard icon={Receipt} label="Pending Invoices" value={pendingInvoices} />
+  <StatCard icon={MessageSquare} label="Open Tickets" value={openTickets} />
+</div>
         <div className="mt-6 flex flex-wrap gap-4">
   <Link
     to="/admin/files"
