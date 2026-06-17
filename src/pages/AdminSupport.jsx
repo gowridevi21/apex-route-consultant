@@ -4,10 +4,14 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 import { collection, doc, getDoc, getDocs, updateDoc } from "firebase/firestore";
 import { auth, db } from "../firebase";
 import { ArrowLeft, LogOut, MessageSquare, Save } from "lucide-react";
+import emailjs from "@emailjs/browser";
 
+const SERVICE_ID = "service_5vyb6vb";
+const CUSTOMER_TEMPLATE_ID = "template_hwroov8";
+const PUBLIC_KEY = "R82-i7Mc5PSHOL3Yi";
 export default function AdminSupport() {
   const navigate = useNavigate();
-
+  
   const [loading, setLoading] = useState(true);
   const [tickets, setTickets] = useState([]);
 
@@ -90,7 +94,23 @@ export default function AdminSupport() {
     await updateDoc(userRef, {
       supportTickets: updatedTickets,
     });
+await emailjs.send(
+  SERVICE_ID,
+  CUSTOMER_TEMPLATE_ID,
+  {
+    name: ticketToUpdate.clientName,
+    from_name: "Apex Route Consultant Group",
+    user_name: ticketToUpdate.clientName,
+    user_email: ticketToUpdate.clientEmail,
+    to_email: ticketToUpdate.clientEmail,
+    reply_to: "ceo@apexrouteconsulting.com",
 
+    ticket_subject: ticketToUpdate.subject || "Support Request",
+    ticket_status: newStatus,
+    message: `Your support ticket status has been updated to ${newStatus}.`,
+  },
+  PUBLIC_KEY
+);
     setTickets((prev) =>
       prev.map((ticket) =>
         ticket.clientId === ticketToUpdate.clientId &&
