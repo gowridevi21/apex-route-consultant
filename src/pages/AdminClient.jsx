@@ -21,6 +21,7 @@ export default function AdminClient() {
   const [saving, setSaving] = useState(false);
 
   const [client, setClient] = useState(null);
+  const [adminNote, setAdminNote] = useState("");
 
   const [progressForm, setProgressForm] = useState({
     progress: 0,
@@ -234,6 +235,26 @@ export default function AdminClient() {
       </main>
     );
   }
+  const handleSaveAdminNote = async () => {
+  if (!adminNote.trim()) return;
+
+  await setDoc(
+    doc(db, "users", clientId),
+    {
+      adminNotes: arrayUnion({
+        note: adminNote,
+        createdAt: new Date().toISOString(),
+      }),
+    },
+    { merge: true }
+  );
+
+  setAdminNote("");
+
+  await refreshClient();
+
+  alert("Admin note saved.");
+};
 
   const clientName = (client?.fullName || client?.documents?.fullName || "Client")
     .split("|")[0]
@@ -381,6 +402,52 @@ export default function AdminClient() {
           <ListCard title="Client Uploads" icon={UploadCloud} items={client.uploads || []} />
           <ListCard title="Support Tickets" icon={MessageSquare} items={client.supportTickets || []} />
         </div>
+        <div className="mt-8 border border-gray-300 bg-white p-6 shadow-sm">
+  <h2 className="text-xl font-black text-black">
+    Internal Admin Notes
+  </h2>
+
+  <textarea
+    rows="4"
+    placeholder="Add private note..."
+    value={adminNote}
+    onChange={(e) => setAdminNote(e.target.value)}
+    className="input-admin mt-4"
+  />
+
+  <button
+    onClick={handleSaveAdminNote}
+    className="mt-4 bg-[#caa12a] px-5 py-3 text-sm font-black uppercase text-black hover:bg-black hover:text-white"
+  >
+    Save Note
+  </button>
+
+  <div className="mt-6 space-y-3">
+    {(client.adminNotes || []).length === 0 ? (
+      <p className="text-sm text-gray-500">
+        No admin notes yet.
+      </p>
+    ) : (
+      client.adminNotes
+        .slice()
+        .reverse()
+        .map((note, index) => (
+          <div
+            key={index}
+            className="border border-gray-200 p-4"
+          >
+            <p className="text-sm text-black">
+              {note.note}
+            </p>
+
+            <p className="mt-2 text-xs text-gray-500">
+              {new Date(note.createdAt).toLocaleString()}
+            </p>
+          </div>
+        ))
+    )}
+  </div>
+</div>
       </section>
     </main>
   );
