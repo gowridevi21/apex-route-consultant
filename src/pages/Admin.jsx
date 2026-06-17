@@ -19,6 +19,7 @@ import {
   Users,
   ShieldCheck,
   LogOut,
+  Search,
 } from "lucide-react";
 
 export default function Admin() {
@@ -188,14 +189,22 @@ if (adminRole !== "admin") {
     Upload Review
   </Link>
 </div>
-        <div className="mt-6">
-  <input
-    type="text"
-    placeholder="Search client name or email..."
-    value={searchTerm}
-    onChange={(e) => setSearchTerm(e.target.value)}
-    className="w-full border border-gray-300 px-4 py-3 outline-none focus:border-[#caa12a]"
-  />
+
+<div className="mt-6 max-w-lg">
+  <div className="relative">
+    <Search
+      size={20}
+      className="absolute left-4 top-1/2 -translate-y-1/2 text-[#caa12a]"
+    />
+
+    <input
+      type="text"
+      placeholder="Search clients..."
+      value={searchTerm}
+      onChange={(e) => setSearchTerm(e.target.value)}
+      className="w-full rounded-md border-4 border-[#caa12a] bg-[#111] py-3 pl-12 pr-4 text-white outline-none"
+    />
+  </div>
 </div>
         <div className="mt-8 overflow-hidden rounded-md border border-[#D4AF37]/30 bg-white shadow-2xl">
           <div className="flex flex-col gap-4 bg-[#0b1118] px-6 py-5 text-white md:flex-row md:items-center md:justify-between">
