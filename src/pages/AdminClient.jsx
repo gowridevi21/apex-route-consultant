@@ -412,11 +412,7 @@ export default function AdminClient() {
         <div className="mt-8 grid gap-8 lg:grid-cols-2">
           <ListCard title="Client Uploads" icon={UploadCloud} items={client.uploads || []} />
           <ListCard title="Support Tickets" icon={MessageSquare} items={client.supportTickets || []} />
-        </div>
-        <div className="mt-8 grid gap-8 lg:grid-cols-2">
-  <ListCard title="Client Uploads" icon={UploadCloud} items={client.uploads || []} />
-  <ListCard title="Support Tickets" icon={MessageSquare} items={client.supportTickets || []} />
-</div>
+        </div>     
 
 {/* ADMIN NOTES SECTION */}
 <div className="mt-8 border border-gray-300 bg-white p-6 shadow-sm">
