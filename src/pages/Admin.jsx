@@ -27,6 +27,7 @@ export default function Admin() {
   const [loading, setLoading] = useState(true);
   const [adminName, setAdminName] = useState("Admin");
   const [clients, setClients] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -115,6 +116,11 @@ if (adminRole !== "admin") {
     (sum, client) => sum + client.supportTickets.length,
     0
   );
+  const filteredClients = clients.filter((client) =>
+  `${client.fullName} ${client.email}`
+    .toLowerCase()
+    .includes(searchTerm.toLowerCase())
+);
 
   if (loading) {
     return (
@@ -182,7 +188,15 @@ if (adminRole !== "admin") {
     Upload Review
   </Link>
 </div>
-
+        <div className="mt-6">
+  <input
+    type="text"
+    placeholder="Search client name or email..."
+    value={searchTerm}
+    onChange={(e) => setSearchTerm(e.target.value)}
+    className="w-full border border-gray-300 px-4 py-3 outline-none focus:border-[#caa12a]"
+  />
+</div>
         <div className="mt-8 overflow-hidden rounded-md border border-[#D4AF37]/30 bg-white shadow-2xl">
           <div className="flex flex-col gap-4 bg-[#0b1118] px-6 py-5 text-white md:flex-row md:items-center md:justify-between">
             <div className="flex items-center gap-3">
@@ -227,7 +241,7 @@ if (adminRole !== "admin") {
                     </td>
                   </tr>
                 ) : (
-                  clients.map((client) => (
+                  filteredClients.map((client) => (
                     <tr
                       key={client.id}
                       className="border-b border-gray-200 last:border-b-0"
