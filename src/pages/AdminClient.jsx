@@ -130,7 +130,18 @@ export default function AdminClient() {
       });
     }
   };
-
+  const addActivity = async (message) => {
+  await setDoc(
+    doc(db, "users", clientId),
+    {
+      activityTimeline: arrayUnion({
+        message,
+        createdAt: new Date().toISOString(),
+      }),
+    },
+    { merge: true }
+  );
+};
   const handleSaveProgress = async () => {
     setSaving(true);
 
@@ -143,7 +154,7 @@ export default function AdminClient() {
       },
       { merge: true }
     );
-
+    await addActivity(`Progress updated to ${progressForm.progress}%.`);
     await refreshClient();
     setSaving(false);
     alert("Progress updated.");
@@ -162,7 +173,7 @@ export default function AdminClient() {
       },
       { merge: true }
     );
-
+    await addActivity(`Document added: ${documentForm.name}.`);
     setDocumentForm({
       name: "",
       type: "",
@@ -187,7 +198,7 @@ export default function AdminClient() {
       },
       { merge: true }
     );
-
+    await addActivity(`Training assigned: ${trainingForm.title}.`);
     setTrainingForm({
       title: "",
       type: "Video",
@@ -213,7 +224,7 @@ export default function AdminClient() {
       },
       { merge: true }
     );
-
+    await addActivity(`Invoice added: ${invoiceForm.invoiceNumber}.`);
     setInvoiceForm({
       invoiceNumber: "",
       service: "",
@@ -248,7 +259,7 @@ export default function AdminClient() {
     },
     { merge: true }
   );
-
+  await addActivity("Internal admin note added.");
   setAdminNote("");
 
   await refreshClient();
@@ -402,6 +413,48 @@ export default function AdminClient() {
           <ListCard title="Client Uploads" icon={UploadCloud} items={client.uploads || []} />
           <ListCard title="Support Tickets" icon={MessageSquare} items={client.supportTickets || []} />
         </div>
+        <div className="mt-8 grid gap-8 lg:grid-cols-2">
+  <ListCard title="Client Uploads" icon={UploadCloud} items={client.uploads || []} />
+  <ListCard title="Support Tickets" icon={MessageSquare} items={client.supportTickets || []} />
+</div>
+
+{/* ADMIN NOTES SECTION */}
+<div className="mt-8 border border-gray-300 bg-white p-6 shadow-sm">
+  ...
+</div>
+
+{/* ACTIVITY TIMELINE SECTION */}
+<div className="mt-8 border border-gray-300 bg-white p-6 shadow-sm">
+  <h2 className="text-xl font-black text-black">
+    Client Activity Timeline
+  </h2>
+
+  <div className="mt-6 space-y-3">
+    {(client.activityTimeline || []).length === 0 ? (
+      <p className="text-sm text-gray-500">
+        No activity recorded yet.
+      </p>
+    ) : (
+      client.activityTimeline
+        .slice()
+        .reverse()
+        .map((activity, index) => (
+          <div
+            key={index}
+            className="border-l-4 border-[#caa12a] bg-[#f7f7f7] p-4"
+          >
+            <p className="text-sm font-bold text-black">
+              {activity.message}
+            </p>
+
+            <p className="mt-2 text-xs text-gray-500">
+              {new Date(activity.createdAt).toLocaleString()}
+            </p>
+          </div>
+        ))
+    )}
+  </div>
+</div>
         <div className="mt-8 border border-gray-300 bg-white p-6 shadow-sm">
   <h2 className="text-xl font-black text-black">
     Internal Admin Notes
