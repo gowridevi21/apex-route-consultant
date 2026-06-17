@@ -103,21 +103,6 @@ const totalTraining = clients.reduce(
   0
 );
 
-const totalUploads = clients.reduce(
-  (sum, client) => sum + client.uploads.length,
-  0
-);
-
-const totalInvoices = clients.reduce(
-  (sum, client) => sum + client.invoices.length,
-  0
-);
-
-const totalTickets = clients.reduce(
-  (sum, client) => sum + client.supportTickets.length,
-  0
-);
-
 const activeClients = clients.filter(
   (client) => client.role !== "admin"
 ).length;
@@ -190,7 +175,7 @@ const filteredClients = clients.filter((client) =>
           </button>
         </div>
 
-        <div className="grid gap-5 md:grid-cols-3 lg:grid-cols-4">
+       <div className="grid gap-5 md:grid-cols-3 lg:grid-cols-4">
   <StatCard icon={Users} label="Active Clients" value={activeClients} />
   <StatCard icon={FileText} label="Documents" value={totalDocuments} />
   <StatCard icon={UploadCloud} label="Pending Uploads" value={pendingUploads} />
