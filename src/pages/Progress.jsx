@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
+import jsPDF from "jspdf";
 import { auth, db } from "../firebase";
 import {
   CheckCircle,
@@ -70,7 +71,40 @@ export default function Progress() {
 
     return () => unsubscribe();
   }, [navigate]);
+  const downloadProgressPDF = () => {
+  const pdf = new jsPDF();
 
+  pdf.setFontSize(20);
+  pdf.text("Apex Client Progress Report", 20, 20);
+
+  pdf.setFontSize(12);
+
+  pdf.text(`Client Name: ${progressData.clientName}`, 20, 40);
+  pdf.text(`Program: ${progressData.programPurchased}`, 20, 50);
+  pdf.text(`Start Date: ${progressData.startDate}`, 20, 60);
+  pdf.text(`Current Phase: ${progressData.currentPhase}`, 20, 70);
+  pdf.text(`Completion: ${progressData.progress}%`, 20, 80);
+  pdf.text(`Next Call: ${progressData.nextCall}`, 20, 90);
+
+  pdf.text("Completed Items:", 20, 110);
+
+  progressData.completedItems.forEach((item, index) => {
+    pdf.text(`• ${item}`, 25, 120 + index * 8);
+  });
+
+  let openTaskY =
+    130 + progressData.completedItems.length * 8;
+
+  pdf.text("Open Tasks:", 20, openTaskY);
+
+  progressData.openTasks.forEach((item, index) => {
+    pdf.text(`• ${item}`, 25, openTaskY + 10 + index * 8);
+  });
+
+  pdf.save(
+    `${progressData.clientName}_Progress_Report.pdf`
+  );
+};
   const handleLogout = async () => {
     await signOut(auth);
     navigate("/signin");
@@ -300,7 +334,12 @@ export default function Progress() {
                 >
                   Back to Dashboard
                 </Link>
-
+                <button
+  onClick={downloadProgressPDF}
+  className="border border-[#caa12a] px-6 py-3 text-sm font-black uppercase text-black transition hover:bg-[#caa12a]"
+>
+  Download PDF
+</button>
                 <Link
                   to="/support"
                   className="border border-[#caa12a] px-6 py-3 text-sm font-black uppercase text-black transition hover:bg-[#caa12a]"
