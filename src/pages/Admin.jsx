@@ -348,9 +348,7 @@ const filteredClients = clients.filter((client) => {
 
         <div className="mt-8 rounded border border-[#D4AF37]/30 bg-[#111] p-5 text-white">
           <p className="text-sm font-bold text-white/80">
-            Phase 1 Admin Dashboard: view clients and summary data. Next step is
-            building the individual client management page where Apex can update
-            progress, assign documents, add invoices, and review support tickets.
+            Apex Admin Command Center: Manage clients, progress, documents, training, invoices, uploads, support requests, and client activity from a single dashboard.
           </p>
         </div>
       </section>
