@@ -1,9 +1,16 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router";
 import { onAuthStateChanged, signOut } from "firebase/auth";
-import { doc, getDoc, setDoc, arrayUnion } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+  arrayUnion,
+} from "firebase/firestore";
 import emailjs from "@emailjs/browser";
 import { auth, db } from "../firebase";
+
 import {
   ArrowLeft,
   FileText,
@@ -120,6 +127,10 @@ export default function AdminClient() {
     return () => unsubscribe();
   }, [clientId, navigate]);
 
+    const clientName = (client?.fullName || client?.documents?.fullName || "Client")
+    .split("|")[0]
+    .trim();
+
   const handleLogout = async () => {
     await signOut(auth);
     navigate("/signin");
@@ -134,6 +145,21 @@ export default function AdminClient() {
       });
     }
   };
+  const handleDeleteDocument = async (indexToDelete) => {
+  const updatedDocuments = (client.documents || []).filter(
+    (_, index) => index !== indexToDelete
+  );
+
+  await updateDoc(doc(db, "users", clientId), {
+    documents: updatedDocuments,
+  });
+
+  await addActivity("Document removed.");
+
+  await refreshClient();
+
+  alert("Document deleted.");
+};
   const addActivity = async (message) => {
   await setDoc(
     doc(db, "users", clientId),
@@ -290,9 +316,6 @@ export default function AdminClient() {
   alert("Admin note saved.");
 };
 
-  const clientName = (client?.fullName || client?.documents?.fullName || "Client")
-    .split("|")[0]
-    .trim();
 
   return (
     <main className="min-h-screen bg-[#050505] px-4 pb-16 pt-8 text-black md:px-8">
@@ -436,7 +459,54 @@ export default function AdminClient() {
           <ListCard title="Client Uploads" icon={UploadCloud} items={client.uploads || []} />
           <ListCard title="Support Tickets" icon={MessageSquare} items={client.supportTickets || []} />
         </div>     
+<div className="mt-8 border border-gray-300 bg-white p-6 shadow-sm">
+  <h2 className="text-xl font-black">
+    Client Vault Documents
+  </h2>
 
+  <div className="mt-5 space-y-3">
+    {(client.documents || []).length === 0 ? (
+      <p className="text-sm text-gray-500">
+        No documents found.
+      </p>
+    ) : (
+      client.documents.map((document, index) => (
+        <div
+          key={index}
+          className="flex items-center justify-between border border-gray-200 p-4"
+        >
+          <div>
+            <p className="font-black">
+              {document.name}
+            </p>
+
+            <p className="text-sm text-gray-500">
+              {document.category}
+            </p>
+          </div>
+
+          <div className="flex gap-3">
+            <a
+              href={document.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-[#caa12a] px-4 py-2 text-xs font-black uppercase text-black"
+            >
+              View
+            </a>
+
+            <button
+              onClick={() => handleDeleteDocument(index)}
+              className="bg-red-600 px-4 py-2 text-xs font-black uppercase text-white"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      ))
+    )}
+  </div>
+</div>
 {/* ACTIVITY TIMELINE SECTION */}
 <div className="mt-8 border border-gray-300 bg-white p-6 shadow-sm">
   <h2 className="text-xl font-black text-black">
