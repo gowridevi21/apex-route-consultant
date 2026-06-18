@@ -135,11 +135,22 @@ const pendingInvoices = clients.reduce(
   0
 );
 
-const filteredClients = clients.filter((client) =>
-  `${client.fullName} ${client.email}`
+const filteredClients = clients.filter((client) => {
+  const matchesSearch = `${client.fullName} ${client.email} ${client.phone}`
     .toLowerCase()
-    .includes(searchTerm.toLowerCase())
-);
+    .includes(searchTerm.toLowerCase());
+
+  const matchesFilter =
+    filter === "all" ||
+    (filter === "admin" && client.role === "admin") ||
+    (filter === "active" &&
+      client.role !== "admin" &&
+      client.progress < 100) ||
+    (filter === "completed" &&
+      client.progress >= 100);
+
+  return matchesSearch && matchesFilter;
+});
   if (loading) {
     return (
       <main className="min-h-screen bg-[#050505] px-4 pt-8 text-white md:px-8">
@@ -206,11 +217,11 @@ const filteredClients = clients.filter((client) =>
   </Link>
 </div>
 
-<div className="mt-6 max-w-lg">
+<div className="mt-6 grid gap-4 md:grid-cols-[1fr_220px]">
   <div className="relative">
     <Search
-      size={20}
-      className="absolute left-4 top-1/2 -translate-y-1/2 text-[#caa12a]"
+      size={22}
+      className="absolute left-4 top-1/2 -translate-y-1/2 text-[#D4AF37]"
     />
 
     <input
@@ -218,20 +229,22 @@ const filteredClients = clients.filter((client) =>
       placeholder="Search clients..."
       value={searchTerm}
       onChange={(e) => setSearchTerm(e.target.value)}
-      className="w-full rounded-md border-4 border-[#caa12a] bg-[#111] py-3 pl-12 pr-4 text-white outline-none"
+      className="h-16 w-full rounded-md border-4 border-[#D4AF37] bg-[#111] pl-14 pr-5 text-lg font-bold text-white outline-none placeholder:text-white/50"
     />
-    <select
-  value={filter}
-  onChange={(e) => setFilter(e.target.value)}
-  className="border-2 border-[#D4AF37] bg-white px-4 py-3"
->
-  <option value="all">All Clients</option>
-  <option value="active">Active</option>
-  <option value="completed">Completed</option>
-  <option value="admin">Admins</option>
-</select>
   </div>
+
+  <select
+    value={filter}
+    onChange={(e) => setFilter(e.target.value)}
+    className="h-16 w-full rounded-md border-4 border-[#D4AF37] bg-white px-5 text-lg font-bold text-black outline-none"
+  >
+    <option value="all">All Clients</option>
+    <option value="active">Active</option>
+    <option value="completed">Completed</option>
+    <option value="admin">Admins</option>
+  </select>
 </div>
+
         <div className="mt-8 overflow-hidden rounded-md border border-[#D4AF37]/30 bg-white shadow-2xl">
           <div className="flex flex-col gap-4 bg-[#0b1118] px-6 py-5 text-white md:flex-row md:items-center md:justify-between">
             <div className="flex items-center gap-3">
