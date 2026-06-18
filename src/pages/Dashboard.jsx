@@ -376,7 +376,7 @@ export default function Dashboard() {
                 </div>
               </div>
 
-              <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+              <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-6">
                 <Link
                   to="/my-vault"
                   className="bg-[#caa12a] px-5 py-4 text-center text-sm font-black uppercase text-black transition hover:bg-black hover:text-white"
@@ -397,7 +397,12 @@ export default function Dashboard() {
                 >
                   Training
                 </Link>
-
+                <Link
+  to="/booking"
+  className="border border-[#caa12a] px-5 py-4 text-center text-sm font-black uppercase text-black transition hover:bg-[#caa12a]"
+>
+  Book Call
+</Link>
                 <Link
                   to="/support"
                   className="border border-[#caa12a] px-5 py-4 text-center text-sm font-black uppercase text-black transition hover:bg-[#caa12a]"
