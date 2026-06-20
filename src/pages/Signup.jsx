@@ -23,6 +23,30 @@ export default function Signup() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const createUserDocument = async (user, cleanEmail) => {
+    await setDoc(
+      doc(db, "users", user.uid),
+      {
+        fullName: form.name.trim(),
+        phone: form.phone.trim(),
+        email: cleanEmail,
+        progress: 0,
+        purchases: [],
+        documents: [],
+        training: [],
+        uploads: [],
+        invoices: [],
+        supportTickets: [],
+        nextStep: "No action assigned yet",
+        timeline: [],
+        currentPhase: "Not started",
+        role: "client",
+        createdAt: new Date(),
+      },
+      { merge: true }
+    );
+  };
+
   const getFriendlyError = (code) => {
     if (code === "auth/email-already-in-use") {
       return "This email already has an account. Please sign in instead, or use Forgot Password if you do not remember your password.";
@@ -58,30 +82,14 @@ export default function Signup() {
         displayName: form.name.trim(),
       });
 
-      await setDoc(doc(db, "users", userCredential.user.uid), {
-        fullName: form.name.trim(),
-        phone: form.phone.trim(),
-        email: cleanEmail,
-        progress: 0,
-        purchases: [],
-        documents: [],
-        training: [],
-        uploads: [],
-        invoices: [],
-        supportTickets: [],
-        nextStep: "No action assigned yet",
-        timeline: [],
-        currentPhase: "Not started",
-        role: "client",
-        createdAt: new Date(),
-      });
+      await createUserDocument(userCredential.user, cleanEmail);
 
       await sendEmailVerification(userCredential.user);
 
       await signOut(auth);
 
       setMessage(
-        "Account created successfully. A verification email has been sent. Please verify your email before signing in."
+        "Account created successfully. A verification email has been sent. Please check your inbox, spam, or promotions folder before signing in."
       );
 
       setForm({
@@ -94,12 +102,9 @@ export default function Signup() {
       setTimeout(() => {
         navigate("/signin");
       }, 4000);
-} catch (err) {
-  console.log("SIGNUP ERROR CODE:", err.code);
-  console.log("SIGNUP ERROR MESSAGE:", err.message);
-
-  setError(getFriendlyError(err.code));
-}
+    } catch (err) {
+      setError(getFriendlyError(err.code));
+    }
 
     setLoading(false);
   };
@@ -163,6 +168,11 @@ export default function Signup() {
           <Link to="/signin" className="text-[#D4AF37]">
             Sign In
           </Link>
+        </p>
+
+        <p className="mt-4 text-xs text-white/50">
+          After signing up, please check your inbox, spam, or promotions folder
+          for the verification email.
         </p>
       </div>
     </main>

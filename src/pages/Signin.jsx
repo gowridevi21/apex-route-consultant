@@ -7,7 +7,8 @@ import {
   browserSessionPersistence,
 } from "firebase/auth";
 import { Link, useNavigate } from "react-router";
-import { auth } from "../firebase";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { auth, db } from "../firebase";
 
 export default function Signin() {
   const navigate = useNavigate();
@@ -20,6 +21,35 @@ export default function Signin() {
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const createMissingUserDocument = async (user, cleanEmail) => {
+    const userRef = doc(db, "users", user.uid);
+    const userSnap = await getDoc(userRef);
+
+    if (!userSnap.exists()) {
+      await setDoc(
+        userRef,
+        {
+          fullName: user.displayName || "Client",
+          phone: "",
+          email: cleanEmail,
+          progress: 0,
+          purchases: [],
+          documents: [],
+          training: [],
+          uploads: [],
+          invoices: [],
+          supportTickets: [],
+          nextStep: "No action assigned yet",
+          timeline: [],
+          currentPhase: "Not started",
+          role: "client",
+          createdAt: new Date(),
+        },
+        { merge: true }
+      );
+    }
+  };
 
   const getFriendlyError = (code) => {
     if (
@@ -62,10 +92,14 @@ export default function Signin() {
 
       if (!userCredential.user.emailVerified) {
         await signOut(auth);
-        setError("Please verify your email before signing in.");
+        setError(
+          "Please verify your email before signing in. Check your inbox, spam, or promotions folder."
+        );
         setLoading(false);
         return;
       }
+
+      await createMissingUserDocument(userCredential.user, cleanEmail);
 
       navigate("/dashboard");
     } catch (err) {
