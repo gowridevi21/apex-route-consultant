@@ -21,12 +21,34 @@ export default function Signin() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const getFriendlyError = (code) => {
+    if (
+      code === "auth/invalid-credential" ||
+      code === "auth/wrong-password" ||
+      code === "auth/user-not-found"
+    ) {
+      return "Invalid email or password. Please try again.";
+    }
+
+    if (code === "auth/invalid-email") {
+      return "Please enter a valid email address.";
+    }
+
+    if (code === "auth/too-many-requests") {
+      return "Too many attempts. Please wait and try again later.";
+    }
+
+    return "Unable to sign in. Please try again.";
+  };
+
   const handleSignin = async (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
 
     try {
+      const cleanEmail = form.email.trim().toLowerCase();
+
       await setPersistence(
         auth,
         rememberMe ? browserLocalPersistence : browserSessionPersistence
@@ -34,7 +56,7 @@ export default function Signin() {
 
       const userCredential = await signInWithEmailAndPassword(
         auth,
-        form.email,
+        cleanEmail,
         form.password
       );
 
@@ -47,7 +69,7 @@ export default function Signin() {
 
       navigate("/dashboard");
     } catch (err) {
-      setError(err.message);
+      setError(getFriendlyError(err.code));
     }
 
     setLoading(false);
