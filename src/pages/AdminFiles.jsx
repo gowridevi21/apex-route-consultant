@@ -49,11 +49,13 @@ export default function AdminFiles() {
       const adminData = adminSnap.data();
       const adminRole = adminData?.role || adminData?.documents?.role;
 
-      if (adminRole !== "admin") {
-        navigate("/dashboard");
-        return;
-      }
-
+ if (
+  adminRole !== "admin" &&
+  adminRole !== "team"
+) {
+  navigate("/dashboard");
+  return;
+}
       const usersSnap = await getDocs(collection(db, "users"));
 
       const clientList = usersSnap.docs.map((userDoc) => {

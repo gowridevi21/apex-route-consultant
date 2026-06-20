@@ -91,10 +91,13 @@ export default function AdminClient() {
       const adminData = adminSnap.data();
       const adminRole = adminData?.role || adminData?.documents?.role;
 
-      if (adminRole !== "admin") {
-        navigate("/dashboard");
-        return;
-      }
+      if (
+  adminRole !== "admin" &&
+  adminRole !== "team"
+) {
+  navigate("/dashboard");
+  return;
+}
 
       const clientSnap = await getDoc(doc(db, "users", clientId));
 

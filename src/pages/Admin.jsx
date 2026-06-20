@@ -48,10 +48,13 @@ export default function Admin() {
       const adminData = adminSnap.data();
     const adminRole = adminData.role || adminData.documents?.role;
 
-if (adminRole !== "admin") {
+if (
+  adminRole !== "admin" &&
+  adminRole !== "team"
+) {
   navigate("/dashboard");
   return;
-      }
+}
 
       const cleanName = (adminData.fullName || user.displayName || "Admin")
         .split("|")[0]
@@ -148,6 +151,7 @@ const filteredClients = clients.filter((client) => {
       client.progress < 100) ||
     (filter === "completed" &&
       client.progress >= 100);
+      (filter === "team" && client.role === "team")
 
   return matchesSearch && matchesFilter;
 });
@@ -242,6 +246,7 @@ const filteredClients = clients.filter((client) => {
     <option value="active">Active</option>
     <option value="completed">Completed</option>
     <option value="admin">Admins</option>
+    <option value="team">Team Members</option>
   </select>
 </div>
 
