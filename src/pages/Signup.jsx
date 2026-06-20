@@ -94,9 +94,12 @@ export default function Signup() {
       setTimeout(() => {
         navigate("/signin");
       }, 4000);
-    } catch (err) {
-      setError(getFriendlyError(err.code));
-    }
+} catch (err) {
+  console.log("SIGNUP ERROR CODE:", err.code);
+  console.log("SIGNUP ERROR MESSAGE:", err.message);
+
+  setError(getFriendlyError(err.code));
+}
 
     setLoading(false);
   };
