@@ -4,63 +4,73 @@ import { Link } from "react-router";
 import { auth } from "../firebase";
 
 export default function ForgotPassword() {
-  const [identifier, setIdentifier] = useState("");
+  const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
-
-  const isEmail = identifier.includes("@");
+  const [loading, setLoading] = useState(false);
 
   const handleReset = async (e) => {
     e.preventDefault();
     setMessage("");
     setError("");
-
-    if (!isEmail) {
-      setError(
-        "Password reset is currently available by email only. Please enter your account email address."
-      );
-      return;
-    }
+    setLoading(true);
 
     try {
-      await sendPasswordResetEmail(auth, identifier);
+      await sendPasswordResetEmail(auth, email.trim().toLowerCase());
+
       setMessage(
-        "Password reset link sent. Please check your email, reset your password, then return to sign in."
+        "Password reset email sent. Please check your inbox, spam, or promotions folder."
       );
+      setEmail("");
     } catch (err) {
-      setError(err.message);
+      if (err.code === "auth/user-not-found") {
+        setError("No account found with this email.");
+      } else if (err.code === "auth/invalid-email") {
+        setError("Please enter a valid email address.");
+      } else {
+        setError("Unable to send reset email. Please try again.");
+      }
     }
+
+    setLoading(false);
   };
 
   return (
     <main className="min-h-screen bg-[#050505] px-6 pt-32 text-white">
       <div className="mx-auto max-w-md rounded-md border border-white/10 bg-white/[0.04] p-8">
-        <p className="font-black uppercase text-[#D4AF37]">Reset Password</p>
-
-        <h1 className="mt-3 text-3xl font-black uppercase">Forgot Password</h1>
-
-        <p className="mt-3 text-sm text-white/70">
-          Enter your email address to receive a password reset link.
+        <p className="font-black uppercase text-[#D4AF37]">
+          Reset Password
         </p>
+
+        <h1 className="mt-3 text-3xl font-black uppercase">
+          Forgot Password
+        </h1>
 
         <form onSubmit={handleReset} className="mt-6 space-y-4">
           <input
             required
-            type="text"
-            placeholder="Email Address or Phone Number"
+            type="email"
+            placeholder="Email Address"
             className="input-style"
-            onChange={(e) => setIdentifier(e.target.value)}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
 
           {message && <p className="text-sm text-green-400">{message}</p>}
           {error && <p className="text-sm text-red-400">{error}</p>}
 
-          <button className="w-full bg-[#D4AF37] px-8 py-4 text-sm font-black uppercase text-black hover:bg-white">
-            Send Reset Link
+          <button
+            disabled={loading}
+            className="w-full bg-[#D4AF37] px-8 py-4 text-sm font-black uppercase text-black hover:bg-white disabled:opacity-60"
+          >
+            {loading ? "Sending..." : "Send Reset Link"}
           </button>
         </form>
 
-        <Link to="/signin" className="mt-5 block text-sm text-[#D4AF37]">
+        <Link
+          to="/signin"
+          className="mt-5 block text-sm text-[#D4AF37]"
+        >
           Back to Sign In
         </Link>
       </div>
