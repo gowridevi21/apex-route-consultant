@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router";
 import { onAuthStateChanged, signOut } from "firebase/auth";
-
 import {
   doc,
   getDoc,
@@ -33,6 +32,9 @@ export default function AdminClient() {
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [uploadingDocument, setUploadingDocument] = useState(false);
+  const [uploadingTraining, setUploadingTraining] = useState(false);
+  const [uploadingInvoice, setUploadingInvoice] = useState(false);
 
   const [client, setClient] = useState(null);
   const [adminNote, setAdminNote] = useState("");
@@ -145,14 +147,14 @@ export default function AdminClient() {
   const uploadFile = async (file, folder) => {
     if (!file) return "";
 
-    const safeFileName = file.name.replaceAll(" ", "_");
+    const safeFileName = file.name.replace(/\s+/g, "_");
+    const filePath = `${folder}/${clientId}/${Date.now()}-${safeFileName}`;
 
-    const fileRef = ref(
-      storage,
-      `${folder}/${clientId}/${Date.now()}-${safeFileName}`
-    );
+    const fileRef = ref(storage, filePath);
 
-    await uploadBytes(fileRef, file);
+    await uploadBytes(fileRef, file, {
+      contentType: file.type,
+    });
 
     return await getDownloadURL(fileRef);
   };
@@ -196,7 +198,6 @@ export default function AdminClient() {
     });
 
     await addActivity("Document removed.");
-
     await refreshClient();
 
     alert("Document deleted.");
@@ -205,188 +206,242 @@ export default function AdminClient() {
   const handleSaveProgress = async () => {
     setSaving(true);
 
-    await setDoc(
-      doc(db, "users", clientId),
-      {
-        ...progressForm,
-        progress: Number(progressForm.progress),
-        updatedAt: new Date(),
-      },
-      { merge: true }
-    );
+    try {
+      await setDoc(
+        doc(db, "users", clientId),
+        {
+          ...progressForm,
+          progress: Number(progressForm.progress),
+          updatedAt: new Date(),
+        },
+        { merge: true }
+      );
 
-    await addActivity(`Progress updated to ${progressForm.progress}%.`);
+      await addActivity(`Progress updated to ${progressForm.progress}%.`);
+      await refreshClient();
 
-    await refreshClient();
+      alert("Progress updated.");
+    } catch (error) {
+      console.error("SAVE PROGRESS ERROR:", error);
+      alert(error.message || "Failed to update progress.");
+    }
+
     setSaving(false);
-    alert("Progress updated.");
   };
 
-const handleAddDocument = async (e) => {
-  e.preventDefault();
+  const handleAddDocument = async (e) => {
+    e.preventDefault();
 
-  alert("Upload Document clicked");
+    if (!documentFile) {
+      alert("Please choose a document file first.");
+      return;
+    }
 
-  if (!documentFile) {
-    alert("Please choose a document file first.");
-    return;
-  }
+    setUploadingDocument(true);
 
-  try {
-    alert("Starting upload");
+    try {
+      const fileUrl = await uploadFile(documentFile, "client-documents");
 
-    const fileUrl = await uploadFile(
-      documentFile,
-      "client-documents"
-    );
+      await setDoc(
+        doc(db, "users", clientId),
+        {
+          documents: arrayUnion({
+            ...documentForm,
+            fileName: documentFile.name,
+            fileType: documentFile.type,
+            url: fileUrl,
+            createdAt: new Date().toISOString(),
+          }),
+        },
+        { merge: true }
+      );
 
-    alert("Upload finished");
+      try {
+        await emailjs.send(
+          SERVICE_ID,
+          CUSTOMER_TEMPLATE_ID,
+          {
+            name: clientName,
+            from_name: "Apex Route Consultant Group",
+            user_name: clientName,
+            user_email: clientEmail,
+            to_email: clientEmail,
+            reply_to: "ceo@apexrouteconsulting.com",
+            document_name: documentForm.name,
+            document_type: documentForm.type || "Document",
+            message: "A new document has been added to your Apex client vault.",
+          },
+          PUBLIC_KEY
+        );
+      } catch (emailError) {
+        console.warn("Document email notification failed:", emailError);
+      }
 
-    await setDoc(
-      doc(db, "users", clientId),
-      {
-        documents: arrayUnion({
-          ...documentForm,
-          url: fileUrl,
-          createdAt: new Date().toISOString(),
-        }),
-      },
-      { merge: true }
-    );
+      await addActivity(`Document added: ${documentForm.name}.`);
 
-    await addActivity(`Document added: ${documentForm.name}.`);
+      setDocumentForm({
+        name: "",
+        type: "",
+        category: "01 - Agreements & Receipts",
+      });
 
-    setDocumentForm({
-      name: "",
-      type: "",
-      category: "01 - Agreements & Receipts",
-    });
+      setDocumentFile(null);
+      await refreshClient();
 
-    setDocumentFile(null);
+      alert("Document uploaded successfully.");
+    } catch (error) {
+      console.error("UPLOAD DOCUMENT ERROR:", error);
+      alert(error.message || "Document upload failed.");
+    }
 
-    await refreshClient();
+    setUploadingDocument(false);
+  };
 
-    alert("Document uploaded successfully.");
-  } catch (error) {
-    console.error("UPLOAD DOCUMENT ERROR:", error);
-    alert(error.message || "Document upload failed.");
-  }
-};
   const handleAddTraining = async (e) => {
     e.preventDefault();
 
-    let fileUrl = trainingForm.url;
+    setUploadingTraining(true);
 
-    if (trainingFile) {
-      fileUrl = await uploadFile(trainingFile, "client-training");
+    try {
+      let fileUrl = trainingForm.url;
+
+      if (trainingFile) {
+        fileUrl = await uploadFile(trainingFile, "client-training");
+      }
+
+      await setDoc(
+        doc(db, "users", clientId),
+        {
+          training: arrayUnion({
+            ...trainingForm,
+            fileName: trainingFile?.name || "",
+            fileType: trainingFile?.type || "",
+            url: fileUrl,
+            createdAt: new Date().toISOString(),
+          }),
+        },
+        { merge: true }
+      );
+
+      await addActivity(`Training assigned: ${trainingForm.title}.`);
+
+      setTrainingForm({
+        title: "",
+        type: "Video",
+        description: "",
+        url: "",
+        locked: false,
+      });
+
+      setTrainingFile(null);
+      await refreshClient();
+
+      alert("Training added.");
+    } catch (error) {
+      console.error("ADD TRAINING ERROR:", error);
+      alert(error.message || "Training upload failed.");
     }
 
-    await setDoc(
-      doc(db, "users", clientId),
-      {
-        training: arrayUnion({
-          ...trainingForm,
-          url: fileUrl,
-          createdAt: new Date().toISOString(),
-        }),
-      },
-      { merge: true }
-    );
-
-    await addActivity(`Training assigned: ${trainingForm.title}.`);
-
-    setTrainingForm({
-      title: "",
-      type: "Video",
-      description: "",
-      url: "",
-      locked: false,
-    });
-
-    setTrainingFile(null);
-
-    await refreshClient();
-    alert("Training added.");
+    setUploadingTraining(false);
   };
 
   const handleAddInvoice = async (e) => {
     e.preventDefault();
 
-    let fileUrl = "";
+    setUploadingInvoice(true);
 
-    if (invoiceFile) {
-      fileUrl = await uploadFile(invoiceFile, "client-invoices");
+    try {
+      let fileUrl = "";
+
+      if (invoiceFile) {
+        fileUrl = await uploadFile(invoiceFile, "client-invoices");
+      }
+
+      await setDoc(
+        doc(db, "users", clientId),
+        {
+          invoices: arrayUnion({
+            ...invoiceForm,
+            fileName: invoiceFile?.name || "",
+            fileType: invoiceFile?.type || "",
+            url: fileUrl,
+            createdAt: new Date().toISOString(),
+          }),
+        },
+        { merge: true }
+      );
+
+      try {
+        await emailjs.send(
+          SERVICE_ID,
+          CUSTOMER_TEMPLATE_ID,
+          {
+            name: clientName,
+            from_name: "Apex Route Consultant Group",
+            user_name: clientName,
+            user_email: clientEmail,
+            to_email: clientEmail,
+            reply_to: "ceo@apexrouteconsulting.com",
+            invoice_number: invoiceForm.invoiceNumber,
+            invoice_service: invoiceForm.service,
+            invoice_amount: invoiceForm.amount,
+            invoice_status: invoiceForm.status,
+            message: "A new invoice has been added to your Apex client portal.",
+          },
+          PUBLIC_KEY
+        );
+      } catch (emailError) {
+        console.warn("Invoice email notification failed:", emailError);
+      }
+
+      await addActivity(`Invoice added: ${invoiceForm.invoiceNumber}.`);
+
+      setInvoiceForm({
+        invoiceNumber: "",
+        service: "",
+        amount: "",
+        dueDate: "",
+        status: "Pending",
+        paymentLink: "",
+      });
+
+      setInvoiceFile(null);
+      await refreshClient();
+
+      alert("Invoice added.");
+    } catch (error) {
+      console.error("ADD INVOICE ERROR:", error);
+      alert(error.message || "Invoice upload failed.");
     }
 
-    await setDoc(
-      doc(db, "users", clientId),
-      {
-        invoices: arrayUnion({
-          ...invoiceForm,
-          url: fileUrl,
-          createdAt: new Date().toISOString(),
-        }),
-      },
-      { merge: true }
-    );
-
-    await emailjs.send(
-      SERVICE_ID,
-      CUSTOMER_TEMPLATE_ID,
-      {
-        name: clientName,
-        from_name: "Apex Route Consultant Group",
-        user_name: clientName,
-        user_email: clientEmail,
-        to_email: clientEmail,
-        reply_to: "ceo@apexrouteconsulting.com",
-        invoice_number: invoiceForm.invoiceNumber,
-        invoice_service: invoiceForm.service,
-        invoice_amount: invoiceForm.amount,
-        invoice_status: invoiceForm.status,
-        message: "A new invoice has been added to your Apex client portal.",
-      },
-      PUBLIC_KEY
-    );
-
-    await addActivity(`Invoice added: ${invoiceForm.invoiceNumber}.`);
-
-    setInvoiceForm({
-      invoiceNumber: "",
-      service: "",
-      amount: "",
-      dueDate: "",
-      status: "Pending",
-      paymentLink: "",
-    });
-
-    setInvoiceFile(null);
-
-    await refreshClient();
-    alert("Invoice added.");
+    setUploadingInvoice(false);
   };
 
   const handleSaveAdminNote = async () => {
     if (!adminNote.trim()) return;
 
-    await setDoc(
-      doc(db, "users", clientId),
-      {
-        adminNotes: arrayUnion({
-          note: adminNote,
-          createdAt: new Date().toISOString(),
-        }),
-      },
-      { merge: true }
-    );
+    try {
+      await setDoc(
+        doc(db, "users", clientId),
+        {
+          adminNotes: arrayUnion({
+            note: adminNote,
+            createdAt: new Date().toISOString(),
+          }),
+        },
+        { merge: true }
+      );
 
-    await addActivity("Internal admin note added.");
+      await addActivity("Internal admin note added.");
 
-    setAdminNote("");
+      setAdminNote("");
+      await refreshClient();
 
-    await refreshClient();
-
-    alert("Admin note saved.");
+      alert("Admin note saved.");
+    } catch (error) {
+      console.error("ADMIN NOTE ERROR:", error);
+      alert(error.message || "Failed to save admin note.");
+    }
   };
 
   if (loading) {
@@ -609,11 +664,12 @@ const handleAddDocument = async (e) => {
               />
 
               <button
-  type="submit"
-  className="bg-[#caa12a] px-5 py-3 text-sm font-black uppercase text-black hover:bg-black hover:text-white"
->
-  Upload Document
-</button>
+                type="submit"
+                disabled={uploadingDocument}
+                className="bg-[#caa12a] px-5 py-3 text-sm font-black uppercase text-black hover:bg-black hover:text-white disabled:opacity-60"
+              >
+                {uploadingDocument ? "Uploading..." : "Upload Document"}
+              </button>
             </div>
           </form>
 
@@ -698,8 +754,12 @@ const handleAddDocument = async (e) => {
                 Locked Content
               </label>
 
-              <button className="bg-[#caa12a] px-5 py-3 text-sm font-black uppercase text-black hover:bg-black hover:text-white">
-                Add Training
+              <button
+                type="submit"
+                disabled={uploadingTraining}
+                className="bg-[#caa12a] px-5 py-3 text-sm font-black uppercase text-black hover:bg-black hover:text-white disabled:opacity-60"
+              >
+                {uploadingTraining ? "Uploading..." : "Add Training"}
               </button>
             </div>
           </form>
@@ -796,8 +856,12 @@ const handleAddDocument = async (e) => {
                 }
               />
 
-              <button className="bg-[#caa12a] px-5 py-3 text-sm font-black uppercase text-black hover:bg-black hover:text-white">
-                Add Invoice
+              <button
+                type="submit"
+                disabled={uploadingInvoice}
+                className="bg-[#caa12a] px-5 py-3 text-sm font-black uppercase text-black hover:bg-black hover:text-white disabled:opacity-60"
+              >
+                {uploadingInvoice ? "Uploading..." : "Add Invoice"}
               </button>
             </div>
           </form>
@@ -827,13 +891,15 @@ const handleAddDocument = async (e) => {
               client.documents.map((document, index) => (
                 <div
                   key={index}
-                  className="flex items-center justify-between border border-gray-200 p-4"
+                  className="flex flex-col gap-4 border border-gray-200 p-4 sm:flex-row sm:items-center sm:justify-between"
                 >
                   <div>
-                    <p className="font-black">{document.name}</p>
+                    <p className="font-black">
+                      {document.name || "Untitled Document"}
+                    </p>
 
                     <p className="text-sm text-gray-500">
-                      {document.category}
+                      {document.category || "No category"}
                     </p>
                   </div>
 
