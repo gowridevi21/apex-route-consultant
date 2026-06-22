@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router";
 import { onAuthStateChanged, signOut } from "firebase/auth";
+
 import {
   doc,
   getDoc,
@@ -232,7 +233,14 @@ const handleAddDocument = async (e) => {
   }
 
   try {
-    const fileUrl = await uploadFile(documentFile, "client-documents");
+    alert("Starting upload");
+
+    const fileUrl = await uploadFile(
+      documentFile,
+      "client-documents"
+    );
+
+    alert("Upload finished");
 
     await setDoc(
       doc(db, "users", clientId),
@@ -264,7 +272,6 @@ const handleAddDocument = async (e) => {
     alert(error.message || "Document upload failed.");
   }
 };
-
   const handleAddTraining = async (e) => {
     e.preventDefault();
 
