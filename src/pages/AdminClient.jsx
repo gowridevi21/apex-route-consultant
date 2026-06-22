@@ -221,14 +221,17 @@ export default function AdminClient() {
     alert("Progress updated.");
   };
 
-  const handleAddDocument = async (e) => {
-    e.preventDefault();
+const handleAddDocument = async (e) => {
+  e.preventDefault();
 
-    if (!documentFile) {
-      alert("Please choose a document file.");
-      return;
-    }
+  alert("Upload Document clicked");
 
+  if (!documentFile) {
+    alert("Please choose a document file first.");
+    return;
+  }
+
+  try {
     const fileUrl = await uploadFile(documentFile, "client-documents");
 
     await setDoc(
@@ -243,23 +246,6 @@ export default function AdminClient() {
       { merge: true }
     );
 
-    await emailjs.send(
-      SERVICE_ID,
-      CUSTOMER_TEMPLATE_ID,
-      {
-        name: clientName,
-        from_name: "Apex Route Consultant Group",
-        user_name: clientName,
-        user_email: clientEmail,
-        to_email: clientEmail,
-        reply_to: "ceo@apexrouteconsulting.com",
-        document_name: documentForm.name,
-        document_type: documentForm.type || "Document",
-        message: "A new document has been added to your Apex client vault.",
-      },
-      PUBLIC_KEY
-    );
-
     await addActivity(`Document added: ${documentForm.name}.`);
 
     setDocumentForm({
@@ -271,8 +257,13 @@ export default function AdminClient() {
     setDocumentFile(null);
 
     await refreshClient();
-    alert("Document uploaded and added.");
-  };
+
+    alert("Document uploaded successfully.");
+  } catch (error) {
+    console.error("UPLOAD DOCUMENT ERROR:", error);
+    alert(error.message || "Document upload failed.");
+  }
+};
 
   const handleAddTraining = async (e) => {
     e.preventDefault();
@@ -610,9 +601,12 @@ export default function AdminClient() {
                 onChange={(e) => setDocumentFile(e.target.files[0])}
               />
 
-              <button className="bg-[#caa12a] px-5 py-3 text-sm font-black uppercase text-black hover:bg-black hover:text-white">
-                Upload Document
-              </button>
+              <button
+  type="submit"
+  className="bg-[#caa12a] px-5 py-3 text-sm font-black uppercase text-black hover:bg-black hover:text-white"
+>
+  Upload Document
+</button>
             </div>
           </form>
 
