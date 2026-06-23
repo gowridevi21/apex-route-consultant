@@ -25,7 +25,17 @@ export default function Training() {
   const [training, setTraining] = useState([]);
 
   const categories = ["Videos", "Guides", "Walkthroughs ", "SOPs", "Homework"];
+const getGoogleDriveDownloadLink = (url) => {
+  if (!url) return "";
 
+  const fileMatch = url.match(/\/file\/d\/([^/]+)/);
+
+  if (fileMatch) {
+    return `https://drive.google.com/uc?export=download&id=${fileMatch[1]}`;
+  }
+
+  return url;
+};
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (!user) {
@@ -257,26 +267,37 @@ export default function Training() {
                           </div>
                         </div>
 
-                        <div className="mt-6">
-                          {item.locked ? (
-                            <button className="inline-flex bg-gray-200 px-5 py-3 text-sm font-black uppercase text-gray-500">
-                              Locked Content
-                            </button>
-                          ) : item.url ? (
-                            <a
-                              href={item.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex bg-[#caa12a] px-5 py-3 text-sm font-black uppercase text-black transition hover:bg-black hover:text-white"
-                            >
-                              Open Training
-                            </a>
-                          ) : (
-                            <button className="inline-flex bg-gray-200 px-5 py-3 text-sm font-black uppercase text-gray-500">
-                              No Link Added
-                            </button>
-                          )}
-                        </div>
+<div className="mt-6 flex flex-wrap gap-3">
+  {item.locked ? (
+    <button className="inline-flex bg-gray-200 px-5 py-3 text-sm font-black uppercase text-gray-500">
+      Locked Content
+    </button>
+  ) : item.url ? (
+    <>
+      <a
+        href={item.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex bg-[#caa12a] px-5 py-3 text-sm font-black uppercase text-black transition hover:bg-black hover:text-white"
+      >
+        Open Training
+      </a>
+
+      <a
+        href={getGoogleDriveDownloadLink(item.url)}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex border border-[#caa12a] px-5 py-3 text-sm font-black uppercase text-black transition hover:bg-[#caa12a]"
+      >
+        Download
+      </a>
+    </>
+  ) : (
+    <button className="inline-flex bg-gray-200 px-5 py-3 text-sm font-black uppercase text-gray-500">
+      No Link Added
+    </button>
+  )}
+</div>
                       </div>
                     ))}
                   </div>
