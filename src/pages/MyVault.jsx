@@ -36,6 +36,22 @@ export default function MyVault() {
     "08 - Bonus Resources",
   ];
 
+  const getGoogleDriveDownloadLink = (url) => {
+    if (!url) return "";
+
+    const fileMatch = url.match(/\/file\/d\/([^/]+)/);
+    if (fileMatch) {
+      return `https://drive.google.com/uc?export=download&id=${fileMatch[1]}`;
+    }
+
+    const openMatch = url.match(/[?&]id=([^&]+)/);
+    if (openMatch) {
+      return `https://drive.google.com/uc?export=download&id=${openMatch[1]}`;
+    }
+
+    return url;
+  };
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (!user) {
@@ -109,32 +125,33 @@ export default function MyVault() {
           </h1>
 
           <p className="mt-3 max-w-3xl text-white/70">
-            Your purchased PDFs, reports, agreements, uploads, invoices, and bonus resources are organized by category.
+            Your purchased PDFs, reports, agreements, uploads, invoices, and
+            bonus resources are organized by category.
           </p>
         </div>
 
         <div className="overflow-hidden rounded-md border border-[#D4AF37]/30 bg-white shadow-2xl">
           <div className="flex flex-col gap-4 bg-[#0b1118] px-6 py-5 text-white md:flex-row md:items-center md:justify-between md:px-8">
             <div className="flex items-center justify-between gap-3">
-  <div className="flex items-center gap-3">
-    <img
-      src="/images/logo1.png"
-      alt="Apex Logo"
-      className="h-10 w-auto"
-    />
+              <div className="flex items-center gap-3">
+                <img
+                  src="/images/logo1.png"
+                  alt="Apex Logo"
+                  className="h-10 w-auto"
+                />
 
-    <h2 className="text-lg font-black uppercase tracking-wide">
-      Apex Client Portal
-    </h2>
-  </div>
+                <h2 className="text-lg font-black uppercase tracking-wide">
+                  Apex Client Portal
+                </h2>
+              </div>
 
-  <button
-    onClick={() => setMobileMenuOpen(true)}
-    className="md:hidden"
-  >
-    <Menu size={24} />
-  </button>
-</div>
+              <button
+                onClick={() => setMobileMenuOpen(true)}
+                className="md:hidden"
+              >
+                <Menu size={24} />
+              </button>
+            </div>
 
             <div className="text-sm font-bold">
               <Link to="/profile" className="hover:text-[#D4AF37]">
@@ -153,45 +170,47 @@ export default function MyVault() {
 
           <div className="grid md:grid-cols-[260px_1fr]">
             <>
-  {mobileMenuOpen && (
-    <div
-      className="fixed inset-0 z-40 bg-black/50 md:hidden"
-      onClick={() => setMobileMenuOpen(false)}
-    />
-  )}
+              {mobileMenuOpen && (
+                <div
+                  className="fixed inset-0 z-40 bg-black/50 md:hidden"
+                  onClick={() => setMobileMenuOpen(false)}
+                />
+              )}
 
-  <aside
-    className={`
-      fixed left-0 top-0 z-50 h-full w-72 bg-[#eee9dc] p-5
-      transition-transform duration-300
-      md:static md:h-auto md:w-auto md:translate-x-0
-      ${mobileMenuOpen ? "translate-x-0" : "-translate-x-full"}
-    `}
-  >
-    <div className="mb-6 flex items-center justify-between md:hidden">
-  <h3 className="font-black">Menu</h3>
+              <aside
+                className={`
+                  fixed left-0 top-0 z-50 h-full w-72 bg-[#eee9dc] p-5
+                  transition-transform duration-300
+                  md:static md:h-auto md:w-auto md:translate-x-0
+                  ${mobileMenuOpen ? "translate-x-0" : "-translate-x-full"}
+                `}
+              >
+                <div className="mb-6 flex items-center justify-between md:hidden">
+                  <h3 className="font-black">Menu</h3>
 
-  <button onClick={() => setMobileMenuOpen(false)}>
-    <X size={22} />
-  </button>
-</div>
-              {sidebarLinks.map(([name, path, Icon]) => (
-                <Link
-  key={name}
-  to={path}
-  onClick={() => setMobileMenuOpen(false)}
-                  className={`mb-3 flex items-center gap-3 px-5 py-4 text-sm font-black uppercase transition ${
-                    name === "My Vault"
-                      ? "bg-[#caa12a] text-black"
-                      : "text-black hover:bg-[#d8cfae]"
-                  }`}
-                >
-                  <Icon size={18} />
-                  {name}
-                </Link>
-              ))}
-            </aside>
+                  <button onClick={() => setMobileMenuOpen(false)}>
+                    <X size={22} />
+                  </button>
+                </div>
+
+                {sidebarLinks.map(([name, path, Icon]) => (
+                  <Link
+                    key={name}
+                    to={path}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`mb-3 flex items-center gap-3 px-5 py-4 text-sm font-black uppercase transition ${
+                      name === "My Vault"
+                        ? "bg-[#caa12a] text-black"
+                        : "text-black hover:bg-[#d8cfae]"
+                    }`}
+                  >
+                    <Icon size={18} />
+                    {name}
+                  </Link>
+                ))}
+              </aside>
             </>
+
             <div className="bg-[#f7f7f7] p-6 md:p-8">
               <h2 className="text-3xl font-black text-black">
                 {clientName}'s Vault
@@ -286,7 +305,9 @@ export default function MyVault() {
 
                                   {docItem.url ? (
                                     <a
-                                      href={docItem.url}
+                                      href={getGoogleDriveDownloadLink(
+                                        docItem.url
+                                      )}
                                       target="_blank"
                                       rel="noopener noreferrer"
                                       className="inline-flex items-center gap-2 border border-[#caa12a] px-4 py-2 text-xs font-black uppercase text-black transition hover:bg-[#caa12a]"
