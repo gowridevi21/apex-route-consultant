@@ -8,9 +8,8 @@ import {
   updateDoc,
   arrayUnion,
 } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import emailjs from "@emailjs/browser";
-import { auth, db, storage } from "../firebase";
+import { auth, db } from "../firebase";
 
 import {
   ArrowLeft,
@@ -32,16 +31,9 @@ export default function AdminClient() {
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [uploadingDocument, setUploadingDocument] = useState(false);
-  const [uploadingTraining, setUploadingTraining] = useState(false);
-  const [uploadingInvoice, setUploadingInvoice] = useState(false);
 
   const [client, setClient] = useState(null);
   const [adminNote, setAdminNote] = useState("");
-
-  const [documentFile, setDocumentFile] = useState(null);
-  const [trainingFile, setTrainingFile] = useState(null);
-  const [invoiceFile, setInvoiceFile] = useState(null);
 
   const [progressForm, setProgressForm] = useState({
     progress: 0,
@@ -57,6 +49,7 @@ export default function AdminClient() {
     name: "",
     type: "",
     category: "01 - Agreements & Receipts",
+    url: "",
   });
 
   const [trainingForm, setTrainingForm] = useState({
@@ -73,6 +66,7 @@ export default function AdminClient() {
     amount: "",
     dueDate: "",
     status: "Pending",
+    url: "",
     paymentLink: "",
   });
 
@@ -144,21 +138,6 @@ export default function AdminClient() {
 
   const clientEmail = client?.email || client?.documents?.email || "";
 
-  const uploadFile = async (file, folder) => {
-    if (!file) return "";
-
-    const safeFileName = file.name.replace(/\s+/g, "_");
-    const filePath = `${folder}/${clientId}/${Date.now()}-${safeFileName}`;
-
-    const fileRef = ref(storage, filePath);
-
-    await uploadBytes(fileRef, file, {
-      contentType: file.type,
-    });
-
-    return await getDownloadURL(fileRef);
-  };
-
   const handleLogout = async () => {
     await signOut(auth);
     navigate("/signin");
@@ -198,6 +177,7 @@ export default function AdminClient() {
     });
 
     await addActivity("Document removed.");
+
     await refreshClient();
 
     alert("Document deleted.");
@@ -218,8 +198,8 @@ export default function AdminClient() {
       );
 
       await addActivity(`Progress updated to ${progressForm.progress}%.`);
-      await refreshClient();
 
+      await refreshClient();
       alert("Progress updated.");
     } catch (error) {
       console.error("SAVE PROGRESS ERROR:", error);
@@ -232,24 +212,12 @@ export default function AdminClient() {
   const handleAddDocument = async (e) => {
     e.preventDefault();
 
-    if (!documentFile) {
-      alert("Please choose a document file first.");
-      return;
-    }
-
-    setUploadingDocument(true);
-
     try {
-      const fileUrl = await uploadFile(documentFile, "client-documents");
-
       await setDoc(
         doc(db, "users", clientId),
         {
           documents: arrayUnion({
             ...documentForm,
-            fileName: documentFile.name,
-            fileType: documentFile.type,
-            url: fileUrl,
             createdAt: new Date().toISOString(),
           }),
         },
@@ -283,40 +251,27 @@ export default function AdminClient() {
         name: "",
         type: "",
         category: "01 - Agreements & Receipts",
+        url: "",
       });
 
-      setDocumentFile(null);
       await refreshClient();
 
-      alert("Document uploaded successfully.");
+      alert("Document added.");
     } catch (error) {
-      console.error("UPLOAD DOCUMENT ERROR:", error);
-      alert(error.message || "Document upload failed.");
+      console.error("ADD DOCUMENT ERROR:", error);
+      alert(error.message || "Failed to add document.");
     }
-
-    setUploadingDocument(false);
   };
 
   const handleAddTraining = async (e) => {
     e.preventDefault();
 
-    setUploadingTraining(true);
-
     try {
-      let fileUrl = trainingForm.url;
-
-      if (trainingFile) {
-        fileUrl = await uploadFile(trainingFile, "client-training");
-      }
-
       await setDoc(
         doc(db, "users", clientId),
         {
           training: arrayUnion({
             ...trainingForm,
-            fileName: trainingFile?.name || "",
-            fileType: trainingFile?.type || "",
-            url: fileUrl,
             createdAt: new Date().toISOString(),
           }),
         },
@@ -333,38 +288,23 @@ export default function AdminClient() {
         locked: false,
       });
 
-      setTrainingFile(null);
       await refreshClient();
-
       alert("Training added.");
     } catch (error) {
       console.error("ADD TRAINING ERROR:", error);
-      alert(error.message || "Training upload failed.");
+      alert(error.message || "Failed to add training.");
     }
-
-    setUploadingTraining(false);
   };
 
   const handleAddInvoice = async (e) => {
     e.preventDefault();
 
-    setUploadingInvoice(true);
-
     try {
-      let fileUrl = "";
-
-      if (invoiceFile) {
-        fileUrl = await uploadFile(invoiceFile, "client-invoices");
-      }
-
       await setDoc(
         doc(db, "users", clientId),
         {
           invoices: arrayUnion({
             ...invoiceForm,
-            fileName: invoiceFile?.name || "",
-            fileType: invoiceFile?.type || "",
-            url: fileUrl,
             createdAt: new Date().toISOString(),
           }),
         },
@@ -402,19 +342,16 @@ export default function AdminClient() {
         amount: "",
         dueDate: "",
         status: "Pending",
+        url: "",
         paymentLink: "",
       });
 
-      setInvoiceFile(null);
       await refreshClient();
-
       alert("Invoice added.");
     } catch (error) {
       console.error("ADD INVOICE ERROR:", error);
-      alert(error.message || "Invoice upload failed.");
+      alert(error.message || "Failed to add invoice.");
     }
-
-    setUploadingInvoice(false);
   };
 
   const handleSaveAdminNote = async () => {
@@ -435,6 +372,7 @@ export default function AdminClient() {
       await addActivity("Internal admin note added.");
 
       setAdminNote("");
+
       await refreshClient();
 
       alert("Admin note saved.");
@@ -657,18 +595,22 @@ export default function AdminClient() {
 
               <input
                 required
-                type="file"
-                accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
                 className="input-admin"
-                onChange={(e) => setDocumentFile(e.target.files[0])}
+                placeholder="Google Drive / File URL"
+                value={documentForm.url}
+                onChange={(e) =>
+                  setDocumentForm({
+                    ...documentForm,
+                    url: e.target.value,
+                  })
+                }
               />
 
               <button
                 type="submit"
-                disabled={uploadingDocument}
-                className="bg-[#caa12a] px-5 py-3 text-sm font-black uppercase text-black hover:bg-black hover:text-white disabled:opacity-60"
+                className="bg-[#caa12a] px-5 py-3 text-sm font-black uppercase text-black hover:bg-black hover:text-white"
               >
-                {uploadingDocument ? "Uploading..." : "Upload Document"}
+                Add Document
               </button>
             </div>
           </form>
@@ -723,7 +665,7 @@ export default function AdminClient() {
 
               <input
                 className="input-admin"
-                placeholder="Training URL optional"
+                placeholder="Training URL"
                 value={trainingForm.url}
                 onChange={(e) =>
                   setTrainingForm({
@@ -731,13 +673,6 @@ export default function AdminClient() {
                     url: e.target.value,
                   })
                 }
-              />
-
-              <input
-                type="file"
-                accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.mp4"
-                className="input-admin"
-                onChange={(e) => setTrainingFile(e.target.files[0])}
               />
 
               <label className="flex items-center gap-2 text-sm font-bold">
@@ -756,10 +691,9 @@ export default function AdminClient() {
 
               <button
                 type="submit"
-                disabled={uploadingTraining}
-                className="bg-[#caa12a] px-5 py-3 text-sm font-black uppercase text-black hover:bg-black hover:text-white disabled:opacity-60"
+                className="bg-[#caa12a] px-5 py-3 text-sm font-black uppercase text-black hover:bg-black hover:text-white"
               >
-                {uploadingTraining ? "Uploading..." : "Add Training"}
+                Add Training
               </button>
             </div>
           </form>
@@ -838,15 +772,20 @@ export default function AdminClient() {
               </select>
 
               <input
-                type="file"
-                accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
                 className="input-admin"
-                onChange={(e) => setInvoiceFile(e.target.files[0])}
+                placeholder="Invoice PDF URL"
+                value={invoiceForm.url}
+                onChange={(e) =>
+                  setInvoiceForm({
+                    ...invoiceForm,
+                    url: e.target.value,
+                  })
+                }
               />
 
               <input
                 className="input-admin"
-                placeholder="Payment Link optional"
+                placeholder="Payment Link"
                 value={invoiceForm.paymentLink}
                 onChange={(e) =>
                   setInvoiceForm({
@@ -858,10 +797,9 @@ export default function AdminClient() {
 
               <button
                 type="submit"
-                disabled={uploadingInvoice}
-                className="bg-[#caa12a] px-5 py-3 text-sm font-black uppercase text-black hover:bg-black hover:text-white disabled:opacity-60"
+                className="bg-[#caa12a] px-5 py-3 text-sm font-black uppercase text-black hover:bg-black hover:text-white"
               >
-                {uploadingInvoice ? "Uploading..." : "Add Invoice"}
+                Add Invoice
               </button>
             </div>
           </form>
