@@ -59,6 +59,18 @@ export default function Invoices() {
     ["Profile", "/profile", User],
   ];
 
+  const getGoogleDriveDownloadLink = (url) => {
+  if (!url) return "";
+
+  const fileMatch = url.match(/\/file\/d\/([^/]+)/);
+
+  if (fileMatch) {
+    return `https://drive.google.com/uc?export=download&id=${fileMatch[1]}`;
+  }
+
+  return url;
+};
+
   if (loading) {
     return (
       <main className="min-h-screen bg-[#050505] px-4 pt-8 text-white md:px-8">
@@ -232,30 +244,47 @@ export default function Invoices() {
                             </span>
                           </td>
                           <td className="p-4">
-                            {invoice.url ? (
-                              <a
-                                href={invoice.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="font-black uppercase text-[#c28f00]"
-                              >
-                                View
-                              </a>
-                            ) : invoice.paymentLink ? (
-                              <a
-                                href={invoice.paymentLink}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="font-black uppercase text-[#c28f00]"
-                              >
-                                Pay
-                              </a>
-                            ) : (
-                              <span className="font-bold text-gray-400">
-                                No Link
-                              </span>
-                            )}
-                          </td>
+  <div className="flex flex-wrap gap-3">
+    {invoice.url && (
+      <>
+        <a
+          href={invoice.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-black uppercase text-[#c28f00]"
+        >
+          View
+        </a>
+
+        <a
+          href={getGoogleDriveDownloadLink(invoice.url)}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-black uppercase text-black"
+        >
+          Download
+        </a>
+      </>
+    )}
+
+    {invoice.paymentLink && (
+      <a
+        href={invoice.paymentLink}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="font-black uppercase text-green-700"
+      >
+        Pay
+      </a>
+    )}
+
+    {!invoice.url && !invoice.paymentLink && (
+      <span className="font-bold text-gray-400">
+        No Link
+      </span>
+    )}
+  </div>
+</td>
                         </tr>
                       ))}
                     </tbody>
