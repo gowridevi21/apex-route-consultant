@@ -108,6 +108,16 @@ export default function AdminFiles() {
         },
         { merge: true }
       );
+      await setDoc(
+  doc(db, "users", form.clientId),
+  {
+    activityTimeline: arrayUnion({
+      message: `File added: ${form.name}.`,
+      createdAt: new Date().toISOString(),
+    }),
+  },
+  { merge: true }
+);
 
       alert("File added to client vault.");
 

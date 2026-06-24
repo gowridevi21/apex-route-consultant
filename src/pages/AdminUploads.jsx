@@ -39,7 +39,7 @@ if (
 ) {
   navigate("/dashboard");
   return;
-}s
+}
       const usersSnap = await getDocs(collection(db, "users"));
       const allUploads = [];
 
@@ -103,23 +103,28 @@ if (
     await updateDoc(userRef, {
       uploads: updatedUploads,
     });
-await emailjs.send(
-  SERVICE_ID,
-  CUSTOMER_TEMPLATE_ID,
-  {
-    name: uploadToUpdate.clientName,
-    from_name: "Apex Route Consultant Group",
-    user_name: uploadToUpdate.clientName,
-    user_email: uploadToUpdate.clientEmail,
-    to_email: uploadToUpdate.clientEmail,
-    reply_to: "ceo@apexrouteconsulting.com",
 
-    upload_name: uploadToUpdate.name || "Uploaded Document",
-    upload_status: newStatus,
-    message: `Your uploaded document status has been updated to ${newStatus}.`,
-  },
-  PUBLIC_KEY
-);
+  try {
+  await emailjs.send(
+    SERVICE_ID,
+    CUSTOMER_TEMPLATE_ID,
+    {
+      name: uploadToUpdate.clientName,
+      from_name: "Apex Route Consultant Group",
+      user_name: uploadToUpdate.clientName,
+      user_email: uploadToUpdate.clientEmail,
+      to_email: uploadToUpdate.clientEmail,
+      reply_to: "ceo@apexrouteconsulting.com",
+      upload_name: uploadToUpdate.name || "Uploaded Document",
+      upload_status: newStatus,
+      message: `Your uploaded document status has been updated to ${newStatus}.`,
+    },
+    PUBLIC_KEY
+  );
+} catch (emailError) {
+  console.warn("Upload status email failed:", emailError);
+}
+
     setUploads((prev) =>
       prev.map((upload) =>
         upload.clientId === uploadToUpdate.clientId &&
