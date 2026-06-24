@@ -2,6 +2,7 @@ import { useState } from "react";
 import emailjs from "@emailjs/browser";
 import { Mail, Phone } from "lucide-react";
 import { FaCalendarAlt } from "react-icons/fa";
+import { useNavigate } from "react-router";
 
 const SERVICE_ID = "service_5vyb6vb";
 const COMPANY_TEMPLATE_ID = "template_c1lco2k";
@@ -21,7 +22,8 @@ export default function Booking() {
   const [selectedType] = useState(consultationTypes[0]);
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
-
+  const navigate = useNavigate();
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -71,6 +73,7 @@ export default function Booking() {
 
       setSubmitted(true);
       form.reset();
+      navigate("/success");
     } catch (error) {
       console.error("EmailJS error:", error);
       alert(error?.text || "Something went wrong. Please try again.");
