@@ -17,16 +17,18 @@ import {
  // FaYoutube,
 } from "react-icons/fa";
 import { FaTiktok } from "react-icons/fa6";
+import { useNavigate } from "react-router";
 
-const SERVICE_ID = "YOUR_SERVICE_ID";
-const COMPANY_TEMPLATE_ID = "YOUR_COMPANY_TEMPLATE_ID";
-const CUSTOMER_TEMPLATE_ID = "YOUR_CUSTOMER_TEMPLATE_ID";
-const PUBLIC_KEY = "YOUR_PUBLIC_KEY";
+const SERVICE_ID = "service_5vyb6vb";
+const COMPANY_TEMPLATE_ID = "template_c1lco2k";
+const CUSTOMER_TEMPLATE_ID = "template_hwroov8";
+const PUBLIC_KEY = "R82-i7Mc5PSHOL3Yi";
+
 
 export default function Contact() {
   const [status, setStatus] = useState("");
   const [sending, setSending] = useState(false);
-
+  const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSending(true);
@@ -42,6 +44,7 @@ export default function Contact() {
         "Request received successfully. A pending confirmation email has been sent to you."
       );
       form.reset();
+      navigate("/success");
     } catch (error) {
       console.error("EmailJS Error:", error);
       setStatus("Something went wrong. Please call us at 603-713-7917.");
