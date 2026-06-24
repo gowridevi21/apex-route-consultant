@@ -4,7 +4,6 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "../firebase";
 
-//import PortalLayout from "../components/PortalLayout";
 import {
   FileText,
   LayoutDashboard,
@@ -97,8 +96,10 @@ export default function Dashboard() {
     ["Support", "/support", MessageSquare],
     ["Profile", "/profile", User],
   ];
+
   const totalDocuments = clientData.documents.length;
-  //const totalPurchases = clientData.purchases.length;
+  const recentDocuments = clientData.documents.slice(0, 5);
+
   if (loading) {
     return (
       <main className="min-h-screen bg-[#050505] px-4 pt-8 text-white md:px-8">
@@ -200,7 +201,7 @@ export default function Dashboard() {
                 </Link>
               ))}
 
-              {userRole === "admin" && (
+              {(userRole === "admin" || userRole === "team") && (
                 <Link
                   to="/admin"
                   onClick={() => setMobileMenuOpen(false)}
@@ -222,54 +223,27 @@ export default function Dashboard() {
                 are organized here.
               </p>
 
-              <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                <div className="border border-gray-300 bg-white p-5 shadow-sm">
-                  <p className="text-sm font-black uppercase text-gray-500">
-                    Purchased Systems
-                  </p>
-                  <p className="mt-2 text-2xl font-black text-[#c28f00]">
-                    {clientData.documents.length} files
-                  </p>
-                </div>
+              <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
+                <DashboardCard
+                  label="Purchased Systems"
+                  value={`${totalDocuments} files`}
+                />
 
-                <div className="border border-gray-300 bg-white p-5 shadow-sm">
-                  <p className="text-sm font-black uppercase text-gray-500">
-                    Progress Score
-                  </p>
-                  <p className="mt-2 text-2xl font-black text-[#c28f00]">
-                    {clientData.progress}% complete
-                  </p>
-                </div>
+                <DashboardCard
+                  label="Progress Score"
+                  value={`${clientData.progress}% complete`}
+                />
 
-                <div className="border border-gray-300 bg-white p-5 shadow-sm">
-                  <p className="text-sm font-black uppercase text-gray-500">
-                    Next Step
-                  </p>
-                  <p className="mt-2 text-xl font-black text-[#c28f00]">
-                    {clientData.nextStep}
-                  </p>
-                  <div className="border border-gray-300 bg-white p-5 shadow-sm">
-  <p className="text-sm font-black uppercase text-gray-500">
-    Current Phase
-  </p>
+                <DashboardCard label="Next Step" value={clientData.nextStep} />
 
-  <p className="mt-2 text-xl font-black text-[#c28f00]">
-    {clientData.currentPhase}
-  </p>
-</div>
+                <DashboardCard
+                  label="Current Phase"
+                  value={clientData.currentPhase}
+                />
 
-<div className="border border-gray-300 bg-white p-5 shadow-sm">
-  <p className="text-sm font-black uppercase text-gray-500">
-    Documents
-  </p>
-
-  <p className="mt-2 text-2xl font-black text-[#c28f00]">
-    {totalDocuments}
-  </p>
-</div>
-                </div>
+                <DashboardCard label="Documents" value={totalDocuments} />
               </div>
-              
+
               <div className="mt-8 grid gap-8 lg:grid-cols-[1.4fr_0.8fr]">
                 <div className="border border-gray-300 bg-white p-6 shadow-sm">
                   <div className="flex items-center justify-between gap-4">
@@ -286,13 +260,13 @@ export default function Dashboard() {
                   </div>
 
                   <div className="mt-5 space-y-3">
-                    {clientData.documents.length === 0 ? (
+                    {recentDocuments.length === 0 ? (
                       <div className="rounded border border-dashed border-gray-300 p-6 text-sm text-gray-500">
                         No purchased documents yet. Once Apex assigns files to
                         your account, they will appear here.
                       </div>
                     ) : (
-                      clientData.documents.map((docItem, index) => (
+                      recentDocuments.map((docItem, index) => (
                         <div
                           key={`${docItem.name}-${index}`}
                           className="flex flex-col gap-3 border-b border-gray-200 pb-3 last:border-b-0 sm:flex-row sm:items-center sm:justify-between"
@@ -307,22 +281,29 @@ export default function Dashboard() {
 
                             <div>
                               <p className="text-sm font-bold">
-                                {docItem.name}
+                                {docItem.name || "Untitled Document"}
                               </p>
+
                               <p className="text-xs text-gray-500">
                                 {docItem.type || "Document"}
                               </p>
                             </div>
                           </div>
 
-                          <a
-  href={docItem.url}
-  target="_blank"
-  rel="noopener noreferrer"
-  className="text-sm font-bold text-[#c28f00]"
->
-  View Document
-</a>
+                          {docItem.url ? (
+                            <a
+                              href={docItem.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-sm font-bold text-[#c28f00]"
+                            >
+                              View Document
+                            </a>
+                          ) : (
+                            <span className="text-sm font-bold text-gray-400">
+                              No Link
+                            </span>
+                          )}
                         </div>
                       ))
                     )}
@@ -358,7 +339,7 @@ export default function Dashboard() {
                               item.status === "locked" ? "" : "font-bold"
                             }
                           >
-                            {item.phase}
+                            {item.phase || "Progress Step"}
                           </span>
                         </div>
                       ))
@@ -369,6 +350,7 @@ export default function Dashboard() {
                     <p className="text-sm font-bold text-black">
                       Current Phase
                     </p>
+
                     <p className="mt-1 text-sm text-gray-700">
                       {clientData.currentPhase}
                     </p>
@@ -397,12 +379,14 @@ export default function Dashboard() {
                 >
                   Training
                 </Link>
+
                 <Link
-  to="/booking"
-  className="border border-[#caa12a] px-5 py-4 text-center text-sm font-black uppercase text-black transition hover:bg-[#caa12a]"
->
-  Book Call
-</Link>
+                  to="/booking"
+                  className="border border-[#caa12a] px-5 py-4 text-center text-sm font-black uppercase text-black transition hover:bg-[#caa12a]"
+                >
+                  Book Call
+                </Link>
+
                 <Link
                   to="/support"
                   className="border border-[#caa12a] px-5 py-4 text-center text-sm font-black uppercase text-black transition hover:bg-[#caa12a]"
@@ -410,7 +394,7 @@ export default function Dashboard() {
                   Support
                 </Link>
 
-                {userRole === "admin" && (
+                {(userRole === "admin" || userRole === "team") && (
                   <Link
                     to="/admin"
                     className="bg-black px-5 py-4 text-center text-sm font-black uppercase text-[#caa12a] transition hover:bg-[#caa12a] hover:text-black"
@@ -424,5 +408,17 @@ export default function Dashboard() {
         </div>
       </section>
     </main>
+  );
+}
+
+function DashboardCard({ label, value }) {
+  return (
+    <div className="border border-gray-300 bg-white p-5 shadow-sm">
+      <p className="text-sm font-black uppercase text-gray-500">{label}</p>
+
+      <p className="mt-2 text-xl font-black text-[#c28f00] break-words">
+        {value}
+      </p>
+    </div>
   );
 }
