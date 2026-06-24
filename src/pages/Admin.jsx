@@ -143,15 +143,15 @@ const filteredClients = clients.filter((client) => {
     .toLowerCase()
     .includes(searchTerm.toLowerCase());
 
-  const matchesFilter =
-    filter === "all" ||
-    (filter === "admin" && client.role === "admin") ||
-    (filter === "active" &&
-      client.role !== "admin" &&
-      client.progress < 100) ||
-    (filter === "completed" &&
-      client.progress >= 100);
-      (filter === "team" && client.role === "team")
+const matchesFilter =
+  filter === "all" ||
+  (filter === "admin" && client.role === "admin") ||
+  (filter === "team" && client.role === "team") ||
+  (filter === "active" &&
+    client.role !== "admin" &&
+    client.progress < 100) ||
+  (filter === "completed" &&
+    client.progress >= 100);
 
   return matchesSearch && matchesFilter;
 });
