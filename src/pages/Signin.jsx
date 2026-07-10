@@ -51,25 +51,7 @@ export default function Signin() {
     }
   };
 
-  const getFriendlyError = (code) => {
-    if (
-      code === "auth/invalid-credential" ||
-      code === "auth/wrong-password" ||
-      code === "auth/user-not-found"
-    ) {
-      return "Invalid email or password. Please try again.";
-    }
-
-    if (code === "auth/invalid-email") {
-      return "Please enter a valid email address.";
-    }
-
-    if (code === "auth/too-many-requests") {
-      return "Too many attempts. Please wait and try again later.";
-    }
-
-    return "Unable to sign in. Please try again.";
-  };
+  
 
   const handleSignin = async (e) => {
     e.preventDefault();
@@ -102,9 +84,14 @@ export default function Signin() {
       await createMissingUserDocument(userCredential.user, cleanEmail);
 
       navigate("/dashboard");
-    } catch (err) {
-      setError(getFriendlyError(err.code));
-    }
+    } 
+    catch (err) {
+  console.error("Firebase Sign In Error:", err);
+
+  alert(err.code);
+
+  setError(err.code + " - " + err.message);
+}
 
     setLoading(false);
   };
