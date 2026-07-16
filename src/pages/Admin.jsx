@@ -10,12 +10,10 @@ import {
 import { auth, db } from "../firebase";
 import {
   FileText,
-  //LayoutDashboard,
   MessageSquare,
   Receipt,
   TrendingUp,
   UploadCloud,
-  //User,
   Users,
   ShieldCheck,
   LogOut,
