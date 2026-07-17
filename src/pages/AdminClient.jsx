@@ -242,22 +242,19 @@ const handleAddDocument = async (e) => {
     );
 
     await setDoc(
-      doc(db, "users", clientId),
-      {
-        documents: arrayUnion({
-          name: documentForm.name,
-          type: documentForm.type || "Document",
-          category: documentForm.category,
-          url: uploadedFile,
-          fileName: uploadedFile,
-          fileSize: uploadedFile,
-          fileType: uploadedFile,
-          storagePath: uploadedFile,
-          createdAt: new Date().toISOString(),
-        }),
-      },
-      { merge: true }
-    );
+  doc(db, "users", clientId),
+  {
+    documents: arrayUnion({
+      name: documentForm.name,
+      type: documentForm.type || "Document",
+      category: documentForm.category,
+      ...uploadedFile,
+      createdAt: new Date().toISOString(),
+    }),
+  },
+  { merge: true }
+);
+ 
 
     try {
       await emailjs.send(
