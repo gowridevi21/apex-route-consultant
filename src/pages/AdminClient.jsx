@@ -325,10 +325,10 @@ const handleAddTraining = async (e) => {
   ...uploadedFile,
   createdAt: new Date().toISOString(),
 })
-        }),
+        },
       { merge: true }
     
-
+      );
     await addActivity(`Training assigned: ${trainingForm.title}.`);
 
     setTrainingForm({
@@ -382,9 +382,9 @@ const handleAddTraining = async (e) => {
   ...uploadedFile,
   createdAt: new Date().toISOString(),
 })
-          }),
+          },
         { merge: true }
-
+        );
       try {
         await emailjs.send(
           SERVICE_ID,
