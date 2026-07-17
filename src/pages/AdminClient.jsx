@@ -10,6 +10,8 @@ import {
 } from "firebase/firestore";
 import emailjs from "@emailjs/browser";
 import { auth, db } from "../firebase";
+import { uploadFile } from "../utils/uploadFile";
+import { deleteFile } from "../utils/deleteFile";
 
 import {
   ArrowLeft,
@@ -31,7 +33,9 @@ export default function AdminClient() {
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-
+  const [documentFile, setDocumentFile] = useState(null);
+  const [trainingFile, setTrainingFile] = useState(null);
+  const [invoiceFile, setInvoiceFile] = useState(null);
   const [client, setClient] = useState(null);
   const [adminNote, setAdminNote] = useState("");
 
@@ -167,7 +171,14 @@ export default function AdminClient() {
     );
   };
 
-  const handleDeleteDocument = async (indexToDelete) => {
+const handleDeleteDocument = async (indexToDelete) => {
+  try {
+    const documentToDelete = client.documents[indexToDelete];
+
+    if (documentToDelete?.storagePath) {
+      await deleteFile(documentToDelete.storagePath);
+    }
+
     const updatedDocuments = (client.documents || []).filter(
       (_, index) => index !== indexToDelete
     );
@@ -176,12 +187,16 @@ export default function AdminClient() {
       documents: updatedDocuments,
     });
 
-    await addActivity("Document removed.");
+    await addActivity(`Document deleted: ${documentToDelete.name}.`);
 
     await refreshClient();
 
-    alert("Document deleted.");
-  };
+    alert("Document deleted successfully.");
+  } catch (error) {
+    console.error(error);
+    alert(error.message);
+  }
+};
 
   const handleSaveProgress = async () => {
     setSaving(true);
@@ -209,102 +224,177 @@ export default function AdminClient() {
     setSaving(false);
   };
 
-  const handleAddDocument = async (e) => {
-    e.preventDefault();
+const handleAddDocument = async (e) => {
+  e.preventDefault();
+
+  if (!documentFile) {
+    alert("Please choose a document.");
+    return;
+  }
+
+  setSaving(true);
+
+  try {
+    const uploadedFile = await uploadFile(
+      documentFile,
+      "documents",
+      clientId
+    );
+
+    await setDoc(
+      doc(db, "users", clientId),
+      {
+        documents: arrayUnion({
+          name: documentForm.name,
+          type: documentForm.type || "Document",
+          category: documentForm.category,
+          url: uploadedFile,
+          fileName: uploadedFile,
+          fileSize: uploadedFile,
+          fileType: uploadedFile,
+          storagePath: uploadedFile,
+          createdAt: new Date().toISOString(),
+        }),
+      },
+      { merge: true }
+    );
 
     try {
-      await setDoc(
-        doc(db, "users", clientId),
+      await emailjs.send(
+        SERVICE_ID,
+        CUSTOMER_TEMPLATE_ID,
         {
-          documents: arrayUnion({
-            ...documentForm,
-            createdAt: new Date().toISOString(),
-          }),
+          name: clientName,
+          from_name: "Apex Route Consultant Group",
+          user_name: clientName,
+          user_email: clientEmail,
+          to_email: clientEmail,
+          reply_to: "ceo@apexrouteconsulting.com",
+          document_name: documentForm.name,
+          document_type: documentForm.type || "Document",
+          message:
+            "A new document has been added to your Apex client vault.",
         },
-        { merge: true }
+        PUBLIC_KEY
       );
-
-      try {
-        await emailjs.send(
-          SERVICE_ID,
-          CUSTOMER_TEMPLATE_ID,
-          {
-            name: clientName,
-            from_name: "Apex Route Consultant Group",
-            user_name: clientName,
-            user_email: clientEmail,
-            to_email: clientEmail,
-            reply_to: "ceo@apexrouteconsulting.com",
-            document_name: documentForm.name,
-            document_type: documentForm.type || "Document",
-            message: "A new document has been added to your Apex client vault.",
-          },
-          PUBLIC_KEY
-        );
-      } catch (emailError) {
-        console.warn("Document email notification failed:", emailError);
-      }
-
-      await addActivity(`Document added: ${documentForm.name}.`);
-
-      setDocumentForm({
-        name: "",
-        type: "",
-        category: "01 - Agreements & Receipts",
-        url: "",
-      });
-
-      await refreshClient();
-
-      alert("Document added.");
-    } catch (error) {
-      console.error("ADD DOCUMENT ERROR:", error);
-      alert(error.message || "Failed to add document.");
+    } catch (emailError) {
+      console.warn("Document email notification failed:", emailError);
     }
-  };
 
-  const handleAddTraining = async (e) => {
-    e.preventDefault();
+    await addActivity(`Document added: ${documentForm.name}.`);
 
-    try {
-      await setDoc(
-        doc(db, "users", clientId),
-        {
-          training: arrayUnion({
-            ...trainingForm,
-            createdAt: new Date().toISOString(),
-          }),
-        },
-        { merge: true }
-      );
+    setDocumentForm({
+      name: "",
+      type: "",
+      category: "01 - Agreements & Receipts",
+      url: "",
+    });
 
-      await addActivity(`Training assigned: ${trainingForm.title}.`);
+    setDocumentFile(null);
 
-      setTrainingForm({
-        title: "",
-        type: "Video",
-        description: "",
-        url: "",
-        locked: false,
-      });
+    await refreshClient();
 
-      await refreshClient();
-      alert("Training added.");
-    } catch (error) {
-      console.error("ADD TRAINING ERROR:", error);
-      alert(error.message || "Failed to add training.");
-    }
-  };
+    alert("Document uploaded successfully.");
+  } catch (error) {
+    console.error("ADD DOCUMENT ERROR:", error);
+    alert(error.message || "Failed to upload document.");
+  } finally {
+    setSaving(false);
+  }
+};
+
+const handleAddTraining = async (e) => {
+  e.preventDefault();
+
+  if (!trainingFile) {
+    alert("Please choose a training file.");
+    return;
+  }
+
+  setSaving(true);
+
+  try {
+    const uploadedFile = await uploadFile(
+      trainingFile,
+      "training",
+      clientId
+    );
+
+    await setDoc(
+      doc(db, "users", clientId),
+      {
+        training: arrayUnion({
+          title: trainingForm.title,
+          type: trainingForm.type,
+          description: trainingForm.description,
+          locked: trainingForm.locked,
+          url: uploadedFile.url,
+          fileName: uploadedFile.fileName,
+          fileSize: uploadedFile.fileSize,
+          fileType: uploadedFile.fileType,
+          storagePath: uploadedFile.storagePath,
+          createdAt: new Date().toISOString(),
+        }),
+      },
+      { merge: true }
+    );
+
+    await addActivity(`Training assigned: ${trainingForm.title}.`);
+
+    setTrainingForm({
+      title: "",
+      type: "Video",
+      description: "",
+      url: "",
+      locked: false,
+    });
+
+    setTrainingFile(null);
+
+    await refreshClient();
+
+    alert("Training uploaded successfully.");
+  } catch (error) {
+    console.error("ADD TRAINING ERROR:", error);
+    alert(error.message || "Failed to upload training.");
+  } finally {
+    setSaving(false);
+  }
+};
+
 
   const handleAddInvoice = async (e) => {
     e.preventDefault();
 
+    if (!invoiceFile) {
+      alert("Please choose an invoice PDF.");
+      return;
+    }
+
+    setSaving(true);
+
     try {
+      const uploadedFile = await uploadFile(
+        invoiceFile,
+        "invoices",
+        clientId
+      );
+
       await setDoc(
         doc(db, "users", clientId),
         {
           invoices: arrayUnion({
-            ...invoiceForm,
+            invoiceNumber: invoiceForm.invoiceNumber,
+            service: invoiceForm.service,
+            amount: invoiceForm.amount,
+            dueDate: invoiceForm.dueDate,
+            status: invoiceForm.status,
+            paymentLink: invoiceForm.paymentLink,
+            url: uploadedFile.url,
+            fileName: uploadedFile.fileName,
+            fileSize: uploadedFile.fileSize,
+            fileType: uploadedFile.fileType,
+            storagePath: uploadedFile.storagePath,
             createdAt: new Date().toISOString(),
           }),
         },
@@ -326,7 +416,8 @@ export default function AdminClient() {
             invoice_service: invoiceForm.service,
             invoice_amount: invoiceForm.amount,
             invoice_status: invoiceForm.status,
-            message: "A new invoice has been added to your Apex client portal.",
+            message:
+              "A new invoice has been added to your Apex client portal.",
           },
           PUBLIC_KEY
         );
@@ -345,12 +436,15 @@ export default function AdminClient() {
         url: "",
         paymentLink: "",
       });
+      setInvoiceFile(null);
 
       await refreshClient();
-      alert("Invoice added.");
+      alert("Invoice uploaded successfully.");
     } catch (error) {
       console.error("ADD INVOICE ERROR:", error);
-      alert(error.message || "Failed to add invoice.");
+      alert(error.message || "Failed to upload invoice.");
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -594,23 +688,19 @@ export default function AdminClient() {
               </select>
 
               <input
-                required
-                className="input-admin"
-                placeholder="Google Drive / File URL"
-                value={documentForm.url}
-                onChange={(e) =>
-                  setDocumentForm({
-                    ...documentForm,
-                    url: e.target.value,
-                  })
-                }
-              />
+  required
+  type="file"
+  accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png"
+  className="input-admin"
+  onChange={(e) => setDocumentFile(e.target.files?.[0] || null)}
+/>
 
               <button
                 type="submit"
-                className="bg-[#caa12a] px-5 py-3 text-sm font-black uppercase text-black hover:bg-black hover:text-white"
+                disabled={saving}
+                className="bg-[#caa12a] px-5 py-3 text-sm font-black uppercase text-black hover:bg-black hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
               >
-                Add Document
+                {saving ? "Uploading..." : "Add Document"}
               </button>
             </div>
           </form>
@@ -664,16 +754,11 @@ export default function AdminClient() {
               />
 
               <input
-                className="input-admin"
-                placeholder="Training URL"
-                value={trainingForm.url}
-                onChange={(e) =>
-                  setTrainingForm({
-                    ...trainingForm,
-                    url: e.target.value,
-                  })
-                }
-              />
+  type="file"
+  accept=".pdf,.doc,.docx,.mp4"
+  className="input-admin"
+  onChange={(e) => setTrainingFile(e.target.files?.[0] || null)}
+/>
 
               <label className="flex items-center gap-2 text-sm font-bold">
                 <input
@@ -691,9 +776,10 @@ export default function AdminClient() {
 
               <button
                 type="submit"
-                className="bg-[#caa12a] px-5 py-3 text-sm font-black uppercase text-black hover:bg-black hover:text-white"
+                disabled={saving}
+                className="bg-[#caa12a] px-5 py-3 text-sm font-black uppercase text-black hover:bg-black hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
               >
-                Add Training
+                {saving ? "Uploading..." : "Add Training"}
               </button>
             </div>
           </form>
@@ -718,6 +804,16 @@ export default function AdminClient() {
                     ...invoiceForm,
                     invoiceNumber: e.target.value,
                   })
+                }
+              />
+
+              <input
+                required
+                type="file"
+                accept=".pdf"
+                className="input-admin"
+                onChange={(e) =>
+                  setInvoiceFile(e.target.files?.[0] || null)
                 }
               />
 
@@ -771,17 +867,6 @@ export default function AdminClient() {
                 <option>Paid</option>
               </select>
 
-              <input
-                className="input-admin"
-                placeholder="Invoice PDF URL"
-                value={invoiceForm.url}
-                onChange={(e) =>
-                  setInvoiceForm({
-                    ...invoiceForm,
-                    url: e.target.value,
-                  })
-                }
-              />
 
               <input
                 className="input-admin"
@@ -797,9 +882,10 @@ export default function AdminClient() {
 
               <button
                 type="submit"
-                className="bg-[#caa12a] px-5 py-3 text-sm font-black uppercase text-black hover:bg-black hover:text-white"
+                disabled={saving}
+                className="bg-[#caa12a] px-5 py-3 text-sm font-black uppercase text-black hover:bg-black hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
               >
-                Add Invoice
+                {saving ? "Uploading..." : "Add Invoice"}
               </button>
             </div>
           </form>
@@ -832,16 +918,34 @@ export default function AdminClient() {
                   className="flex flex-col gap-4 border border-gray-200 p-4 sm:flex-row sm:items-center sm:justify-between"
                 >
                   <div>
-                    <p className="font-black">
-                      {document.name || "Untitled Document"}
-                    </p>
+  <p className="font-black">
+    {document.name || "Untitled Document"}
+  </p>
 
-                    <p className="text-sm text-gray-500">
-                      {document.category || "No category"}
-                    </p>
-                  </div>
+  <p className="text-sm text-gray-500">
+    {document.category || "No category"}
+  </p>
 
-                  <div className="flex gap-3">
+  {document.fileType && (
+    <p className="text-xs text-gray-500">
+      Type: {document.fileType}
+    </p>
+  )}
+
+  {document.fileSize && (
+    <p className="text-xs text-gray-500">
+      Size: {(document.fileSize / 1024 / 1024).toFixed(2)} MB
+    </p>
+  )}
+
+  {document.uploadDate && (
+    <p className="text-xs text-gray-500">
+      Uploaded: {new Date(document.uploadDate).toLocaleDateString()}
+    </p>
+  )}
+</div>
+
+                  <div className="flex flex-wrap gap-3">
                     {document.url && (
                       <a
                         href={document.url}
@@ -852,6 +956,15 @@ export default function AdminClient() {
                         View
                       </a>
                     )}
+                    {document.url && (
+  <a
+    href={document.url}
+    download
+    className="bg-blue-600 px-4 py-2 text-xs font-black uppercase text-white"
+  >
+    Download
+  </a>
+)}
 
                     <button
                       onClick={() => handleDeleteDocument(index)}
