@@ -318,20 +318,16 @@ const handleAddTraining = async (e) => {
       doc(db, "users", clientId),
       {
         training: arrayUnion({
-          title: trainingForm.title,
-          type: trainingForm.type,
-          description: trainingForm.description,
-          locked: trainingForm.locked,
-          url: uploadedFile.url,
-          fileName: uploadedFile.fileName,
-          fileSize: uploadedFile.fileSize,
-          fileType: uploadedFile.fileType,
-          storagePath: uploadedFile.storagePath,
-          createdAt: new Date().toISOString(),
+  title: trainingForm.title,
+  type: trainingForm.type,
+  description: trainingForm.description,
+  locked: trainingForm.locked,
+  ...uploadedFile,
+  createdAt: new Date().toISOString(),
+})
         }),
-      },
       { merge: true }
-    );
+    
 
     await addActivity(`Training assigned: ${trainingForm.title}.`);
 
@@ -377,22 +373,17 @@ const handleAddTraining = async (e) => {
         doc(db, "users", clientId),
         {
           invoices: arrayUnion({
-            invoiceNumber: invoiceForm.invoiceNumber,
-            service: invoiceForm.service,
-            amount: invoiceForm.amount,
-            dueDate: invoiceForm.dueDate,
-            status: invoiceForm.status,
-            paymentLink: invoiceForm.paymentLink,
-            url: uploadedFile.url,
-            fileName: uploadedFile.fileName,
-            fileSize: uploadedFile.fileSize,
-            fileType: uploadedFile.fileType,
-            storagePath: uploadedFile.storagePath,
-            createdAt: new Date().toISOString(),
+  invoiceNumber: invoiceForm.invoiceNumber,
+  service: invoiceForm.service,
+  amount: invoiceForm.amount,
+  dueDate: invoiceForm.dueDate,
+  status: invoiceForm.status,
+  paymentLink: invoiceForm.paymentLink,
+  ...uploadedFile,
+  createdAt: new Date().toISOString(),
+})
           }),
-        },
         { merge: true }
-      );
 
       try {
         await emailjs.send(
