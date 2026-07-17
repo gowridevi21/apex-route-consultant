@@ -53,14 +53,13 @@ export default function AdminClient() {
     name: "",
     type: "",
     category: "01 - Agreements & Receipts",
-    url: "",
+    
   });
 
   const [trainingForm, setTrainingForm] = useState({
     title: "",
     type: "Video",
     description: "",
-    url: "",
     locked: false,
   });
 
@@ -70,7 +69,6 @@ export default function AdminClient() {
     amount: "",
     dueDate: "",
     status: "Pending",
-    url: "",
     paymentLink: "",
   });
 
@@ -284,7 +282,6 @@ const handleAddDocument = async (e) => {
       name: "",
       type: "",
       category: "01 - Agreements & Receipts",
-      url: "",
     });
 
     setDocumentFile(null);
@@ -342,7 +339,6 @@ const handleAddTraining = async (e) => {
       title: "",
       type: "Video",
       description: "",
-      url: "",
       locked: false,
     });
 
@@ -430,7 +426,6 @@ const handleAddTraining = async (e) => {
         amount: "",
         dueDate: "",
         status: "Pending",
-        url: "",
         paymentLink: "",
       });
       setInvoiceFile(null);

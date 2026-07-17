@@ -13,7 +13,7 @@ import { FaCalendarAlt } from "react-icons/fa";
 export default function About() {
   return (
     <main className="bg-[#050505]">
-      {/* HERO */}
+      {/* Home */}
       <section className="relative min-h-[520px] bg-[url('/images/twotrucktree.png')] bg-cover bg-center">
         <div className="absolute inset-0 bg-gradient-to-r from-black via-black/75 to-black/20"></div>
 
@@ -45,7 +45,7 @@ export default function About() {
         </div>
       </section>
 
-      {/* STORY */}
+      {/* Matter */}
       <section className="mx-auto grid max-w-7xl gap-16 border-b border-white/10 px-8 py-16 md:grid-cols-2">
         <div>
           <p className="font-black uppercase text-[#D4AF37]">Our Story</p>
