@@ -50,11 +50,11 @@ export default function AdminClient() {
   });
 
   const [documentForm, setDocumentForm] = useState({
-    name: "",
-    type: "",
-    category: "01 - Agreements & Receipts",
-    
-  });
+  name: "",
+  type: "",
+  category: "01 - Agreements & Receipts",
+  service: "",
+});
 
   const [trainingForm, setTrainingForm] = useState({
     title: "",
