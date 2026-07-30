@@ -204,8 +204,13 @@ const handleDeleteDocument = async (indexToDelete) => {
         doc(db, "users", clientId),
         {
           ...progressForm,
-          progress: Number(progressForm.progress),
-          updatedAt: new Date(),
+  servicesPurchased: progressForm.programPurchased
+    .split(",")
+    .map((service) => service.trim())
+    .filter(Boolean),
+  progress: Number(progressForm.progress),
+  updatedAt: new Date(),
+
         },
         { merge: true }
       );
@@ -672,10 +677,9 @@ const handleAddTraining = async (e) => {
                 ))}
               </select>
 
-              <input
+              <select
   required
   className="input-admin"
-  placeholder="Service Name (Example: 90 Day Mentorship)"
   value={documentForm.service}
   onChange={(e) =>
     setDocumentForm({
@@ -683,7 +687,14 @@ const handleAddTraining = async (e) => {
       service: e.target.value,
     })
   }
-/>
+>
+  <option value="">Select Service</option>
+  <option value="90 Day Mentorship">90 Day Mentorship</option>
+  <option value="Dispatch Setup">Dispatch Setup</option>
+  <option value="Broker Authority">Broker Authority</option>
+  <option value="DOT Authority">DOT Authority</option>
+  <option value="Factoring">Factoring</option>
+</select>
 
               <input
   required
