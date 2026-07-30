@@ -24,6 +24,7 @@ export default function MyVault() {
   const [loading, setLoading] = useState(true);
   const [clientName, setClientName] = useState("Client");
   const [documents, setDocuments] = useState([]);
+  const [servicesPurchased, setServicesPurchased] = useState([]);
 
   const categories = [
     "01 - Agreements & Receipts",
@@ -70,6 +71,7 @@ export default function MyVault() {
 
         setClientName(cleanName);
         setDocuments(data.documents || []);
+        setServicesPurchased(data.servicesPurchased || []);
       } else {
         const cleanName = (user.displayName || "Client")
           .split("|")[0]
@@ -101,8 +103,12 @@ export default function MyVault() {
   ];
 
   const getDocumentsByCategory = (category) => {
-    return documents.filter((docItem) => docItem.category === category);
-  };
+  return documents.filter(
+    (docItem) =>
+      docItem.category === category &&
+      servicesPurchased.includes(docItem.service)
+  );
+};
 
   if (loading) {
     return (

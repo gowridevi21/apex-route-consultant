@@ -246,6 +246,7 @@ const handleAddDocument = async (e) => {
       name: documentForm.name,
       type: documentForm.type || "Document",
       category: documentForm.category,
+      service: documentForm.service,
       ...uploadedFile,
       createdAt: new Date().toISOString(),
     }),
@@ -282,6 +283,7 @@ const handleAddDocument = async (e) => {
       name: "",
       type: "",
       category: "01 - Agreements & Receipts",
+      service: "",
     });
 
     setDocumentFile(null);
@@ -669,6 +671,19 @@ const handleAddTraining = async (e) => {
                   <option key={category}>{category}</option>
                 ))}
               </select>
+
+              <input
+  required
+  className="input-admin"
+  placeholder="Service Name (Example: 90 Day Mentorship)"
+  value={documentForm.service}
+  onChange={(e) =>
+    setDocumentForm({
+      ...documentForm,
+      service: e.target.value,
+    })
+  }
+/>
 
               <input
   required
